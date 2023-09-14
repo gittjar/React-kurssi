@@ -65,6 +65,21 @@ const TotalSum = () => {
 };
 
 const App = () => {
+
+
+  const course = 'Half Stack application development'
+  const part1 = {
+    name: 'Fundamentals of React',
+    exercises: 10
+  }
+  const part2 = {
+    name: 'Using props to pass data',
+    exercises: 7
+  }
+  const part3 = {
+    name: 'State of a component',
+    exercises: 14
+  }
   
   return (
     
@@ -85,9 +100,22 @@ const App = () => {
       <h2>
       <TotalSum />
       </h2>
+
+      <h1>Step 3</h1>
+      <h1>{course}</h1>
+          <ul>
+         <li>{part1.name} and {part1.exercises} courses</li>
+         <li>{part2.name} and {part2.exercises} courses</li>
+         <li>{part3.name} and {part3.exercises} courses</li>
+         </ul>
+
+
+
+
+
         </div>
 
-    
+  
   
   
   )
