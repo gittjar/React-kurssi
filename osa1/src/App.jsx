@@ -8,8 +8,6 @@ const Content = () => {
   )
 }
 
-
-
 const Course = () => {
   return(
   <div>Half Stack application development</div>
@@ -64,8 +62,9 @@ const TotalSum = () => {
   );
 };
 
-const App = () => {
+// app
 
+const App = () => {
 
   const course = 'Half Stack application development'
   const part1 = {
@@ -96,6 +95,24 @@ const App = () => {
       exercises: 14
     }
   ]
+
+  const kurssia = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
   
   return (
     
@@ -118,7 +135,7 @@ const App = () => {
       </h2>
 
       <h1>Step 3</h1>
-      <h1>{course}</h1>
+      <h2>{course}</h2>
           <ul>
          <li>{part1.name} and {part1.exercises} exercises</li>
          <li>{part2.name} and {part2.exercises} exercises</li>
@@ -126,9 +143,19 @@ const App = () => {
          </ul>
 
       <h1>Step 4</h1>
-      <h1>{kurssi}</h1>
+      <h2>{kurssi}</h2>
       <ul>
         {osaset.map((part, index) => (
+          <li key={index}>
+            {part.name}: {part.exercises} exercises
+          </li>
+        ))}
+      </ul>
+      
+      <h1>Step 5</h1>
+      <h2>{kurssia.name}</h2>
+      <ul>
+        {kurssia.parts.map((part, index) => (
           <li key={index}>
             {part.name}: {part.exercises} exercises
           </li>
