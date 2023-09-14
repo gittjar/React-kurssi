@@ -80,6 +80,22 @@ const App = () => {
     name: 'State of a component',
     exercises: 14
   }
+
+  const kurssi = 'Half Stack application development'
+  const osaset = [
+    {
+      name: 'Fundamentals of React',
+      exercises: 10
+    },
+    {
+      name: 'Using props to pass data',
+      exercises: 7
+    },
+    {
+      name: 'State of a component',
+      exercises: 14
+    }
+  ]
   
   return (
     
@@ -104,10 +120,20 @@ const App = () => {
       <h1>Step 3</h1>
       <h1>{course}</h1>
           <ul>
-         <li>{part1.name} and {part1.exercises} courses</li>
-         <li>{part2.name} and {part2.exercises} courses</li>
-         <li>{part3.name} and {part3.exercises} courses</li>
+         <li>{part1.name} and {part1.exercises} exercises</li>
+         <li>{part2.name} and {part2.exercises} exercises</li>
+         <li>{part3.name} and {part3.exercises} exercises</li>
          </ul>
+
+      <h1>Step 4</h1>
+      <h1>{kurssi}</h1>
+      <ul>
+        {osaset.map((part, index) => (
+          <li key={index}>
+            {part.name}: {part.exercises} exercises
+          </li>
+        ))}
+      </ul>
 
 
 
