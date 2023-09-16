@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import './styles.css'; // Import the external CSS file
+
 
 const App = () => {
 
@@ -31,18 +33,26 @@ const App = () => {
     1000
   )
 
-  const Display = ({ counter }) => <div>{counter}</div>
+  const Display = ({ counter }) => {
+    const displayStyle = {
+      fontSize: '60px',
+      color: 'blue',
+    };
+  
+    return <div style={displayStyle}>{counter}</div>;
+  };
 
   const Button = (props) => {
     return (
-      <button onClick={props.handleClick}>
+      <button className="button" onClick={props.handleClick}>
         {props.text}
       </button>
     )
   }
 
   return (
-    <div>
+    <div className='center'>
+      <h1>Counter App</h1>
       <Display counter={counter} />
       <Button handleClick={increaseByOne} text="plus" />
       <Button handleClick={setToZero} text="zero" />
