@@ -123,27 +123,36 @@ const App = () => {
     ]
   }
 
-const [ counter, setCounter ] = useState(0)
 const [good, setGood] = useState(0)
 const [neutral, setNeutral] = useState(0)
 const [bad, setBad] = useState(0)
 const [allClicks, setAll] = useState([])
 const [total, setTotal] = useState(0) // laskee totalin
+const [average, setAverage] = useState(0)
+const [positivepros, setPositive] = useState(0)
 
 const handleGoodClick = () => {
   setAll(allClicks.concat('Good'))
   const updatedGood = good + 1
   setGood(updatedGood)
+  setTotal(updatedGood + neutral + bad)
+  setAverage(updatedGood + neutral - bad / total)
+  setPositive(good / total * 100)
 }
 const handleNeutralClick = () => {
   setAll(allClicks.concat('Neutral'))
   const updatedNeutral = neutral + 1
   setNeutral(updatedNeutral)
+  setTotal(updatedNeutral + bad + good)
+ // setAverage(updatedNeutral + good / total)
+
 }
 const handleBadClick = () => {
   setAll(allClicks.concat('Bad'))
   const updatedBad = bad + 1
   setBad(updatedBad)
+  setTotal(updatedBad + good + neutral)
+  setAverage(updatedBad - 1 + good / total)
 }
 
 
@@ -209,6 +218,9 @@ const handleBadClick = () => {
           <div>Good: {good}</div>
           <div>Neutral: {neutral}</div>
           <div>Bad: {bad}</div>
+          <div>Total: {total}</div>
+          <div>Average: {average} </div>
+          <div>Positive: {positivepros} %</div>
 
 
 
