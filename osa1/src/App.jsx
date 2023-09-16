@@ -66,7 +66,19 @@ const TotalSum = () => {
   );
 };
 
-
+const Statistics = ({ good, neutral, bad, total, average, positive }) => {
+  return (
+    <div>
+      <h2>Statistics</h2>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>Total: {total}</p>
+      <p>Average: {average || 0}</p>
+      <p>Positive: {positive || 0}%</p>
+    </div>
+  );
+};
 
 
 
@@ -214,13 +226,14 @@ const handleBadClick = () => {
 
 
 
-          <h2>Tulokset</h2>
-          <div>Good: {good}</div>
-          <div>Neutral: {neutral}</div>
-          <div>Bad: {bad}</div>
-          <div>Total: {total}</div>
-          <div>Average: {average} </div>
-          <div>Positive: {positivepros} %</div>
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        total={total}
+        average={average}
+        positive={positivepros}
+      />
 
 
 
