@@ -16,6 +16,12 @@ const History = (props) => {
   )
 }
 
+const Button2 = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
 
 const App = () => {
 
@@ -91,9 +97,9 @@ const App = () => {
       <Button handleClick={decreaseByOne} text="minus" />
 
       <div>
-        {left}
-        <button className="button" onClick={handleLeftClick}>left</button>
-        <button className="button" onClick={handleRightClick}>right</button>
+      {left}
+        <Button2 handleClick={handleLeftClick} text='left' />
+        <Button2 handleClick={handleRightClick} text='right' />
         {right}
         <p>total {total}</p>
         <History allClicks={allClicks} />

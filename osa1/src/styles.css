@@ -1,0 +1,9 @@
+.button {
+    color: rgb(3, 106, 79);
+    font-weight: 600;
+    background-color: aquamarine;
+    border-radius: 10px;
+    border: 0;
+    padding: 1%;
+    margin: 0.5%;
+}
