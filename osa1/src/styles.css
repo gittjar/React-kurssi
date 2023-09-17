@@ -2,11 +2,12 @@
     color: rgb(3, 106, 79);
     font-weight: 600;
     background-color: aquamarine;
-    border-radius: 10px;
+    border-radius: 3px;
     border: 0;
     padding: 1%;
     margin: 0.5%;
     cursor:pointer;
+    width: 100%;
 }
 
 h3 {
@@ -14,3 +15,14 @@ h3 {
     font-weight: 600;
     color: fuchsia;
 }
+
+table {
+    border: 2px black dashed;
+    
+}
+
+tr {
+    background-color: rgb(214, 213, 213);
+    
+}
+

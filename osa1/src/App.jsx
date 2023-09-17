@@ -217,12 +217,16 @@ const handleBadClick = () => {
         ))}
       </ul>
 
-      <h1>Step 6</h1>
-      <h2>Unicafe feedback</h2>
-      <h1>Give Feedback</h1>
+<table>
+      <tr><h1>Step 6</h1></tr>
+      <tr><h2>Unicafe feedback</h2></tr>
+      <tr><h1>Give Feedback</h1></tr>
+      <tr>
       <button className="button" onClick={handleGoodClick}>Good</button>
       <button className="button" onClick={handleNeutralClick}>Neutral</button>
       <button className="button" onClick={handleBadClick}>Bad</button>
+      </tr>
+      <tr>
       {total === 0 ? (
         <h3>No feedback given</h3>
       ) : (
@@ -235,7 +239,8 @@ const handleBadClick = () => {
           <StatisticLine text="positive" value={`${positivepros || 0}%`} />
         </div>
       )}
-
+      </tr>
+</table>
         </div>
   )
 }
