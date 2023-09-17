@@ -11,6 +11,17 @@
     height: 25px;
 }
 
+.buttonB {
+    color: rgb(3, 106, 79);
+    font-weight: 600;
+    background-color: aquamarine;
+    border-radius: 3px;
+    border: 1px black solid;
+    cursor:pointer;
+    width: 10%;
+    height: 25px;
+}
+
 .button:hover {
     background-color: rgb(185, 252, 230);
 }
