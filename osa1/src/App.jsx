@@ -75,17 +75,14 @@ const Statistics = ({ good, neutral, bad, total, average, positive }) => {
       <p>Bad: {bad}</p>
       <p>Total: {total}</p>
       <p>Average: {average || 0}</p>
-      <p>Positive: {positive || 0}%</p>
+      <p>Positive: {positive || 0} %</p>
     </div>
   );
 };
 
-
-
 // app
 
 const App = () => {
-
 
   const course = 'Half Stack application development'
   const part1 = {
@@ -167,9 +164,6 @@ const handleBadClick = () => {
   setAverage(updatedBad - 1 + good / total)
 }
 
-
-
-  
   return (
     
     <div>
@@ -224,25 +218,10 @@ const handleBadClick = () => {
       <button className="button" onClick={handleNeutralClick}>Neutral</button>
       <button className="button" onClick={handleBadClick}>Bad</button>
 
-
-
-      <Statistics
-        good={good}
-        neutral={neutral}
-        bad={bad}
-        total={total}
-        average={average}
-        positive={positivepros}
-      />
-
-
+      {total === 0 ? <h2>No feedback given</h2> : <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} positive={positivepros} />}
 
 
         </div>
-
-  
-  
-  
   )
 }
 
