@@ -230,7 +230,7 @@ const handleBadClick = () => {
       {total === 0 ? (
         <h3>No feedback given</h3>
       ) : (
-        <div>
+        <div className="cellstyle">
           <StatisticLine text="good" value={good} />
           <StatisticLine text="neutral" value={neutral} />
           <StatisticLine text="bad" value={bad} />
