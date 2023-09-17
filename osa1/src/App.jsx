@@ -1,7 +1,6 @@
 import { useState } from "react";
 import './styles.css';
 
-
 const Content = () => {
   return (
     <div>
@@ -79,6 +78,12 @@ const Statistics = ({ good, neutral, bad, total, average, positive }) => {
     </div>
   );
 };
+
+const StatisticLine = ({ text, value }) => (
+  <p>
+    {text}: {value}
+  </p>
+);
 
 // app
 
@@ -214,12 +219,22 @@ const handleBadClick = () => {
 
       <h1>Step 6</h1>
       <h2>Unicafe feedback</h2>
+      <h1>Give Feedback</h1>
       <button className="button" onClick={handleGoodClick}>Good</button>
       <button className="button" onClick={handleNeutralClick}>Neutral</button>
       <button className="button" onClick={handleBadClick}>Bad</button>
-
-      {total === 0 ? <h2>No feedback given</h2> : <Statistics good={good} neutral={neutral} bad={bad} total={total} average={average} positive={positivepros} />}
-
+      {total === 0 ? (
+        <h3>No feedback given</h3>
+      ) : (
+        <div>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="total" value={total} />
+          <StatisticLine text="average" value={average || 0} />
+          <StatisticLine text="positive" value={`${positivepros || 0}%`} />
+        </div>
+      )}
 
         </div>
   )
