@@ -186,7 +186,7 @@ const anecdotes = [
 
 const [selected, setSelected] = useState(0)
 const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
-
+const mostVotedIndex = votes.indexOf(Math.max(...votes));
 
 const getRandomAnecdote = () => {
   const randomIndex = Math.floor(Math.random(5) * anecdotes.length);
@@ -273,10 +273,22 @@ const handleVoteClick = () => {
 </table>
 
       <div>
+        <h1>Anecdotes</h1>
       <div><h4>{anecdotes[selected]}</h4></div>
         <h4>Has {votes[selected]} votes</h4>
         <button className="buttonAnecdote" onClick={handleVoteClick}>Vote</button>
       <button className="buttonAnecdote" onClick={getRandomAnecdote}>Next Anecdote</button>
+      </div>
+      <div>
+        <h2>Most Voted Anecdote</h2>
+        {votes[mostVotedIndex] > 0 ? (
+          <div>
+            <h4>{anecdotes[mostVotedIndex]}</h4>
+            <h4>Has {votes[mostVotedIndex]} votes</h4>
+          </div>
+        ) : (
+          <h3>No votes yet</h3>
+        )}
       </div>
 
         </div>
