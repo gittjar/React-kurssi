@@ -11,15 +11,16 @@
     height: 25px;
 }
 
-.buttonB {
-    color: rgb(3, 106, 79);
+.buttonAnecdote {
+    color: rgb(243, 244, 252);
     font-weight: 600;
-    background-color: aquamarine;
-    border-radius: 3px;
-    border: 1px black solid;
+    background-color: rgb(18, 18, 237);
+    border-radius: 8px;
+    border: 0;
     cursor:pointer;
     width: 10%;
-    height: 25px;
+    height: 45px;
+    margin: 3px;
 }
 
 .button:hover {
