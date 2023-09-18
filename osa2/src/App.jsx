@@ -18,7 +18,7 @@ const Course = ({ course }) => (
     </p>
   </div>
 );
-
+// step7 above
 
 const App = () => {
   const course = {
