@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
+  const [persons, setPersons] = useState([{ name: 'Päiviö Pyysalo' }]);
   const [newName, setNewName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const addName = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName };
-    setPersons([...persons, newPerson]);
-    setNewName('');
+
+    if (persons.some((person) => person.name === newName)) {
+      setErrorMessage(`'${newName}' on jo listalla!`);
+    } else {
+      const newPerson = { name: newName };
+      setPersons([...persons, newPerson]);
+      setNewName('');
+      setErrorMessage('');
+    }
   };
 
   const handleNameChange = (event) => {
@@ -25,6 +33,8 @@ const App = () => {
 
 
 
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -36,6 +46,8 @@ const App = () => {
           <button type="submit" onClick={checkTextInput}>add</button>
         </div>
       </form>
+      {errorMessage && <div className="error">{errorMessage}</div>}
+
       <div>debug: {newName}</div>
       <h2>Numbers</h2>
       <ul>
