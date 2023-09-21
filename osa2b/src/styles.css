@@ -1,0 +1,18 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+input {
+    height : 40px;
+    padding: 5px;
+    margin: 1%;
+    font-size: 1.1rem;
+    border-radius: 10px;
+}
+
+button {
+    margin-left: 4%;
+    font-weight: 700;
+    padding: 15px 32px;
+    text-align: center;
+}

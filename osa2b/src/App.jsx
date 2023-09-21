@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
+import './styles.css';
 
 // App jaettu komponentteihin
 
