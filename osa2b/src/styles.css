@@ -2,17 +2,55 @@ html {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.main {
+    background-color: rgb(234, 215, 253);
+    padding: 1%;
+    border-radius: 2%;
+    
+}
+
+.filter-text {
+    margin-left: 20px;
+}
+
+.inputform {
+    margin-left: 20px
+}
+
+
+
 input {
     height : 40px;
     padding: 5px;
-    margin: 1%;
     font-size: 1.1rem;
     border-radius: 10px;
+    margin: 0.2%;
+}
+
+.add-nappi {
+    margin-top: 1%;
 }
 
 button {
-    margin-left: 4%;
     font-weight: 700;
     padding: 15px 32px;
     text-align: center;
+    border-radius: 10px;
+    cursor: grab;
+    border-top: 10px solid rgb(150, 83, 250);
+    border-bottom: 10px solid rgb(150, 83, 250);
+    background-color: rgb(132, 34, 231);
+}
+
+button:hover {
+    background-color: rgb(194, 135, 252);
+}
+
+.filtered-list {
+    background-color: rgb(207, 255, 248);
+    padding: 5px;
+    border-radius: 10px;
+    margin-top: 5px;
+    width: fit-content;
+    margin-left: 20px
 }

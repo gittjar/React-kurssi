@@ -2,28 +2,43 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "puhelin": "040-123456",
       "id": 1
     },
     {
       "name": "Ada Lovelace",
-      "number": "39-44-5323523",
+      "puhelin": "39-44-5323523",
       "id": 2
     },
     {
       "name": "Dan Abramov",
-      "number": "12-43-234345",
+      "puhelin": "12-43-234345",
       "id": 3
     },
     {
       "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
+      "puhelin": "39-23-6423122",
       "id": 4
     },
     {
       "name": "Test Person",
       "puhelin": "0502192023",
       "id": 5
+    },
+    {
+      "name": "",
+      "puhelin": "",
+      "id": 6
+    },
+    {
+      "name": "Jack Sparrow",
+      "puhelin": "0500666999",
+      "id": 7
+    },
+    {
+      "name": "Mister Bean",
+      "puhelin": "09-900-600012-5",
+      "id": 8
     }
   ]
 }

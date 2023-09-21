@@ -3,7 +3,7 @@ import React from 'react';
 const Filter = ({ filterText, handleFilterChange }) => {
   return (
     <div>
-      Filter phonebook: <br />
+      Etsi puhelinluettelosta <br />
       <input value={filterText} onChange={handleFilterChange} />
     </div>
   );

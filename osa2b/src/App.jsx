@@ -1,28 +1,25 @@
-import React, { useState } from 'react';
-import Filter from './components/Filter'; // Component Filter ..
+import React, { useState, useEffect } from 'react';
+import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
-import './styles.css'; // Import CSS styles
-import axios from 'axios'; // Import Axios
-
-
-// App jaettu komponentteihin
+import './styles.css';
+import numberService from './services/numberService'; 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', puhelin: '040-123456' },
-    { name: 'Ada Lovelace', puhelin: '39-44-5323523' },
-    { name: 'Dan Abramov', puhelin: '12-43-234345' },
-    { name: 'Mary Poppendieck', puhelin: '39-23-6423122' },
-    { name: 'Terminator "T-1000"', puhelin: '555-441000123' },
-    { name: 'Jack Sparrow', puhelin: '041-9996660' },
-  ]);
-
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [filterText, setFilterText] = useState('');
-  const [filteredList, setFilteredList] = useState(persons);
+  const [filteredList, setFilteredList] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the server when the component mounts
+    numberService.getAll().then((data) => {
+      setPersons(data);
+      setFilteredList(data);
+    });
+  }, []);
 
   const addName = (event) => {
     event.preventDefault();
@@ -31,15 +28,22 @@ const App = () => {
       setErrorMessage(`'${newName}' is already in the list.`);
     } else {
       const newPerson = { name: newName, puhelin: newPhoneNumber };
-      // Send a POST request to the JSON server
-      axios.post('http://localhost:3000/persons', newPerson)
+      
+      // Use the create function from numberService to add the new person
+      // Remember install Axios
+      // npm i axios
+      // Remember install and run JSON server
+      // npm i -g json-server
+      // json-server --watch db.json
+      // http://localhost:3000/persons
+
+      numberService.create(newPerson)
         .then((response) => {
-          setPersons([...persons, response.data]);
+          setPersons([...persons, response]);
           setNewName('');
           setNewPhoneNumber('');
           setErrorMessage('');
-          // Update filtered list with the new data
-          setFilteredList([...filteredList, response.data]);
+          setFilteredList([...filteredList, response]);
         })
         .catch((error) => {
           console.error('Error saving data:', error);
@@ -66,13 +70,15 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="main">
       <h2>Phonebook</h2>
+      <div className="filter-text">
       <Filter filterText={filterText} handleFilterChange={handleFilterChange} />
-      <form onSubmit={addName}>
+      </div>
+      <form className="inputform" onSubmit={addName}>
         <div>
 
-          Name and phonenumber: <br />
+       <br />
           <PersonForm
         newName={newName}
         newPhoneNumber={newPhoneNumber}
@@ -81,12 +87,14 @@ const App = () => {
       />
         </div>
 
-        <div>
-          <button type="submit">Add</button>
+        <div className="add-nappi">
+          <button type="submit">Add +</button>
         </div>
       </form>
       {errorMessage && <div className="error">{errorMessage}</div>}
+      <div className="filtered-list">
       <Persons filteredList={filteredList} />
+      </div>
     </div>
   );
 };
