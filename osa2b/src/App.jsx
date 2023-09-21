@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import Filter from './components/Filter';
+import Persons from './components/Persons';
+import PersonForm from './components/PersonForm';
+
+// App jaettu komponentteihin
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -53,35 +58,25 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter phonebook: <br />
-        <input value={filterText} onChange={handleFilterChange} />
-      </div>
+      <Filter filterText={filterText} handleFilterChange={handleFilterChange} />
       <form onSubmit={addName}>
         <div>
-          Name: <br />
-          <input value={newName} onChange={handleNameChange} />
+
+          Name and phonenumber: <br />
+          <PersonForm
+        newName={newName}
+        newPhoneNumber={newPhoneNumber}
+        handleNameChange={handleNameChange}
+        handlePhoneNumberChange={handlePhoneNumberChange}
+      />
         </div>
-        <div>
-          Number: <br />
-          <input value={newPhoneNumber} onChange={handlePhoneNumberChange} />
-        </div>
+
         <div>
           <button type="submit">Add</button>
         </div>
       </form>
       {errorMessage && <div className="error">{errorMessage}</div>}
-      <h2>Numbers</h2>
-      <table>
-        <tbody>
-          {filteredList.map((person, index) => (
-            <tr key={index}>
-              <td>{person.name}</td>
-              <td>{person.puhelin}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Persons filteredList={filteredList} />
     </div>
   );
 };
