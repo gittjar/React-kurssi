@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import Filter from './components/Filter';
+import Filter from './components/Filter'; // Component Filter ..
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
-import './styles.css';
+import './styles.css'; // Import CSS styles
+import axios from 'axios'; // Import Axios
+
 
 // App jaettu komponentteihin
 
@@ -29,12 +31,19 @@ const App = () => {
       setErrorMessage(`'${newName}' is already in the list.`);
     } else {
       const newPerson = { name: newName, puhelin: newPhoneNumber };
-      setPersons([...persons, newPerson]);
-      setNewName('');
-      setNewPhoneNumber('');
-      setErrorMessage('');
-      // Update filtered list with the new data
-      setFilteredList([...filteredList, newPerson]);
+      // Send a POST request to the JSON server
+      axios.post('http://localhost:3000/persons', newPerson)
+        .then((response) => {
+          setPersons([...persons, response.data]);
+          setNewName('');
+          setNewPhoneNumber('');
+          setErrorMessage('');
+          // Update filtered list with the new data
+          setFilteredList([...filteredList, response.data]);
+        })
+        .catch((error) => {
+          console.error('Error saving data:', error);
+        });
     }
   };
 
