@@ -24,8 +24,28 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
 
-    if (persons.some((person) => person.name === newName)) {
-      setErrorMessage(`'${newName}' is already in the list.`);
+    const existingPerson = persons.find((person) => person.name === newName);
+
+    if (existingPerson) {
+      const confirmed = window.confirm(
+        `${newName} is already in the list. Do you want to update the information?`
+      );
+
+      if (confirmed) {
+        const updatedPerson = { ...existingPerson, puhelin: newPhoneNumber };
+        numberService
+          .put(existingPerson.id, updatedPerson)
+          .then((response) => {
+            setPersons(persons.map((person) => (person.id === response.id ? response : person)));
+            setFilteredList(filteredList.map((person) => (person.id === response.id ? response : person)));
+            setNewName('');
+            setNewPhoneNumber('');
+            setErrorMessage('');
+          })
+          .catch((error) => {
+            console.error('Error updating data:', error);
+          });
+      }
     } else {
       const newPerson = { name: newName, puhelin: newPhoneNumber };
       

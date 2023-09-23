@@ -2,13 +2,8 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "puhelin": "040-123456",
+      "puhelin": "050-121212",
       "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "puhelin": "39-44-5323523",
-      "id": 2
     },
     {
       "name": "Dan Abramov",
@@ -34,6 +29,26 @@
       "name": "Mister Bean",
       "puhelin": "09-900-600012-5",
       "id": 8
+    },
+    {
+      "name": "Aapeli Käki",
+      "puhelin": "04005550005",
+      "id": 9
+    },
+    {
+      "name": "Janne Kataja",
+      "puhelin": "0404441114",
+      "id": 10
+    },
+    {
+      "name": "Terminator T1000",
+      "puhelin": "555-50990554-23",
+      "id": 11
+    },
+    {
+      "name": "Benjamin Franklin",
+      "puhelin": "440-9009-0043-33",
+      "id": 12
     }
   ]
 }
