@@ -46,6 +46,16 @@ button:hover {
     background-color: rgb(194, 135, 252);
 }
 
+.deletebutton {
+    background-color: rgb(28, 9, 45);
+    border: 2px rgb(92, 2, 128) solid;
+    color: azure;
+}
+.deletebutton:hover {
+    background-color: rgb(56, 56, 55);
+
+}
+
 .filtered-list {
     background-color: rgb(207, 255, 248);
     padding: 5px;

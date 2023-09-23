@@ -69,6 +69,20 @@ const App = () => {
     setFilteredList(filtered);
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm('Do you really want to delete this person?')) {
+      numberService.deleteId(id)
+        .then(() => {
+          // Filter out the deleted person from both states
+          setPersons(persons.filter((person) => person.id !== id));
+          setFilteredList(filteredList.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          console.error('Error deleting data:', error);
+        });
+    }
+  };
+
   return (
     <div className="main">
       <h2>Phonebook</h2>
@@ -93,7 +107,7 @@ const App = () => {
       </form>
       {errorMessage && <div className="error">{errorMessage}</div>}
       <div className="filtered-list">
-      <Persons filteredList={filteredList} />
+      <Persons filteredList={filteredList} handleDelete={handleDelete}/>
       </div>
     </div>
   );
