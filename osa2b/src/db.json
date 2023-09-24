@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "puhelin": "050-121212",
+      "puhelin": "040-1005545",
       "id": 1
     },
     {
@@ -17,13 +17,8 @@
     },
     {
       "name": "Test Person",
-      "puhelin": "0502192023",
+      "puhelin": "04005550005",
       "id": 5
-    },
-    {
-      "name": "Jack Sparrow",
-      "puhelin": "0500666999",
-      "id": 7
     },
     {
       "name": "Mister Bean",
@@ -32,23 +27,13 @@
     },
     {
       "name": "Aapeli Käki",
-      "puhelin": "04005550005",
+      "puhelin": "03-777-99901-1",
       "id": 9
-    },
-    {
-      "name": "Janne Kataja",
-      "puhelin": "0404441114",
-      "id": 10
     },
     {
       "name": "Terminator T1000",
       "puhelin": "555-50990554-23",
       "id": 11
-    },
-    {
-      "name": "Benjamin Franklin",
-      "puhelin": "440-9009-0043-33",
-      "id": 12
     }
   ]
 }

@@ -3,7 +3,9 @@ import Filter from './components/Filter';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import './styles.css';
-import numberService from './services/numberService'; 
+import numberService from './services/numberService';
+import Notification from './components/Notification';
+import ConfirmationDialog from './components/ConfirmationDialog';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,9 +14,22 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [filterText, setFilterText] = useState('');
   const [filteredList, setFilteredList] = useState([]);
+  const [notification, setNotification] = useState(null);
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  const [personToUpdate, setPersonToUpdate] = useState(null); // Track the person being updated
+  const [showDeleteConfirmationDialog, setShowDeleteConfirmationDialog] = useState(false);
+  const [deleteConfirmationMessage, setDeleteConfirmationMessage] = useState('');
+  const [personToDelete, setPersonToDelete] = useState(null);
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 10000);
+  };
 
   useEffect(() => {
-    // Fetch data from the server when the component mounts
     numberService.getAll().then((data) => {
       setPersons(data);
       setFilteredList(data);
@@ -23,40 +38,14 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
-
     const existingPerson = persons.find((person) => person.name === newName);
 
     if (existingPerson) {
-      const confirmed = window.confirm(
-        `${newName} is already in the list. Do you want to update the information?`
-      );
-
-      if (confirmed) {
-        const updatedPerson = { ...existingPerson, puhelin: newPhoneNumber };
-        numberService
-          .put(existingPerson.id, updatedPerson)
-          .then((response) => {
-            setPersons(persons.map((person) => (person.id === response.id ? response : person)));
-            setFilteredList(filteredList.map((person) => (person.id === response.id ? response : person)));
-            setNewName('');
-            setNewPhoneNumber('');
-            setErrorMessage('');
-          })
-          .catch((error) => {
-            console.error('Error updating data:', error);
-          });
-      }
+      setPersonToUpdate(existingPerson);
+      setConfirmationMessage(`${newName} is already in the list. Do you want to update the information?`);
+      setShowConfirmationDialog(true);
     } else {
       const newPerson = { name: newName, puhelin: newPhoneNumber };
-      
-      // Use the create function from numberService to add the new person
-      // Remember install Axios
-      // npm i axios
-      // Remember install and run JSON server
-      // npm i -g json-server
-      // json-server --watch db.json
-      // http://localhost:3000/persons
-
       numberService.create(newPerson)
         .then((response) => {
           setPersons([...persons, response]);
@@ -64,11 +53,38 @@ const App = () => {
           setNewPhoneNumber('');
           setErrorMessage('');
           setFilteredList([...filteredList, response]);
+          showNotification(`${newName} added to the list.`);
         })
         .catch((error) => {
           console.error('Error saving data:', error);
         });
     }
+  };
+
+  const handleConfirm = () => {
+    setShowConfirmationDialog(false);
+    if (personToUpdate) {
+      const updatedPerson = { ...personToUpdate, puhelin: newPhoneNumber };
+      numberService
+        .put(personToUpdate.id, updatedPerson)
+        .then((response) => {
+          setPersons(persons.map((person) => (person.id === response.id ? response : person)));
+          setFilteredList(filteredList.map((person) => (person.id === response.id ? response : person)));
+          setNewName('');
+          setNewPhoneNumber('');
+          setErrorMessage('');
+          setPersonToUpdate(null);
+          showNotification(`${newName} updated in the list.`);
+        })
+        .catch((error) => {
+          console.error('Error updating data:', error);
+        });
+    }
+  };
+
+  const handleCancel = () => {
+    setShowConfirmationDialog(false);
+    setPersonToUpdate(null);
   };
 
   const handleNameChange = (event) => {
@@ -82,7 +98,6 @@ const App = () => {
   const handleFilterChange = (event) => {
     const searchText = event.target.value;
     setFilterText(searchText);
-    // Update filtered list based on the search text
     const filtered = persons.filter((person) =>
       person.name.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -90,44 +105,78 @@ const App = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Do you really want to delete this person?')) {
-      numberService.deleteId(id)
+    const person = persons.find((p) => p.id === id);
+
+    if (person) {
+      setPersonToDelete(person);
+      setDeleteConfirmationMessage(`Do you really want to delete ${person.name}?`);
+      setShowDeleteConfirmationDialog(true);
+    }
+  };
+
+  const handleDeleteConfirm = () => {
+    if (personToDelete) {
+      numberService.deleteId(personToDelete.id)
         .then(() => {
-          // Filter out the deleted person from both states
-          setPersons(persons.filter((person) => person.id !== id));
-          setFilteredList(filteredList.filter((person) => person.id !== id));
+          setPersons(persons.filter((person) => person.id !== personToDelete.id));
+          setFilteredList(filteredList.filter((person) => person.id !== personToDelete.id));
+          setPersonToDelete(null);
+          showNotification(`${personToDelete.name} deleted from the list.`);
         })
         .catch((error) => {
           console.error('Error deleting data:', error);
         });
     }
+
+    setShowDeleteConfirmationDialog(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setPersonToDelete(null);
+    setShowDeleteConfirmationDialog(false);
   };
 
   return (
     <div className="main">
       <h2>Phonebook</h2>
       <div className="filter-text">
-      <Filter filterText={filterText} handleFilterChange={handleFilterChange} />
+        <Filter filterText={filterText} handleFilterChange={handleFilterChange} />
       </div>
       <form className="inputform" onSubmit={addName}>
         <div>
-
-       <br />
+          <br />
           <PersonForm
-        newName={newName}
-        newPhoneNumber={newPhoneNumber}
-        handleNameChange={handleNameChange}
-        handlePhoneNumberChange={handlePhoneNumberChange}
-      />
+            newName={newName}
+            newPhoneNumber={newPhoneNumber}
+            handleNameChange={handleNameChange}
+            handlePhoneNumberChange={handlePhoneNumberChange}
+          />
         </div>
-
         <div className="add-nappi">
           <button type="submit">Add +</button>
         </div>
       </form>
+      <Notification message={notification} />
+
+      {showConfirmationDialog && (
+        <ConfirmationDialog
+          message={confirmationMessage}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
+
+{showDeleteConfirmationDialog && (
+        <ConfirmationDialog
+          message={deleteConfirmationMessage}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handleDeleteCancel}
+        />
+      )}
+
       {errorMessage && <div className="error">{errorMessage}</div>}
       <div className="filtered-list">
-      <Persons filteredList={filteredList} handleDelete={handleDelete}/>
+        <Persons filteredList={filteredList} handleDelete={handleDelete}/>
       </div>
     </div>
   );
