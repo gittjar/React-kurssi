@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './styles.css';
+import Weather from './Weather'; // Import the Weather component
 
 const App = () => {
   const [countryData, setCountryData] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+
 
   useEffect(() => {
     // Make the initial API request when the component mounts
@@ -33,8 +36,8 @@ const App = () => {
   }, [searchTerm, countryData]);
 
   return (
-    <div>
-      <h2>Country Information</h2>
+    <div className='main'>
+      <h2>Country Information App</h2>
       <input
         type="text"
         placeholder="Search for countries..."
@@ -48,7 +51,10 @@ const App = () => {
               <h3>{country.name}</h3>
               <p>Capital: {country.capital}</p>
               <p>Population: {country.population}</p>
-              {/* Add more data fields as needed */}
+              <figure>
+              <img src={country.flag} className='maalippu' alt={`Flag of ${country.name}`} />
+            </figure>
+            <Weather capital={country.capital} />
             </div>
           ))}
         </div>
