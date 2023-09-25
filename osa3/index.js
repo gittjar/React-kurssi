@@ -55,34 +55,38 @@ app.get('/', (req, res) => {
     response.status(204).end()
   })
 
-  /* generates +1 id number above */
-  const generateId = () => {
-    const maxId = persons.length > 0
-      ? Math.max(...persons.map(n => n.id))
-      : 0
-    return maxId + 1
-  }
-  
   app.post('/api/persons', (request, response) => {
-    const body = request.body
+    const body = request.body;
   
     if (!body.name) {
-      return response.status(400).json({ 
-        error: 'name missing' 
-      })
+      return response.status(400).json({
+        error: 'Name is missing',
+      });
     }
   
-/* id generation */
-
+    if (!body.phonenumber) {
+      return response.status(400).json({
+        error: 'Phonenumber is missing',
+      });
+    }
+  
+    const nameExists = persons.some((person) => person.name === body.name);
+    if (nameExists) {
+      return response.status(400).json({
+        error: 'Name already exists in the list',
+      });
+    }
+  
     const person = {
       name: body.name,
       phonenumber: body.phonenumber,
       id: generateId(),
-    }
+    };
   
-    persons = persons.concat(person)
-    response.json(person)
+    persons = persons.concat(person);
+    response.json(person);
   });
+  
 
   /*Information of count of persons and local time*/
   app.get('/info', (req, res) => {
