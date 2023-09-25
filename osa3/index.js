@@ -1,7 +1,12 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan');
+
+// Use the "tiny" format for logging
+app.use(morgan('tiny'));
 
 app.use(express.json())
+
 
 
 
