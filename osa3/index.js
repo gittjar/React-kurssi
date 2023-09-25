@@ -77,7 +77,18 @@ app.get('/', (req, res) => {
   
     persons = persons.concat(person)
     response.json(person)
-  })
+  });
+
+  /*Information of count of persons and local time*/
+  app.get('/info', (req, res) => {
+    const personCount = persons.length;
+    const currentTime = new Date().toString();
+  
+    res.send(`
+      <p>Phonebook has info for ${personCount} people</p>
+      <p>${currentTime}</p>
+    `);
+  });
   
   const PORT = 3001
   app.listen(PORT, () => {
