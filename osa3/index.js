@@ -60,6 +60,15 @@ app.get('/', (req, res) => {
     response.status(204).end()
   })
 
+
+    /* generates +1 id number above */
+    const generateId = () => {
+        const maxId = persons.length > 0
+          ? Math.max(...persons.map(n => n.id))
+          : 0
+        return maxId + 1
+      }
+
   app.post('/api/persons', (request, response) => {
     const body = request.body;
   
@@ -87,6 +96,9 @@ app.get('/', (req, res) => {
       phonenumber: body.phonenumber,
       id: generateId(),
     };
+
+    // Log the POST data using Morgan
+    console.log('Received POST request data:', request.body);
   
     persons = persons.concat(person);
     response.json(person);
