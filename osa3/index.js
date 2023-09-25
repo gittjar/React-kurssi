@@ -47,6 +47,7 @@ app.get('/', (req, res) => {
       }
   })
 
+  /* delete person by id */
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     persons = persons.filter(person => person.id !== id)
