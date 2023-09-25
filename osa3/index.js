@@ -55,6 +55,7 @@ app.get('/', (req, res) => {
     response.status(204).end()
   })
 
+  /* generates +1 id number above */
   const generateId = () => {
     const maxId = persons.length > 0
       ? Math.max(...persons.map(n => n.id))
@@ -71,6 +72,8 @@ app.get('/', (req, res) => {
       })
     }
   
+/* id generation */
+
     const person = {
       name: body.name,
       phonenumber: body.phonenumber,
