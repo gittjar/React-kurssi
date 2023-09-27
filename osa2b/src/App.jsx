@@ -17,7 +17,7 @@ const App = () => {
   const [notification, setNotification] = useState(null);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState('');
-  const [personToUpdate, setPersonToUpdate] = useState(null); // Track the person being updated
+  const [personToUpdate, setPersonToUpdate] = useState(null);
   const [showDeleteConfirmationDialog, setShowDeleteConfirmationDialog] = useState(false);
   const [deleteConfirmationMessage, setDeleteConfirmationMessage] = useState('');
   const [personToDelete, setPersonToDelete] = useState(null);
@@ -30,54 +30,73 @@ const App = () => {
   };
 
   useEffect(() => {
+    // Fetch data from the backend when the component mounts
     numberService.getAll().then((data) => {
       setPersons(data);
       setFilteredList(data);
     });
   }, []);
 
+
   const addName = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((person) => person.name === newName);
-
+  
     if (existingPerson) {
       setPersonToUpdate(existingPerson);
+      setNewPhoneNumber(existingPerson.phonenumber); // Update phone number
       setConfirmationMessage(`${newName} is already in the list. Do you want to update the information?`);
       setShowConfirmationDialog(true);
     } else {
-      const newPerson = { name: newName, puhelin: newPhoneNumber };
+      const newPerson = { name: newName, phonenumber: newPhoneNumber };
       numberService.create(newPerson)
         .then((response) => {
           setPersons([...persons, response]);
           setNewName('');
-          setNewPhoneNumber('');
           setErrorMessage('');
           setFilteredList([...filteredList, response]);
           showNotification(`${newName} added to the list.`);
+          setNewPhoneNumber(''); // Clear phone number after showing the notification
         })
         .catch((error) => {
           console.error('Error saving data:', error);
         });
     }
   };
+  
 
   const handleConfirm = () => {
     setShowConfirmationDialog(false);
     if (personToUpdate) {
-      const updatedPerson = { ...personToUpdate, puhelin: newPhoneNumber };
+      const updatedPerson = { ...personToUpdate, phonenumber: newPhoneNumber };
       numberService
-        .put(personToUpdate.id, updatedPerson)
+        .update(personToUpdate.id, updatedPerson) // Use the correct update method
         .then((response) => {
           setPersons(persons.map((person) => (person.id === response.id ? response : person)));
           setFilteredList(filteredList.map((person) => (person.id === response.id ? response : person)));
           setNewName('');
-          setNewPhoneNumber('');
+          setNewPhoneNumber(''); // Clear phone number
           setErrorMessage('');
           setPersonToUpdate(null);
           showNotification(`${newName} updated in the list.`);
         })
         .catch((error) => {
           console.error('Error updating data:', error);
+        });
+    } else {
+      // Handle the case when no person is being updated
+      const newPerson = { name: newName, phonenumber: newPhoneNumber };
+      numberService.create(newPerson)
+        .then((response) => {
+          setPersons([...persons, response]);
+          setNewName('');
+          setNewPhoneNumber(''); // Clear phone number
+          setErrorMessage('');
+          setFilteredList([...filteredList, response]);
+          showNotification(`${newName} added to the list.`);
+        })
+        .catch((error) => {
+          console.error('Error saving data:', error);
         });
     }
   };
@@ -166,7 +185,7 @@ const App = () => {
         />
       )}
 
-{showDeleteConfirmationDialog && (
+      {showDeleteConfirmationDialog && (
         <ConfirmationDialog
           message={deleteConfirmationMessage}
           onConfirm={handleDeleteConfirm}
@@ -176,7 +195,7 @@ const App = () => {
 
       {errorMessage && <div className="error">{errorMessage}</div>}
       <div className="filtered-list">
-        <Persons filteredList={filteredList} handleDelete={handleDelete}/>
+        <Persons filteredList={filteredList} handleDelete={handleDelete} />
       </div>
     </div>
   );
