@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan');
+const cors = require('cors')
+
+app.use(cors())
 
 // Use the "tiny" format for logging
 app.use(morgan('tiny'));
@@ -14,22 +17,22 @@ let persons = [
   {
     id: 1,
     name: "Arto Hellas",
-    phonenumber: "040-1234567"
+    puhelin: "040-1234567"
   },
   {
     id: 2,
     name: "Ada Lovelace",
-    phonenumber: "03-903490"
+    puhelin: "03-903490"
   },
   {
     id: 3,
     name: "Jack Sparrow",
-    phonenumber: "044-1234567"
+    puhelin: "044-1234567"
   },
   {
     id: 4,
     name: "Mikko Mallikas",
-    phonenumber: "0500-6667770"
+    puhelin: "0500-6667770"
   }
 ]
 
