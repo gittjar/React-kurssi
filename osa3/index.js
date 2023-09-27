@@ -16,7 +16,7 @@ app.use(express.json())
 let persons = [
   {
     id: 1,
-    name: "Arto Hellas",
+    name: "Arto Fellas",
     puhelin: "040-1234567"
   },
   {
@@ -119,7 +119,9 @@ app.get('/', (req, res) => {
     `);
   });
   
-  const PORT = 3001
+
+  // const PORT = 3001
+  const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })
