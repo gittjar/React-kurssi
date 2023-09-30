@@ -5,3 +5,4 @@ Oppimistehtäviä Full Stack Open kurssilta. Materiaalit : https://fullstackopen
 #### Julkaisut netissä
 
 * Tehtävä 3.10 backend step10: https://puhelinluettelo-oqv3.onrender.com/api/persons
+* Tehtävä 3.11 frontend step11: https://puhelinluettelo-frontend.onrender.com/
