@@ -37,11 +37,10 @@ const App = () => {
     });
   }, []);
 
-
   const addName = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((person) => person.name === newName);
-  
+
     if (existingPerson) {
       setPersonToUpdate(existingPerson);
       setNewPhoneNumber(existingPerson.phonenumber); // Update phone number
@@ -55,7 +54,7 @@ const App = () => {
           setNewName('');
           setErrorMessage('');
           setFilteredList([...filteredList, response]);
-          showNotification(`${newName} added to the list.`);
+          showNotification(`${newName} added to the list with phonenumer: ${newPhoneNumber}`);
           setNewPhoneNumber(''); // Clear phone number after showing the notification
         })
         .catch((error) => {
@@ -63,14 +62,13 @@ const App = () => {
         });
     }
   };
-  
 
   const handleConfirm = () => {
     setShowConfirmationDialog(false);
     if (personToUpdate) {
       const updatedPerson = { ...personToUpdate, phonenumber: newPhoneNumber };
       numberService
-        .update(personToUpdate.id, updatedPerson) // Use the correct update method
+        .update(personToUpdate.id, updatedPerson)
         .then((response) => {
           setPersons(persons.map((person) => (person.id === response.id ? response : person)));
           setFilteredList(filteredList.map((person) => (person.id === response.id ? response : person)));
@@ -84,7 +82,6 @@ const App = () => {
           console.error('Error updating data:', error);
         });
     } else {
-      // Handle the case when no person is being updated
       const newPerson = { name: newName, phonenumber: newPhoneNumber };
       numberService.create(newPerson)
         .then((response) => {
