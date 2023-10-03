@@ -31,6 +31,7 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+// GET persons
 app.get('/api/persons', (req, res) => {
   Phonebook.find({})
     .then((persons) => {
@@ -41,6 +42,66 @@ app.get('/api/persons', (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     });
 });
+
+// GET persons by id
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+
+  Phonebook.findById(id)
+    .then((person) => {
+      if (!person) {
+        // If no person with the given ID is found, return a 404 response
+        return res.status(404).json({ error: 'Person not found' });
+      }
+      res.json(person);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+// DELETE
+app.delete('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+
+  Phonebook.findByIdAndRemove(id)
+    .then((deletedPerson) => {
+      if (!deletedPerson) {
+        // If no person with the given ID is found, return a 404 response
+        return res.status(404).json({ error: 'Person not found' });
+      }
+      res.status(204).end(); // Successfully deleted, send a 204 (No Content) response
+    })
+    .catch((error) => {
+      console.error('Error deleting data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+// PUT
+app.put('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  const updatedPerson = req.body;
+
+  Phonebook.findByIdAndUpdate(id, updatedPerson, { new: true })
+    .then((person) => {
+      if (!person) {
+        // If no person with the given ID is found, return a 404 response
+        return res.status(404).json({ error: 'Person not found' });
+      }
+      res.json(person); // Send the updated person as JSON
+    })
+    .catch((error) => {
+      console.error('Error updating data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+
+
+
+
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
