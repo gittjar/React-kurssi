@@ -8,10 +8,10 @@ const Phonebook = require('./models/phonebook');
 
 app.use(cors())
 app.use(morgan('tiny'));
+app.use(express.static('build'))
 app.use(express.json())
 
 // Connect to your MongoDB database using the provided URI in .env
-// 
 const url = process.env.MONGODB_URI;
 
 console.log('connecting to', url);
@@ -24,7 +24,6 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('error connecting to MongoDB:', error.message)
   });
 
-// Handle errors if any during database connection
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
@@ -44,21 +43,17 @@ app.get('/api/persons', (req, res) => {
 });
 
 // GET persons by id
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
 
   Phonebook.findById(id)
     .then((person) => {
       if (!person) {
-        // If no person with the given ID is found, return a 404 response
         return res.status(404).json({ error: 'Person not found' });
       }
       res.json(person);
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-      res.status(500).json({ error: 'Sorry this ID not found!' });
-    });
+    .catch(error => next(error))
 });
 
 // DELETE Persons
@@ -68,10 +63,9 @@ app.delete('/api/persons/:id', (req, res) => {
   Phonebook.findByIdAndRemove(id)
     .then((deletedPerson) => {
       if (!deletedPerson) {
-        // If no person with the given ID is found, return a 404 response
         return res.status(404).json({ error: 'Person not found' });
       }
-      res.status(204).end(); // Successfully deleted, send a 204 (No Content) response
+      res.status(204).end();
     })
     .catch((error) => {
       console.error('Error deleting data:', error);
@@ -87,10 +81,9 @@ app.put('/api/persons/:id', (req, res) => {
   Phonebook.findByIdAndUpdate(id, updatedPerson, { new: true })
     .then((person) => {
       if (!person) {
-        // If no person with the given ID is found, return a 404 response
         return res.status(404).json({ error: 'Person not found' });
       }
-      res.json(person); // Send the updated person as JSON
+      res.json(person);
     })
     .catch((error) => {
       console.error('Error updating data:', error);
@@ -98,12 +91,16 @@ app.put('/api/persons/:id', (req, res) => {
     });
 });
 
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Error:', error.message);
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+  next(error);
+});
 
-
-
-
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
   if (!body.name || !body.phonenumber) {
@@ -123,10 +120,7 @@ app.post('/api/persons', (req, res) => {
       console.log(`Added ${savedPerson.name} number ${savedPerson.phonenumber} to phonebook.`);
       res.json(savedPerson);
     })
-    .catch((error) => {
-      console.error('Error saving data:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+    .catch((error) => next(error));
 });
 
 app.get('/info', (req, res) => {
@@ -138,10 +132,18 @@ app.get('/info', (req, res) => {
         <p>${currentTime}</p>
       `);
     })
-    .catch((error) => {
-      console.error('Error fetching data:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    });
+    .catch((error) => next(error));
+});
+
+// Define a middleware to handle unknown endpoints
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
+// Define a middleware to handle errors
+app.use((error, req, res, next) => {
+  console.error('Error:', error.message);
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 const PORT = process.env.PORT || 3001;
