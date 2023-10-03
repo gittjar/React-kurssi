@@ -1,127 +1,98 @@
-const express = require('express')
-const app = express()
+require('dotenv').config()
+const express = require('express');
+const app = express();
 const morgan = require('morgan');
-const cors = require('cors')
+const cors = require('cors');
+const mongoose = require('mongoose');
+//const Phonebook = require('./models/phonebook');
 
 app.use(cors())
-
-// Use the "tiny" format for logging
 app.use(morgan('tiny'));
-
 app.use(express.json())
 
+// Connect to your MongoDB database (use your own connection URL)
+const url = process.env.MONGODB_URI
 
+console.log('connecting to', url)
 
+mongoose.connect(url)
+  .then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Fellas",
-    puhelin: "040-1234567"
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    puhelin: "03-903490"
-  },
-  {
-    id: 3,
-    name: "Jack Sparrow",
-    puhelin: "044-1234567"
-  },
-  {
-    id: 4,
-    name: "Mikko Mallikas",
-    puhelin: "0500-6667770"
+// Handle errors if any during database connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Define a Mongoose schema that matches your data structure
+const phonebookSchema = new mongoose.Schema({
+  name: String,
+  phonenumber: String,
+});
+
+const Phonebook = mongoose.model('Phonebook', phonebookSchema); // Define the model once
+
+app.get('/api/persons', (req, res) => {
+  Phonebook.find({})
+    .then((persons) => {
+      res.json(persons);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  if (!body.name || !body.phonenumber) {
+    return res.status(400).json({
+      error: 'Name or phonenumber is missing',
+    });
   }
-]
 
-app.get('/', (req, res) => {
-    res.send('<h1>Puhelinluettelo Backend</h1>')
-  })
   
-  app.get('/api/persons', (req, res) => {
-    res.json(persons)
-  })
-
-  /*persons by id*/
-  app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        response.json(person)
-      } else {
-        response.status(404).end()
-      }
-  })
-
-  /* delete person by id */
-  app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-  
-    response.status(204).end()
-  })
-
-
-    /* generates +1 id number above */
-    const generateId = () => {
-        const maxId = persons.length > 0
-          ? Math.max(...persons.map(n => n.id))
-          : 0
-        return maxId + 1
-      }
-
-  app.post('/api/persons', (request, response) => {
-    const body = request.body;
-  
-    if (!body.name) {
-      return response.status(400).json({
-        error: 'Name is missing',
-      });
-    }
-  
-    if (!body.phonenumber) {
-      return response.status(400).json({
-        error: 'Phonenumber is missing',
-      });
-    }
-  
-    const nameExists = persons.some((person) => person.name === body.name);
-    if (nameExists) {
-      return response.status(400).json({
-        error: 'Name already exists in the list',
-      });
-    }
-  
-    const person = {
-      name: body.name,
-      phonenumber: body.phonenumber,
-      id: generateId(),
-    };
-
-    // Log the POST data using Morgan
-    console.log('Received POST request data:', request.body);
-  
-    persons = persons.concat(person);
-    response.json(person);
+  const person = new Phonebook({
+    name: body.name,
+    phonenumber: body.phonenumber,
   });
-  
 
-  /*Information of count of persons and local time*/
-  app.get('/info', (req, res) => {
-    const personCount = persons.length;
-    const currentTime = new Date().toString();
-  
-    res.send(`
-      <p>Phonebook has info for ${personCount} people</p>
-      <p>${currentTime}</p>
-    `);
-  });
-  
 
-  // const PORT = 3001
-  const PORT = process.env.PORT || 3001
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-  })
+  person
+    .save()
+    .then((savedPerson) => {
+      console.log(`Added ${savedPerson.name} number ${savedPerson.phonenumber} to phonebook.`);
+      res.json(savedPerson);
+    })
+    .catch((error) => {
+      console.error('Error saving data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+app.get('/info', (req, res) => {
+  Phonebook.countDocuments({})
+    .then((personCount) => {
+      const currentTime = new Date().toString();
+      res.send(`
+        <p>Phonebook has info for ${personCount} people</p>
+        <p>${currentTime}</p>
+      `);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
