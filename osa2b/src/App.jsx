@@ -6,6 +6,7 @@ import './styles.css';
 import numberService from './services/numberService';
 import Notification from './components/Notification';
 import ConfirmationDialog from './components/ConfirmationDialog';
+import ErrorMessage from './components/errorMessage';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -40,7 +41,7 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     const existingPerson = persons.find((person) => person.name === newName);
-
+  
     if (existingPerson) {
       setPersonToUpdate(existingPerson);
       setNewPhoneNumber(existingPerson.phonenumber); // Update phone number
@@ -48,20 +49,27 @@ const App = () => {
       setShowConfirmationDialog(true);
     } else {
       const newPerson = { name: newName, phonenumber: newPhoneNumber };
+          // Check if the name is at least 3 characters long
+        if (newPerson.name.length < 3) {
+          setErrorMessage('Name must be at least 3 characters long');
+          return; // Exit early if the name is invalid
+        }
       numberService.create(newPerson)
         .then((response) => {
           setPersons([...persons, response]);
           setNewName('');
-          setErrorMessage('');
+          setErrorMessage(''); // Clear any previous error message
           setFilteredList([...filteredList, response]);
           showNotification(`${newName} added to the list with phonenumer: ${newPhoneNumber}`);
           setNewPhoneNumber(''); // Clear phone number after showing the notification
         })
         .catch((error) => {
           console.error('Error saving data:', error);
+          setErrorMessage(error.message); // Set error message from the rejected promise
         });
     }
   };
+  
 
   const handleConfirm = () => {
     setShowConfirmationDialog(false);
@@ -173,6 +181,7 @@ const App = () => {
         </div>
       </form>
       <Notification message={notification} />
+      
 
       {showConfirmationDialog && (
         <ConfirmationDialog
@@ -191,6 +200,7 @@ const App = () => {
       )}
 
       {errorMessage && <div className="error">{errorMessage}</div>}
+
       <div className="filtered-list">
         <Persons filteredList={filteredList} handleDelete={handleDelete} />
       </div>
