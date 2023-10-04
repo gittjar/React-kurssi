@@ -49,18 +49,28 @@ const App = () => {
       setShowConfirmationDialog(true);
     } else {
       const newPerson = { name: newName, phonenumber: newPhoneNumber };
-          // Check if the name is at least 3 characters long
-        if (newPerson.name.length < 3) {
-          setErrorMessage('Name must be at least 3 characters long');
-          return; // Exit early if the name is invalid
-        }
-      numberService.create(newPerson)
+  
+      // Check if the name is at least 3 characters long
+      if (newPerson.name.length < 3) {
+        setErrorMessage('Name must be at least 3 characters long');
+        return; // Exit early if the name is invalid
+      }
+  
+      // Check if the phone number matches the accepted styles
+      const phoneRegex = /^(09|040|050|044|045)-\d{7,}$/;
+      if (!phoneRegex.test(newPerson.phonenumber)) {
+        setErrorMessage('Phone number must match the accepted styles: 09-1234556 or 040-22334455 for new person!');
+        return; // Exit early if the phone number is invalid
+      }
+      // Validate the phone number using the create function
+      numberService
+        .create(newPerson)
         .then((response) => {
           setPersons([...persons, response]);
           setNewName('');
           setErrorMessage(''); // Clear any previous error message
           setFilteredList([...filteredList, response]);
-          showNotification(`${newName} added to the list with phonenumer: ${newPhoneNumber}`);
+          showNotification(`${newName} added to the list with phone number: ${newPhoneNumber}`);
           setNewPhoneNumber(''); // Clear phone number after showing the notification
         })
         .catch((error) => {
@@ -69,6 +79,7 @@ const App = () => {
         });
     }
   };
+  
   
 
   const handleConfirm = () => {
