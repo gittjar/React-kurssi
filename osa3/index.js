@@ -27,7 +27,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
-  console.log('Connected to MongoDB');
+  console.log('Connection to MongoDB is open...');
 });
 
 // GET persons
@@ -128,12 +128,15 @@ app.get('/info', (req, res) => {
     .then((personCount) => {
       const currentTime = new Date().toString();
       res.send(`
-        <p>Phonebook has info for ${personCount} people</p>
-        <p>${currentTime}</p>
+        <div style="background-color: navy; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h2 style="color: fuchsia;">Phonebook has info for ${personCount} people</h2>
+          <span style="font-size: 1.4rem; color: green; background-color: black;">Today is: ${currentTime}</span>
+        </div>
       `);
     })
     .catch((error) => next(error));
 });
+
 
 // Define a middleware to handle unknown endpoints
 app.use((req, res) => {
