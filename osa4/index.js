@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
+
 const blogsRouter = require('./routes/blogs');
 const Bloglist = require('./models/bloglist');
 
