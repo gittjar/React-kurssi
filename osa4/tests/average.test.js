@@ -1,13 +1,14 @@
 const listHelper = require('../utils/list_helper')
 
-test('dummy returns one', () => {
-  const blogs = []
+describe('List Helper', () => {
+    test('dummy returns one', () => {
+      const blogs = []
+  
+      const result = listHelper.dummy(blogs)
+      expect(result).toBe(1)
+    })
 
-  const result = listHelper.dummy(blogs)
-  expect(result).toBe(1)
-})
-
-describe('total likes', () => {
+describe('Total likes test', () => {
     const listWithOneBlog = [
       {
         _id: '5a422aa71b54a676234d17f8',
@@ -68,8 +69,17 @@ describe('total likes', () => {
     ]
   
     test('when list has only one blog equals the likes of that', () => {
-      const result = listHelper.totalLikes(listWithOneBlog)
-      expect(result).toBe(41)
-      // calculated toBe value 41 total of likes.
-    })
-  })
+        const result = listHelper.totalLikes(listWithOneBlog)
+        expect(result).toBe(41)
+      })
+
+    test('most likes', () => {
+        const result = listHelper.mostLikes(listWithOneBlog);
+        expect(result).toEqual({
+          title: "Canonical string reduction",
+          author: "Edsger W. Dijkstra",
+          likes: 12,
+    })  
+})
+})
+})
