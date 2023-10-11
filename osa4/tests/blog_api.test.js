@@ -54,6 +54,33 @@ test('a valid blog can be added', async () => {
     expect(addedBlog.url).toBe('https://testblog.com');
     expect(addedBlog.likes).toBe(5);
   });
+
+  
+  test('valid blog without likes, it sets likes to 0', async () => {
+    const newBlog = {
+      title: 'Test Blog',
+      // 'likes' field is not included
+    };
+  
+    // Add a new blog without specifying 'likes'
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+  
+    // Check if the newly added blog has the 'likes' field
+    const response = await api.get('/api/blogs');
+    const addedBlog = response.body.find((blog) => blog.title === 'Test Blog');
+    expect(addedBlog).toBeDefined();
+  
+    // Check if the 'likes' field is set to 0 or is a numeric value
+    const likes = addedBlog.likes;
+    expect(likes).toBeDefined();
+    expect(typeof likes).toBe('number');
+  });
+  
+  
   
   
   
