@@ -14,7 +14,16 @@ describe('Blog API tests', () => {
       .expect('Content-Type', /application\/json/);
   });
 
-  // Add more test cases as needed for your API routes
+  test('blogs have an "id" property', async () => {
+    const response = await api.get('/api/blogs');
+    const blogs = response.body;
+  
+    blogs.forEach((blog) => {
+      expect(blog.id).toBeDefined();
+    });
+  });
+
+
 });
 
 afterAll(async () => {
