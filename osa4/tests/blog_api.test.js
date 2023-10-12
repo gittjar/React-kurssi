@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const bloglist = require('../models/bloglist');
 
 const api = supertest(app);
 
@@ -78,6 +79,18 @@ test('a valid blog can be added', async () => {
     const likes = addedBlog.likes;
     expect(likes).toBeDefined();
     expect(typeof likes).toBe('number');
+  });
+  
+  test('deleting a blog by ID', async () => {
+    const blogsAtStart = await bloglist.find({});
+    const blogToDelete = blogsAtStart[0];
+  
+    const response = await api
+      .delete(`/api/blogs/${blogToDelete._id}`)
+      .expect(204);
+  
+    const blogsAtEnd = await bloglist.find({});
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
   });
   
   
