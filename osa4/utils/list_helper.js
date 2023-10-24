@@ -1,3 +1,5 @@
+const User = require('../models/user')
+
 const dummy = () => {
     return 1; // Return a fixed value of 1, as this is what the test expects
   }
@@ -26,10 +28,17 @@ const mostLikes = (blogs) => {
     };
   };
   
+  const usersInDb = async () => {
+    const users = await User.find({}).lean()
+    return users
+  }
+
+
   module.exports = {
     dummy,
     totalLikes,
-    mostLikes
+    mostLikes,
+    usersInDb
   }
   
   
