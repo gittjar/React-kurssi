@@ -3,6 +3,9 @@ const supertest = require('supertest');
 const app = require('../app');
 const bloglist = require('../models/bloglist');
 
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+
 const api = supertest(app);
 
 // Define your test cases
@@ -92,7 +95,8 @@ test('a valid blog can be added', async () => {
     const blogsAtEnd = await bloglist.find({});
     expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
   });
-  
+  // TEST User below ...
+
   
   
   

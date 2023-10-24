@@ -1,17 +1,18 @@
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
-
-const blogsRouter = require('./routes/blogs');
-const Bloglist = require('./models/bloglist');
-
+const usersRouter = require('./controllers/users'); // Import the usersRouter function
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const blogsRouter = require('./routes/blogs');
+const Bloglist = require('./models/bloglist');
+const loginRouter = require('./controllers/login');
 
 // Connect to MongoDB
 const url = process.env.MONGODB_URI;
@@ -19,17 +20,20 @@ logger.info('Connecting to MongoDB...');
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    logger.info('Connected to MongoDB success!');
+    logger.info('Connected to MongoDB successfully!');
   })
   .catch((error) => {
     logger.error('Error connecting to MongoDB:', error.message);
   });
 
 // Routes
+usersRouter(app); // Pass the express app instance
+app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
+app.use('/api/users', usersRouter); // Prefix user-related routes with '/api/users'
 
+// Info route
 const startTime = new Date();
-
 app.get('/info', async (req, res) => {
   try {
     const blogCount = await Bloglist.countDocuments({});

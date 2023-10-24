@@ -1,6 +1,10 @@
 const express = require('express');
 const blogsRouter = express.Router();
 const Bloglist = require('../models/bloglist');
+const User = require('../models/user'); // Import the User model
+
+
+
 
 // GET all blogs
 blogsRouter.get('/', async (request, response) => {
@@ -31,16 +35,41 @@ blogsRouter.get('/:id', async (request, response) => {
 
 // POST a new blog
 blogsRouter.post('/', async (request, response) => {
-  const blog = new Bloglist(request.body);
+  const body = request.body;
 
-  try {
-    const savedBlog = await blog.save();
-    response.status(201).json(savedBlog);
-  } catch (error) {
-    console.error('Error saving data:', error);
-    response.status(500).json({ error: 'Internal Server Error' });
-  }
+  // Find the user based on the provided user ID
+// Assuming you have already parsed the request body into 'body'
+
+// Find the user by their username
+const user = await User.findOne({ username: body.username });
+
+if (!user) {
+  return response.status(404).json({ error: 'User not found' });
+}
+// Create the new blog post associated with the user
+const blog = new Bloglist({
+  title: body.title,
+  author: body.author,
+  url: body.url,
+  likes: body.likes,
+  user: user._id,
 });
+
+try {
+  const savedBlog = await blog.save();
+  
+  // Update the user's blogs array with the new blog's ID
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
+
+  response.status(201).json(savedBlog);
+} catch (error) {
+  console.error('Error saving data:', error);
+  response.status(500).json({ error: 'Internal Server Error' });
+}
+
+});
+
 
 // DELETE a blog by ID
 blogsRouter.delete('/:id', async (request, response) => {
