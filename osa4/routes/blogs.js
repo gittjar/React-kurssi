@@ -6,10 +6,10 @@ const User = require('../models/user'); // Import the User model
 
 
 
-// GET all blogs
+// GET all blogs (populate)
 blogsRouter.get('/', async (request, response) => {
   try {
-    const blogs = await Bloglist.find({});
+    const blogs = await Bloglist.find({}).populate('user', 'username name');
     response.json(blogs);
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -34,41 +34,42 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 // POST a new blog
+// POST a new blog
 blogsRouter.post('/', async (request, response) => {
   const body = request.body;
 
-  // Find the user based on the provided user ID
-// Assuming you have already parsed the request body into 'body'
+  // Find a random user in your database
+  const users = await User.find({});
+  if (users.length === 0) {
+    return response.status(404).json({ error: 'No users found' });
+  }
 
-// Find the user by their username
-const user = await User.findOne({ username: body.username });
+  const randomUser = users[Math.floor(Math.random() * users.length)];
 
-if (!user) {
-  return response.status(404).json({ error: 'User not found' });
-}
-// Create the new blog post associated with the user
-const blog = new Bloglist({
-  title: body.title,
-  author: body.author,
-  url: body.url,
-  likes: body.likes,
-  user: user._id,
+  // Create the new blog post associated with the random user
+  const blog = new Bloglist({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+    user: randomUser._id, // Associate the random user with the blog
+  });
+
+  try {
+    const savedBlog = await blog.save();
+
+    // Update the random user's blogs array with the new blog's ID
+    randomUser.blogs = randomUser.blogs.concat(savedBlog._id);
+    await randomUser.save();
+
+    response.status(201).json(savedBlog);
+  } catch (error) {
+    console.error('Error saving data:', error);
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-try {
-  const savedBlog = await blog.save();
-  
-  // Update the user's blogs array with the new blog's ID
-  user.blogs = user.blogs.concat(savedBlog._id);
-  await user.save();
 
-  response.status(201).json(savedBlog);
-} catch (error) {
-  console.error('Error saving data:', error);
-  response.status(500).json({ error: 'Internal Server Error' });
-}
-
-});
 
 
 // DELETE a blog by ID
