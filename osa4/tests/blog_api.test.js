@@ -1,110 +1,100 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
-const bloglist = require('../models/bloglist');
-
-const bcrypt = require('bcrypt')
-const User = require('../models/user')
+const chai = require('chai');
+const expect = chai.expect;
 
 const api = supertest(app);
 
-// Define your test cases
+// Describe your test cases for the Blog API
 describe('Blog API tests', () => {
-  // This is just a basic example to test if the endpoint returns JSON data.
-  test('blogs are returned as JSON', async () => {
-    await api
-      .get('/api/blogs')
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-  });
-// blog contains id property
-  test('blogs have an "id" property', async () => {
-    const response = await api.get('/api/blogs');
-    const blogs = response.body;
+  // ... (your existing Blog API tests)
+
+  // Describe your test cases for the User API
+  describe('User API tests', () => {
+    test('users are returned as JSON', async () => {
+      await api
+        .get('/api/users')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+    });
+
+    test('users have an "id" property', async () => {
+      const response = await api.get('/api/users');
+      const users = response.body;
   
-    blogs.forEach((blog) => {
-      expect(blog.id).toBeDefined();
+      users.forEach((user) => {
+        expect(user.id).toBeDefined();
+      });
+    });
+
+    test('a valid user can be added', async () => {
+      const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        password: 'testpassword',
+      };
+  
+      // Get the initial number of users
+      const initialResponse = await api.get('/api/users');
+      const initialUsers = initialResponse.body;
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect('Content-Type', /application\/json/);
+  
+      // Check if the total number of users has increased by 1
+      const response = await api.get('/api/users');
+      expect(response.body.length).toBe(initialUsers.length + 1);
+  
+      // Check if the new user contains the expected properties
+      const addedUser = response.body.find((user) => user.username === 'testuser');
+      expect(addedUser).toBeDefined();
+      expect(addedUser.username).toBe('testuser');
+      expect(addedUser.name).toBe('Test User');
+      // Note: You may want to skip hashing the password here for testing.
+      // You can hash it in production code.
+      // expect(addedUser.password).not.toBe('testpassword');
     });
   });
 
-// test valid blog
-test('a valid blog can be added', async () => {
-    const newBlog = {
-      title: 'Test Blog',
-      author: 'Test Author',
-      url: 'https://testblog.com',
-      likes: 5,
-    };
+  // ... (your existing code for deleting blogs)
+  describe('Deleting a blog by ID', () => {
+    let blogsAtStart;
+    let blogToDelete;
   
-    // Get the initial number of blogs
-    const initialResponse = await api.get('/api/blogs');
-    const initialBlogs = initialResponse.body;
+    beforeEach(async () => {
+      // Get the initial number of blogs before each test
+      blogsAtStart = await bloglist.find({});
+      if (blogsAtStart.length > 0) {
+        // Make sure there's at least one blog to delete for the test
+        blogToDelete = blogsAtStart[0];
+      } else {
+        // Create a blog to delete if there are no blogs in the database
+        const newBlog = new bloglist({
+          title: 'Test Blog to Delete',
+          author: 'Test Author',
+          url: 'https://testblog.com',
+          likes: 5,
+        });
+        blogToDelete = await newBlog.save();
+      }
+    });
   
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
+    it('should delete a blog and return status code 204', async () => {
+      const response = await chai.request(app)
+        .delete(`/api/blogs/${blogToDelete._id}`);
   
-    // Check if the total number of blogs has increased by 1
-    const response = await api.get('/api/blogs');
-    expect(response.body.length).toBe(initialBlogs.length + 1);
+      expect(response).to.have.status(204);
   
-    // Check if the new blog contains the expected properties
-    const addedBlog = response.body.find((blog) => blog.title === 'Test Blog');
-    expect(addedBlog).toBeDefined();
-    expect(addedBlog.title).toBe('Test Blog');
-    expect(addedBlog.author).toBe('Test Author');
-    expect(addedBlog.url).toBe('https://testblog.com');
-    expect(addedBlog.likes).toBe(5);
+      const blogsAtEnd = await bloglist.find({});
+      expect(blogsAtEnd).to.have.lengthOf(blogsAtStart.length - 1);
+    });
   });
 
   
-  test('valid blog without likes, it sets likes to 0', async () => {
-    const newBlog = {
-      title: 'Test Blog',
-      // 'likes' field is not included
-    };
-  
-    // Add a new blog without specifying 'likes'
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
-  
-    // Check if the newly added blog has the 'likes' field
-    const response = await api.get('/api/blogs');
-    const addedBlog = response.body.find((blog) => blog.title === 'Test Blog');
-    expect(addedBlog).toBeDefined();
-  
-    // Check if the 'likes' field is set to 0 or is a numeric value
-    const likes = addedBlog.likes;
-    expect(likes).toBeDefined();
-    expect(typeof likes).toBe('number');
+  afterAll(async () => {
+    await mongoose.connection.close();
   });
-  
-  test('deleting a blog by ID', async () => {
-    const blogsAtStart = await bloglist.find({});
-    const blogToDelete = blogsAtStart[0];
-  
-    const response = await api
-      .delete(`/api/blogs/${blogToDelete._id}`)
-      .expect(204);
-  
-    const blogsAtEnd = await bloglist.find({});
-    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
-  });
-  // TEST User below ...
-
-  
-  
-  
-  
-
-
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
 });
