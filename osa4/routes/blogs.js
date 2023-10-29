@@ -2,9 +2,7 @@ const express = require('express');
 const blogsRouter = express.Router();
 const Bloglist = require('../models/bloglist');
 const User = require('../models/user'); // Import the User model
-
-
-
+const verifyToken = require('../middleware/middleware');
 
 // GET all blogs (populate)
 blogsRouter.get('/', async (request, response) => {
@@ -35,7 +33,7 @@ blogsRouter.get('/:id', async (request, response) => {
 
 // POST a new blog
 // POST a new blog
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', verifyToken ,async (request, response) => {
   const body = request.body;
 
   // Find a random user in your database
