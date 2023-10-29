@@ -1,7 +1,7 @@
 const express = require('express');
 const blogsRouter = express.Router();
 const Bloglist = require('../models/bloglist');
-const User = require('../models/user'); // Import the User model
+const User = require('../models/user');
 const verifyToken = require('../middleware/middleware');
 
 // GET all blogs (populate)
@@ -66,8 +66,6 @@ blogsRouter.post('/', verifyToken ,async (request, response) => {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 
 // DELETE a blog by ID

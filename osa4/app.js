@@ -5,15 +5,16 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
 const usersRouter = require('./controllers/users');
-const middleware = require('./middleware/middleware');
 const blogsRouter = require('./routes/blogs'); // Lisätään blogsRouter
 const Bloglist = require('./models/bloglist');
 const loginRouter = require('./controllers/login');
+const middleware = require('./middleware/middleware');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(middleware);
+app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter); // Prefix user-related routes with '/api/users'
 app.use('/api/blogs', blogsRouter); // Käytetään määriteltyä blogsRouteria
 
