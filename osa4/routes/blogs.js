@@ -4,13 +4,16 @@ const Bloglist = require('../models/bloglist');
 const User = require('../models/user');
 const verifyToken = require('../middleware/middleware');
 
-// GET all blogs (populate)
-blogsRouter.get('/', async (request, response) => {
+// GET blogs for the authenticated user
+// http://localhost:3003/api/blogs/user/blogs
+blogsRouter.get('/user/blogs', verifyToken, async (request, response) => {
   try {
-    const blogs = await Bloglist.find({}).populate('user', 'username name');
-    response.json(blogs);
+    const user = request.user; // The user data from the token
+
+    const userBlogs = await Bloglist.find({ user: user.id }).populate('user', 'username name');
+    response.json(userBlogs);
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching user blogs:', error);
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
