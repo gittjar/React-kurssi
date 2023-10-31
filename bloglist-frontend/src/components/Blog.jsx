@@ -1,15 +1,16 @@
-import blogs from "../services/blogs"
+import React from 'react';
 
 const Blog = ({ blog, toggleImportance }) => {
   const label = blog.important
-    ? 'make not important' : 'make important'
+    ? 'make not important'
+    : 'make important';
 
   return (
     <li className='blog'>
-      {blogs.author} 
+      {blog.author} {/* Näytä kirjoittajan nimi */}
       <button onClick={toggleImportance}>{label}</button>
     </li>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;

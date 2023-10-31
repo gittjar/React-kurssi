@@ -70,7 +70,6 @@ const App = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Lisää token otsikkoon
           'Authorization': `${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({ username, password }),
@@ -79,11 +78,14 @@ const App = () => {
       if (response.ok) {
         const data = await response.json();
         const token = data.token;
-        localStorage.setItem('token', token); // Tallenna uusi token
+        localStorage.setItem('token', token);
   
-        setUser(data); // Aseta kirjautunut käyttäjä
-        setUsername(''); // Tyhjennä käyttäjänimi-kenttä
-        setPassword(''); // Tyhjennä salasana-kenttä
+        await blogService.setToken(token); // Lisätty await tässä
+  
+        setUser(data);
+        setUsername('');
+        setPassword('');
+        setLoggedIn(true);
       } else {
         setError('Authentication failed. Please check your credentials.');
       }
@@ -92,6 +94,7 @@ const App = () => {
       setError('An error occurred during login.');
     }
   };
+  
 
   const loginForm = () => {
     return (

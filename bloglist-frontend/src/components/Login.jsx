@@ -28,6 +28,10 @@ function Login() {
         // Store the token in localStorage
         localStorage.setItem('token', token);
 
+        setUser(data); // Aseta kirjautunut käyttäjä
+        setUsername(''); // Tyhjennä käyttäjänimi-kenttä
+        setPassword(''); // Tyhjennä salasana-kenttä
+
         // Set the loggedIn state to true
         setLoggedIn(true);
       } else {
