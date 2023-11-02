@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 function UserBlogs() {
   const [userBlogs, setUserBlogs] = useState([]);
   const [error, setError] = useState(null);
-  const user = JSON.parse(localStorage.getItem('loggedBlogAppUser')); // Hae käyttäjä localStoragesta
 
   useEffect(() => {
     // Fetch the user's blogs after successful login
     const token = localStorage.getItem('token');
-    if (!user) {
+    if (!token) {
+      // Handle the case where the user is not authenticated
       setError('Authentication required');
       return;
     }
@@ -17,25 +17,27 @@ function UserBlogs() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${token}`,
+        'Authorization': `${token}`, // Lisää Authorization-token
       },
     };
 
     fetch('http://localhost:3003/api/blogs/user/blogs', requestOptions)
-      .then(async (response) => {
+      .then((response) => {
         if (response.ok) {
-          const data = await response.json();
-          setUserBlogs(data);
+          return response.json();
         } else {
           throw new Error('Failed to fetch user blogs');
         }
       })
+      .then((data) => {
+        setUserBlogs(data);
+      })
       .catch((error) => {
         setError('Error fetching user blogs: ' + error.message);
       });
-  }, [user]);
+  }, []);
 
-  if (!user) {
+  if (error) {
     return <p style={{ color: 'red' }}>{error}</p>;
   }
 
@@ -45,7 +47,9 @@ function UserBlogs() {
       <ul>
         {userBlogs.map((blog) => (
           <li key={blog.id}>
+
             <a href={blog.url}>{blog.title}</a> by {blog.author}
+           
           </li>
         ))}
       </ul>

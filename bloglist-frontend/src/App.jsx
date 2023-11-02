@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
-import blogService from './services/blogs';
+import UserBlogs from './components/UserBlogs';
 import loginService from './services/login';
+import blogService from './services/blogs';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -29,63 +30,48 @@ const App = () => {
   }, []);
 
   const handleLogout = () => {
-    // Poista token ja käyttäjä liittyvät tiedot local storagesta
-    localStorage.removeItem('token');
+    localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
   };
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault();
-    const blogObject = {
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-    };
-
-    blogService.create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog));
-        setNewBlog({ title: '', author: '', url: '' });
-      })
-      .catch(error => {
-        setErrorMessage('Error adding a new blog');
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
-  };
-
-  const handleBlogChange = (event) => {
-    const { name, value } = event.target;
-    setNewBlog({
-      ...newBlog,
-      [name]: value
-    });
+    try {
+      const returnedBlog = await blogService.create(newBlog);
+      setBlogs(blogs.concat(returnedBlog));
+      setNewBlog({ title: '', author: '', url: '' });
+    } catch (error) {
+      setErrorMessage('Error adding a new blog');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
+
     try {
       const response = await fetch('http://localhost:3003/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${localStorage.getItem('token')}`,
+          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvZCIsImlkIjoiNjUzZTVjN2MxYWZhZTU2YjcwNmQyZDk0IiwiaWF0IjoxNjk4OTM4NzEyfQ.dGyEMEbidxien3s4ZC12BTSVbEedD7EbfuBtdzns7v0'
         },
         body: JSON.stringify({ username, password }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-        const token = data.token;
-        localStorage.setItem('token', token);
-  
-        await blogService.setToken(token); // Lisätty await tässä
-  
-        setUser(data);
-        setUsername('');
+        console.log('Received Token:', data.token);
+        localStorage.setItem('token', data.token);
+        console.log('Stored Token:', localStorage.getItem('token'));
+        const token = response.token;
+        localStorage.setItem('loggedBlogAppUser', JSON.stringify(response));
+        blogService.setToken(token);
+        setUser(response);
+        setUsername(data.name); // Set the username
         setPassword('');
-        setLoggedIn(true);
       } else {
         setError('Authentication failed. Please check your credentials.');
       }
@@ -94,7 +80,6 @@ const App = () => {
       setError('An error occurred during login.');
     }
   };
-  
 
   const loginForm = () => {
     return (
@@ -157,6 +142,14 @@ const App = () => {
     );
   };
 
+  const handleBlogChange = (event) => {
+    const { name, value } = event.target;
+    setNewBlog({
+      ...newBlog,
+      [name]: value
+    });
+  };
+
   const blogsToShow = showAll ? blogs : blogs.filter(blog => blog.important);
 
   return (
@@ -164,14 +157,15 @@ const App = () => {
       <h1>Blogs</h1>
 
       {user ? (
-      <div>
-        <p>{user.name} logged in</p>
-        <button onClick={handleLogout}>Logout</button>
-        {blogForm()}
-      </div>
-    ) : (
-      loginForm()
-    )}
+  <div>
+    <p>Welcome, {username}! You are now logged in.</p>
+    <button onClick={handleLogout}>Logout</button>
+    {blogForm()}
+    <UserBlogs />
+  </div>
+) : (
+  loginForm()
+)}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
@@ -179,10 +173,10 @@ const App = () => {
         </button>
       </div>
       <ul>
-        {blogsToShow.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </ul>
+  {blogsToShow.map(blog => (
+    <Blog key={blog.id} blog={blog} />
+  ))}
+</ul>
     </div>
   );
 };

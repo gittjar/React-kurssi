@@ -10,8 +10,8 @@ function Login() {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    // Send a POST request to your server for authentication
     try {
+      // Send a POST request to your server for authentication
       const response = await fetch('http://localhost:3003/api/login', {
         method: 'POST',
         headers: {
@@ -27,10 +27,6 @@ function Login() {
 
         // Store the token in localStorage
         localStorage.setItem('token', token);
-
-        setUser(data); // Aseta kirjautunut käyttäjä
-        setUsername(''); // Tyhjennä käyttäjänimi-kenttä
-        setPassword(''); // Tyhjennä salasana-kenttä
 
         // Set the loggedIn state to true
         setLoggedIn(true);
