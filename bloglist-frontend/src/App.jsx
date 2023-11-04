@@ -3,6 +3,7 @@ import Blog from './components/Blog';
 import UserBlogs from './components/UserBlogs';
 import loginService from './services/login';
 import blogService from './services/blogs';
+import './styles.css'; // Import the styles.css file
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -111,7 +112,7 @@ const App = () => {
     return (
       <form onSubmit={addBlog}>
         <div>
-          Title
+          Title<br/>
           <input
             type="text"
             name="title"
@@ -120,7 +121,7 @@ const App = () => {
           />
         </div>
         <div>
-          Author
+          Author<br/>
           <input
             type="text"
             name="author"
@@ -129,7 +130,7 @@ const App = () => {
           />
         </div>
         <div>
-          URL
+          URL<br/>
           <input
             type="text"
             name="url"
@@ -153,7 +154,8 @@ const App = () => {
   const blogsToShow = showAll ? blogs : blogs.filter(blog => blog.important);
 
   return (
-    <div>
+  
+    <div className='main'>
       <h1>Blogs</h1>
 
       {user ? (
