@@ -4,6 +4,7 @@ import UserBlogs from './components/UserBlogs';
 import loginService from './services/login';
 import blogService from './services/blogs';
 import './styles.css'; // Import the styles.css file
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -35,6 +36,8 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
+    setUsername(''); // Set the username 0
+    setPassword('');
   };
 
   const addBlog = async (event) => {
@@ -183,37 +186,39 @@ const App = () => {
   const blogsToShow = showAll ? blogs : blogs.filter(blog => blog.important);
 
   return (
-  
     <div className='main'>
       <h1>Blogs</h1>
-
       {user ? (
-  <div>
-    <p>Welcome, {username}! You are now logged in.</p>
-    <button onClick={handleLogout}>Logout</button>
-    {blogForm()}
-    <UserBlogs />
-  </div>
-) : (
-  loginForm()
-)}
-
-     {/* Notifications */}
-     {successMessage && <div className="success-notification">{successMessage}</div>}
+        <div>
+          <p>Welcome, {username}! You are now logged in.</p>
+          <button onClick={handleLogout}>Logout</button>
+          {blogForm()}
+          <ul>
+            {blogsToShow.map(blog => (
+              <Blog key={blog.id} blog={blog} />
+            ))}
+          </ul>
+        </div>
+      ) : (
+        loginForm()
+      )}
+  
+      {/* Notifications */}
+      {successMessage && <div className="success-notification">{successMessage}</div>}
       {failureMessage && <div className="failure-notification">{failureMessage}</div>}
-
+  
       <div>
         <button onClick={() => setShowAll(!showAll)}>
-          Show {showAll ? 'important' : 'all'}
+          Jotakin tekstiä: {showAll ? 'Moikka' : 'Heippa'}
         </button>
       </div>
-      <ul>
-  {blogsToShow.map(blog => (
-    <Blog key={blog.id} blog={blog} />
-  ))}
-</ul>
+  
+      {user && (
+        <Togglable buttonLabel='Load Blogs'>
+          <UserBlogs />
+        </Togglable>
+      )}
     </div>
   );
-};
-
+      };
 export default App;
