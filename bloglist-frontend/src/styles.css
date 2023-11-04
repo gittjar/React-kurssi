@@ -40,3 +40,25 @@ button:hover {
   background-color: rgb(179, 0, 167); /* Change to your desired hover color */
   transform: scale(1.05); /* Add a slight scale effect on hover */
 }
+
+/* Style for success notifications */
+.success-notification {
+    background-color: #4CAF50; /* Green background color */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: opacity 0.5s;
+  }
+  
+  /* Style for failure notifications */
+  .failure-notification {
+    background-color: #FF5252; /* Red background color */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: opacity 0.5s;
+  }

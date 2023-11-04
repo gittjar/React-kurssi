@@ -14,6 +14,8 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [failureMessage, setFailureMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -41,11 +43,15 @@ const App = () => {
       const returnedBlog = await blogService.create(newBlog);
       setBlogs(blogs.concat(returnedBlog));
       setNewBlog({ title: '', author: '', url: '' });
+      showSuccessMessage('Blog added successfully.'); // Näytä onnistunut ilmoitus
+
     } catch (error) {
       setErrorMessage('Error adding a new blog');
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
+      showFailureMessage('Failed to add a blog.'); // Näytä epäonnistunut ilmoitus
+
     }
   };
 
@@ -73,12 +79,17 @@ const App = () => {
         setUser(response);
         setUsername(data.name); // Set the username
         setPassword('');
+        showSuccessMessage('Login successful.'); // Näytä onnistunut ilmoitus
       } else {
         setError('Authentication failed. Please check your credentials.');
+        showFailureMessage('Login failed.'); // Näytä epäonnistunut ilmoitus
+
       }
     } catch (error) {
       console.error('Error during login:', error);
       setError('An error occurred during login.');
+      showFailureMessage('Login failed.'); // Näytä epäonnistunut ilmoitus
+
     }
   };
 
@@ -151,6 +162,24 @@ const App = () => {
     });
   };
 
+    // Lisää funktio onnistuneen ilmoituksen näyttämiseksi
+    const showSuccessMessage = (message) => {
+      setSuccessMessage(message);
+  
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000); // Piilota ilmoitus 5 sekunnin kuluttua
+    };
+  
+    // Lisää funktio epäonnistuneen ilmoituksen näyttämiseksi
+    const showFailureMessage = (message) => {
+      setFailureMessage(message);
+  
+      setTimeout(() => {
+        setFailureMessage(null);
+      }, 5000); // Piilota ilmoitus 5 sekunnin kuluttua
+    };
+
   const blogsToShow = showAll ? blogs : blogs.filter(blog => blog.important);
 
   return (
@@ -168,6 +197,10 @@ const App = () => {
 ) : (
   loginForm()
 )}
+
+     {/* Notifications */}
+     {successMessage && <div className="success-notification">{successMessage}</div>}
+      {failureMessage && <div className="failure-notification">{failureMessage}</div>}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
