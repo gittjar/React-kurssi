@@ -9,16 +9,16 @@ const blogsRouter = require('./routes/blogs'); // Lisätään blogsRouter
 const Bloglist = require('./models/bloglist');
 const loginRouter = require('./controllers/login');
 const middleware = require('./middleware/middleware');
+const jwt = require('jsonwebtoken'); // Import the jsonwebtoken library
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(middleware);
+
 app.use('/api/login', loginRouter);
 app.use('/api/users', usersRouter); // Prefix user-related routes with '/api/users'
 app.use('/api/blogs', blogsRouter); // Käytetään määriteltyä blogsRouteria
-
-
 
 // Connect to MongoDB
 const url = process.env.MONGODB_URI;
@@ -37,6 +37,23 @@ usersRouter(app); // Pass the express app instance
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter); // Prefix user-related routes with '/api/users'
+
+// JWT Token Verification Middleware
+app.use((req, res, next) => {
+  const token = req.get('authorization'); // Get token from the header
+  if (!token) {
+    return res.status(401).json({ error: 'Token missing' });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    req.user = decodedToken; // Add decoded token data to the request
+    next();
+  } catch (error) {
+    console.error('Token Verification Error:', error);
+    return res.status(401).json({ error: 'Token invalid' });
+  }
+});
 
 // Info route
 const startTime = new Date();

@@ -35,7 +35,7 @@ blogsRouter.get('/:id', async (request, response) => {
 });
 
 // POST a new blog
-// POST a new blog
+// POST a new blog by the authenticated user
 blogsRouter.post('/', verifyToken ,async (request, response) => {
   const body = request.body;
 
@@ -69,6 +69,12 @@ blogsRouter.post('/', verifyToken ,async (request, response) => {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+
+
 
 
 // DELETE a blog by ID
