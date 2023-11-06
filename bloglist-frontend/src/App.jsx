@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import UserBlogs from './components/UserBlogs';
-import loginService from './services/login';
+import LoginForm from './components/LoginForm';
 import blogService from './services/blogs';
 import './styles.css'; // Import the styles.css file
 import Togglable from './components/Togglable';
+import BlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -58,6 +59,8 @@ const App = () => {
     }
   };
 
+ const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvZCIsImlkIjoiNjUzZTVjN2MxYWZhZTU2YjcwNmQyZDk0IiwiaWF0IjoxNjk4OTM4NzEyfQ.dGyEMEbidxien3s4ZC12BTSVbEedD7EbfuBtdzns7v0';
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -66,8 +69,9 @@ const App = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvZCIsImlkIjoiNjUzZTVjN2MxYWZhZTU2YjcwNmQyZDk0IiwiaWF0IjoxNjk4OTM4NzEyfQ.dGyEMEbidxien3s4ZC12BTSVbEedD7EbfuBtdzns7v0'
-        },
+        //  'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvZCIsImlkIjoiNjUzZTVjN2MxYWZhZTU2YjcwNmQyZDk0IiwiaWF0IjoxNjk4OTM4NzEyfQ.dGyEMEbidxien3s4ZC12BTSVbEedD7EbfuBtdzns7v0',
+        'Authorization': `${token}`
+      },
         body: JSON.stringify({ username, password }),
       });
 
@@ -96,67 +100,7 @@ const App = () => {
     }
   };
 
-  const loginForm = () => {
-    return (
-      <form onSubmit={handleLogin}>
-        <div>
-          Username
-          <input
-            type="text"
-            value={username}
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          Password
-          <input
-            type="password"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    );
-  };
-
-  const blogForm = () => {
-    return (
-      <form onSubmit={addBlog}>
-        <div>
-          Title<br/>
-          <input
-            type="text"
-            name="title"
-            value={newBlog.title}
-            onChange={handleBlogChange}
-          />
-        </div>
-        <div>
-          Author<br/>
-          <input
-            type="text"
-            name="author"
-            value={newBlog.author}
-            onChange={handleBlogChange}
-          />
-        </div>
-        <div>
-          URL<br/>
-          <input
-            type="text"
-            name="url"
-            value={newBlog.url}
-            onChange={handleBlogChange}
-          />
-        </div>
-        <button type="submit">Save</button>
-      </form>
-    );
-  };
-
+  
   const handleBlogChange = (event) => {
     const { name, value } = event.target;
     setNewBlog({
@@ -187,12 +131,20 @@ const App = () => {
 
   return (
     <div className='main'>
+         {/* Notifications */}
+        {successMessage && <div className="success-notification">{successMessage}</div>}
+      {failureMessage && <div className="failure-notification">{failureMessage}</div>}
+
       <h1>Blogs</h1>
       {user ? (
         <div>
           <p>Welcome, {username}! You are now logged in.</p>
           <button onClick={handleLogout}>Logout</button>
-          {blogForm()}
+          <BlogForm // Käytä BlogForm-komponenttia tässä
+            newBlog={newBlog}
+            handleBlogChange={handleBlogChange}
+            addBlog={addBlog}
+          />
           <ul>
             {blogsToShow.map(blog => (
               <Blog key={blog.id} blog={blog} />
@@ -200,12 +152,16 @@ const App = () => {
           </ul>
         </div>
       ) : (
-        loginForm()
+        <LoginForm
+        handleLogin={handleLogin}
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword}
+      />
       )}
   
-      {/* Notifications */}
-      {successMessage && <div className="success-notification">{successMessage}</div>}
-      {failureMessage && <div className="failure-notification">{failureMessage}</div>}
+   
   
       <div>
         <button onClick={() => setShowAll(!showAll)}>
