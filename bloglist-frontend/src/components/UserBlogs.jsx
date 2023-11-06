@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function UserBlogs() {
   const [userBlogs, setUserBlogs] = useState([]);
   const [error, setError] = useState(null);
+  const [showDetails, setShowDetails] = useState([]); // Initialize state for each blog
 
   useEffect(() => {
     // Fetch the user's blogs after successful login
@@ -17,7 +18,7 @@ function UserBlogs() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${token}`, // Lisää Authorization-token
+        'Authorization': `${token}`, // Add Authorization token
       },
     };
 
@@ -41,18 +42,35 @@ function UserBlogs() {
     return <p style={{ color: 'red' }}>{error}</p>;
   }
 
+  const toggleDetails = (index) => {
+    // Toggle the showDetails state for the specified blog index
+    const updatedShowDetails = [...showDetails];
+    updatedShowDetails[index] = !showDetails[index];
+    setShowDetails(updatedShowDetails);
+  };
+
   return (
     <div>
       <h2>User's Blogs</h2>
-      <ul>
-        {userBlogs.map((blog) => (
-          <li key={blog.id}>
-
-            <a href={blog.url}>{blog.title}</a> by {blog.author}
+      <div>
+        {userBlogs.map((blog, index) => (
+          
+          <div key={blog.id} className='blogibox'>
+            {blog.title}<br/>
+            <button onClick={() => toggleDetails(index)} className='showmore-button'>
+              {showDetails[index] ? 'Show Less' : 'Show More'}
+            </button>
            
-          </li>
+            {showDetails[index] && (
+              <div>
+                <a href={blog.url}>{blog.url}</a> <br />
+                likes: {blog.likes} <br />
+                by {blog.author}
+              </div>
+            )}
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
