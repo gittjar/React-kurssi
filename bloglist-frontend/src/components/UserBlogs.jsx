@@ -65,7 +65,10 @@ function UserBlogs() {
               <div>
                 <a href={blog.url}>{blog.url}</a> <br />
                 likes: {blog.likes} <br />
-                by {blog.author}
+                by {blog.author}<br/>
+                <span className='username'>
+                {blog.user.name}
+                </span>
               </div>
             )}
           </div>
