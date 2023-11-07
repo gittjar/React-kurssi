@@ -18,6 +18,8 @@ const App = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [failureMessage, setFailureMessage] = useState(null);
+  const [sortAsc, setSortAsc] = useState(true);
+
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -127,7 +129,24 @@ const App = () => {
       }, 5000); // Piilota ilmoitus 5 sekunnin kuluttua
     };
 
-  const blogsToShow = showAll ? blogs : blogs.filter(blog => blog.important);
+  // Function to toggle sorting order
+  const toggleSortingOrder = () => {
+    setSortAsc(!sortAsc);
+  };
+
+  // Sort blogs based on the selected sorting order
+  const sortedBlogs = [...blogs].sort((a, b) => {
+    if (sortAsc) {
+      return a.likes - b.likes; // Ascending order
+    } else {
+      return b.likes - a.likes; // Descending order
+    }
+  });
+
+
+  
+  const blogsToShow = showAll ? sortedBlogs : sortedBlogs.filter(blog => blog.important);
+  
 
   return (
     <div className='main'>
@@ -135,7 +154,11 @@ const App = () => {
         {successMessage && <div className="success-notification">{successMessage}</div>}
       {failureMessage && <div className="failure-notification">{failureMessage}</div>}
 
+
       <h1>Blogs</h1>
+
+    
+
       {user ? (
         <div>
           <p>Welcome, {username}! You are now logged in.</p>
@@ -145,6 +168,9 @@ const App = () => {
             handleBlogChange={handleBlogChange}
             addBlog={addBlog}
           />
+    <button onClick={toggleSortingOrder}>
+        Sort by Likes: {sortAsc ? 'Ascending' : 'Descending'}
+      </button>
           <ul>
             {blogsToShow.map(blog => (
               <Blog key={blog.id} blog={blog} />

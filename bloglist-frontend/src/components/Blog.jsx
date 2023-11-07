@@ -5,10 +5,12 @@ const Blog = ({ blog, toggleImportance }) => {
     ? 'make not important'
     : 'make important';
 
+
   return (
     <li className='blog'>
       {blog.author} {/* Näytä kirjoittajan nimi */}
       <button onClick={toggleImportance}>{label}</button>
+
     </li>
   );
 };
