@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const Togglable = ({ buttonLabel, children }) => {
+const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -8,15 +9,20 @@ const Togglable = ({ buttonLabel, children }) => {
   };
 
   return (
-    <div>
-      <button onClick={toggleVisibility}>{buttonLabel}</button>
+    <div ref={ref}>
+      <button onClick={toggleVisibility}>{props.buttonLabel}</button>
       {visible && (
         <div>
-          {children}
+          {props.children}
         </div>
       )}
     </div>
   );
+});
+
+Togglable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default Togglable;
