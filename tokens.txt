@@ -1,0 +1,24 @@
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImlwYWQiLCJpZCI6IjY1MzkyNDQ5ZDE2OWIxN2Q0MjJjOTQ4YyIsImlhdCI6MTY5ODU4NTYyNX0.7ot2mm070LM-4_JlDAQux_WgFmw-I0b9lFsVmvpCqEA",
+    "username": "ipad",
+    "name": "Ipad Smith"
+}
+
+{
+    "username": "ipad",
+    "password": "YesYes123"
+}
+
+{
+  "username": "god",
+  "name": "Matti Meikäläinen",
+  "password": "god1234"
+}
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdvZCIsImlkIjoiNjUzZTVjN2MxYWZhZTU2YjcwNmQyZDk0IiwiaWF0IjoxNjk4NTg1NzY1fQ.TGPBJilZ7flL7JcT8B-x-QcJG_2wGnOjmBvs0eC7xHk",
+    "username": "god",
+    "name": "Matti Meikäläinen"
+}
+
+
