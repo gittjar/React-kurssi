@@ -34,6 +34,7 @@ const App = () => {
 
   return (
     <div className='main'>
+      <h5>Jarno K. 11/2023 Unicafe program</h5>
       <button onClick={good}>Good</button> 
       <button onClick={ok}>OK</button> 
       <button onClick={bad}>Bad</button>
