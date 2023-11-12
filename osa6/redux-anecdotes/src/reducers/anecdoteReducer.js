@@ -21,28 +21,30 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state);
-  console.log('action', action);
-
   switch (action.type) {
     case 'VOTE':
       const id = action.data.id;
       const anecdoteToVote = state.find((anecdote) => anecdote.id === id);
 
       if (anecdoteToVote) {
-        // Create a new array with the voted anecdote replaced
-        return state.map((anecdote) =>
+        // Luodaan uusi taulukko, jossa äänestetty anekdootti on korvattu
+        const updatedState = state.map((anecdote) =>
           anecdote.id === id
-            ? { ...anecdote, votes: anecdote.votes + 1 } // Correct usage of spread operator
+            ? { ...anecdote, votes: anecdote.votes + 1 }
             : anecdote
         );
+
+        // Järjestä taulukko äänimäärän mukaan suurimmasta pienimpään
+        return updatedState.sort((a, b) => b.votes - a.votes);
       }
-      // Return the current state if the anecdote is not found
+
+      // Palauta nykyinen tila, jos anekdoottia ei löydy
       return state;
 
     case 'NEW_ANECDOTE':
-      const newAnecdote = action.data; 
-      return [...state, newAnecdote]; 
+      const newAnecdote = action.data;
+      // Lisää uusi anekdootti ja järjestä taulukko äänimäärän mukaan
+      return [...state, newAnecdote].sort((a, b) => b.votes - a.votes);
 
     case 'ZERO':
       return initialState;
@@ -51,5 +53,6 @@ const reducer = (state = initialState, action) => {
       return state;
   }
 };
+
 
 export default reducer
