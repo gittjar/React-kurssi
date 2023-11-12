@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import App from './App';
 import anecdoteReducer from './reducers/anecdoteReducer';
 import AnecdoteForm from './components/AnecdoteForm';  // Import the AnecdoteForm component
+import Footer from './components/Footer';
 
 
 const store = createStore(anecdoteReducer);
@@ -17,6 +18,7 @@ root.render(
       <App />
       <div>Jarno K. 11/2023</div>
       <AnecdoteForm />  {/* Include the AnecdoteForm component */}
+      <Footer/>
     </div>
   </Provider>
 );
