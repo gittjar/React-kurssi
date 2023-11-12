@@ -40,6 +40,10 @@ const reducer = (state = initialState, action) => {
       // Return the current state if the anecdote is not found
       return state;
 
+    case 'NEW_ANECDOTE':
+      const newAnecdote = action.data; 
+      return [...state, newAnecdote]; 
+
     case 'ZERO':
       return initialState;
 
