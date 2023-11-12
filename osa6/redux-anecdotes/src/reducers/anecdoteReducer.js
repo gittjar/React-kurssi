@@ -41,6 +41,7 @@ const reducer = (state = initialState, action) => {
       // Palauta nykyinen tila, jos anekdoottia ei löydy
       return state;
 
+      
     case 'NEW_ANECDOTE':
       const newAnecdote = action.data;
       // Lisää uusi anekdootti ja järjestä taulukko äänimäärän mukaan
