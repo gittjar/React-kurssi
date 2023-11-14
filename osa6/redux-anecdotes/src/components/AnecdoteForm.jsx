@@ -1,21 +1,14 @@
 // AnecdoteForm.jsx
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
-const getId = () => (100000 * Math.random()).toFixed(0);
+import { createAnecdote } from '../reducers/anecdoteReducer';
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
   const [newAnecdoteContent, setNewAnecdoteContent] = useState('');
 
   const createNewAnecdote = () => {
-    const newAnecdote = {
-      content: newAnecdoteContent,
-      id: getId(),
-      votes: 0,
-    };
-
-    dispatch({ type: 'NEW_ANECDOTE', data: newAnecdote });
+    dispatch(createAnecdote(newAnecdoteContent));
     // Clear the input field after creating a new anecdote
     setNewAnecdoteContent('');
   };

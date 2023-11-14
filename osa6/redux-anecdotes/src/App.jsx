@@ -1,14 +1,16 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createStore } from 'redux';
-import anecdoteReducer from './reducers/anecdoteReducer';
-import { Provider } from 'react-redux';
+import rootReducer, { getFilteredAnecdotes } from './reducers/rootReducer';
+// import VisibilityFilter from './components/VisibilityFilter';
 import './styles.css';
 
-const store = createStore(anecdoteReducer);
+// Create the Redux store
+const store = createStore(rootReducer);
 
 const App = () => {
-  const anecdotes = useSelector((state) => state);
+  // Use useSelector to get the state from the Redux store
+  const filteredAnecdotes = useSelector(getFilteredAnecdotes);
   const dispatch = useDispatch();
 
   const vote = (id) => {
@@ -21,23 +23,23 @@ const App = () => {
   };
 
   return (
-    <Provider store={store}>
-      <div>
-        <h2>Anecdotes - Anecdote Web App</h2>
-        <button onClick={zero}>Reset all</button>
-        <hr />
-        {anecdotes.map((anecdote) => (
-          <div key={anecdote.id} className="anecdote-content">
-            <div>{anecdote.content}</div>
-            <div>
-              has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>Vote</button>
-            </div>
-            <br />
+    <div>
+      <h2>Anecdotes - Anecdote Web App</h2>
+      <button onClick={zero}>Reset all</button>
+      <hr />
+     
+     
+      {filteredAnecdotes.map((anecdote) => (
+        <div key={anecdote.id} className="anecdote-content">
+          <div>{anecdote.content}</div>
+          <div>
+            has {anecdote.votes}
+            <button onClick={() => vote(anecdote.id)}>Vote</button>
           </div>
-        ))}
-      </div>
-    </Provider>
+          <br />
+        </div>
+      ))}
+    </div>
   );
 };
 
