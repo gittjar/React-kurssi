@@ -1,15 +1,10 @@
+// App.jsx
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createStore } from 'redux';
-import rootReducer, { getFilteredAnecdotes } from './reducers/rootReducer';
-// import VisibilityFilter from './components/VisibilityFilter';
-import './styles.css';
-
-// Create the Redux store
-const store = createStore(rootReducer);
+import { setFilter } from './reducers/filterReducer';
+import { getFilteredAnecdotes } from './reducers/rootReducer';
 
 const App = () => {
-  // Use useSelector to get the state from the Redux store
   const filteredAnecdotes = useSelector(getFilteredAnecdotes);
   const dispatch = useDispatch();
 
@@ -22,13 +17,21 @@ const App = () => {
     dispatch({ type: 'ZERO' });
   };
 
+  const handleFilterChange = (event) => {
+    const filter = event.target.value;
+    dispatch(setFilter({ filter }));
+  };
+
   return (
     <div>
       <h2>Anecdotes - Anecdote Web App</h2>
+      <div>
+        <div>Filter:</div>
+        <input type="text" onChange={handleFilterChange} />
+      </div>
       <button onClick={zero}>Reset all</button>
       <hr />
-     
-     
+
       {filteredAnecdotes.map((anecdote) => (
         <div key={anecdote.id} className="anecdote-content">
           <div>{anecdote.content}</div>

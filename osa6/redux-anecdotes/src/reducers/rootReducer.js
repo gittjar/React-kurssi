@@ -9,15 +9,9 @@ const rootReducer = combineReducers({
 });
 
 export const getFilteredAnecdotes = (state) => {
-  const filter = state.filter;
-  const anecdotes = state.anecdotes;
-
-  if (!filter) {
-    return anecdotes;
-  }
-
-  return anecdotes.filter((anecdote) =>
-    anecdote.content.toLowerCase().includes(filter.toLowerCase())
+  const filter = state.filter.toLowerCase();
+  return state.anecdotes.filter((anecdote) =>
+    anecdote.content.toLowerCase().includes(filter)
   );
 };
 

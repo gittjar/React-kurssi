@@ -1,29 +1,17 @@
-// filterReducer.js
-const filterReducer = (state = '', action) => {
-    console.log('ACTION: ', action)
-    switch (action.type) {
-      case 'SET_FILTER':
+import { createSlice } from '@reduxjs/toolkit';
 
-        return action.data.filter;
-      default:
-        return state;
-    }
-  };
-  
-  export const setFilter = (filter) => {
-    console.log('ACTION: ', filter)
-    return {
-      type: 'SET_FILTER',
-      data: { filter: String(filter) }, // Ensure the filter is a string
-    };
-  };
+const filterSlice = createSlice({
+  name: 'filter',
+  initialState: '',
+  reducers: {
+    setFilter: (state, action) => {
+      return action.payload.filter || ''; // Use action.payload.filter or fallback to an empty string
+    },
+    
+  },
+});
 
-  export const getFilteredAnecdotes = (state) => {
-    const filter = state.filter.toLowerCase(); // Convert to lowercase for case-insensitive matching
-    return state.anecdotes.filter((anecdote) =>
-      anecdote.content.toLowerCase().includes(filter)
-    );
-  };
-  
-  export default filterReducer;
-  
+console.log(filterSlice);
+
+export const { setFilter } = filterSlice.actions;
+export default filterSlice.reducer;
