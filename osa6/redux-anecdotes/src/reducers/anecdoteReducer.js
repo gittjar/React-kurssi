@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -11,55 +13,39 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  };
-};
+const asObject = (anecdote) => ({
+  content: anecdote,
+  id: getId(),
+  votes: 0,
+});
 
 const initialState = anecdotesAtStart.map(asObject);
 
-export const createAnecdote = (content) => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data: {
-      content,
-      id: getId(),
-      votes: 0,
-    },
-  };
-};
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'VOTE':
-      const id = action.data.id;
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    vote: (state, action) => {
+      const id = action.payload.id;
       const anecdoteToVote = state.find((anecdote) => anecdote.id === id);
 
       if (anecdoteToVote) {
         const updatedState = state.map((anecdote) =>
-          anecdote.id === id
-            ? { ...anecdote, votes: anecdote.votes + 1 }
-            : anecdote
+          anecdote.id === id ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote
         );
 
         return updatedState.sort((a, b) => b.votes - a.votes);
       }
 
       return state;
+    },
+    createAnecdote: (state, action) => {
+      const newAnecdote = action.payload;
+      state.push(newAnecdote);
+    },
+    resetAnecdotes: () => initialState,
+  },
+});
 
-    case 'NEW_ANECDOTE':
-      const newAnecdote = action.data;
-      return [...state, newAnecdote].sort((a, b) => b.votes - a.votes);
-
-    case 'ZERO':
-      return initialState;
-
-    default:
-      return state;
-  }
-};
-
-export default reducer;
+export const { vote, createAnecdote, resetAnecdotes } = anecdoteSlice.actions;
+export default anecdoteSlice.reducer;

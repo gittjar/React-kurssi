@@ -1,5 +1,4 @@
-// AnecdoteForm.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createAnecdote } from '../reducers/anecdoteReducer';
 
@@ -8,7 +7,7 @@ const AnecdoteForm = () => {
   const [newAnecdoteContent, setNewAnecdoteContent] = useState('');
 
   const createNewAnecdote = () => {
-    dispatch(createAnecdote(newAnecdoteContent));
+    dispatch(createAnecdote({ content: newAnecdoteContent, votes: 0 }));
     // Clear the input field after creating a new anecdote
     setNewAnecdoteContent('');
   };

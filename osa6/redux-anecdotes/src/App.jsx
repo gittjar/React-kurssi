@@ -1,20 +1,19 @@
-// App.jsx
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
-import { getFilteredAnecdotes } from './reducers/rootReducer';
+import { vote, resetAnecdotes } from './reducers/anecdoteReducer';
+import { selectFilteredAnecdotes } from './reducers/rootReducer';
 
 const App = () => {
-  const filteredAnecdotes = useSelector(getFilteredAnecdotes);
+  const filteredAnecdotes = useSelector(selectFilteredAnecdotes);
   const dispatch = useDispatch();
 
-  const vote = (id) => {
+  const handleVote = (id) => {
     console.log('vote', id);
-    dispatch({ type: 'VOTE', data: { id } });
+    dispatch(vote({ id }));
   };
 
-  const zero = () => {
-    dispatch({ type: 'ZERO' });
+  const handleReset = () => {
+    dispatch(resetAnecdotes());
   };
 
   const handleFilterChange = (event) => {
@@ -29,19 +28,21 @@ const App = () => {
         <div>Filter:</div>
         <input type="text" onChange={handleFilterChange} />
       </div>
-      <button onClick={zero}>Reset all</button>
+      <button onClick={handleReset}>Reset all</button>
       <hr />
 
-      {filteredAnecdotes.map((anecdote) => (
-        <div key={anecdote.id} className="anecdote-content">
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>Vote</button>
+      {filteredAnecdotes
+        .sort((a, b) => b.votes - a.votes)
+        .map((anecdote) => (
+          <div key={anecdote.id} className="anecdote-content">
+            <div>{anecdote.content}</div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={() => handleVote(anecdote.id)}>Vote</button>
+            </div>
+            <br />
           </div>
-          <br />
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

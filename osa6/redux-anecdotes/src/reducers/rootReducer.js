@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
   filter: filterReducer,
 });
 
-export const getFilteredAnecdotes = (state) => {
+export const selectFilteredAnecdotes = (state) => {
   const filter = state.filter.toLowerCase();
   return state.anecdotes.filter((anecdote) =>
     anecdote.content.toLowerCase().includes(filter)
