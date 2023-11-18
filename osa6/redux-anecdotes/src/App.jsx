@@ -2,6 +2,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
 import { vote, resetAnecdotes } from './reducers/anecdoteReducer';
 import { selectFilteredAnecdotes } from './reducers/rootReducer';
+import Notification from './components/Notification'; // Import the Notification component
+
+
 
 const App = () => {
   const filteredAnecdotes = useSelector(selectFilteredAnecdotes);
@@ -30,6 +33,7 @@ const App = () => {
       </div>
       <button onClick={handleReset}>Reset all</button>
       <hr />
+      <Notification/>
 
       {filteredAnecdotes
         .sort((a, b) => b.votes - a.votes)

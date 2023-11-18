@@ -2,10 +2,14 @@
 import { combineReducers } from 'redux';
 import anecdoteReducer from './anecdoteReducer';
 import filterReducer from './filterReducer';
+import notificationReducer from '../reducers/notificationReducer';
+
 
 const rootReducer = combineReducers({
   anecdotes: anecdoteReducer,
   filter: filterReducer,
+  notification: notificationReducer,
+
 });
 
 export const selectFilteredAnecdotes = (state) => {
