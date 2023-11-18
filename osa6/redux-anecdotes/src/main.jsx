@@ -8,6 +8,8 @@ import AnecdoteForm from './components/AnecdoteForm';
 import Footer from './components/Footer';
 import './styles.css';
 import VisibilityFilter from './components/VisibilityFilter';
+import ErrorBoundary from './components/ErrorBoundary';
+
 
 const root = createRoot(document.getElementById('root'));
 
@@ -15,7 +17,10 @@ root.render(
   <Provider store={store}>
     <div>
       <VisibilityFilter/>
+      <ErrorBoundary>
       <App />
+      </ErrorBoundary>
+
       <div>Jarno K. 11/2023</div>
       <AnecdoteForm />
       <Footer />

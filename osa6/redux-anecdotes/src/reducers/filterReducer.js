@@ -7,7 +7,6 @@ const filterSlice = createSlice({
     setFilter: (state, action) => {
       return action.payload.filter || ''; // Use action.payload.filter or fallback to an empty string
     },
-    
   },
 });
 
