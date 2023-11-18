@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
-import { vote, resetAnecdotes } from './reducers/anecdoteReducer';
+import { vote, resetAnecdotes, initializeAnecdotes } from './reducers/anecdoteReducer';
 import { selectFilteredAnecdotes } from './reducers/rootReducer';
 import Notification from './components/Notification'; // Import the Notification component
 
@@ -9,6 +10,21 @@ import Notification from './components/Notification'; // Import the Notification
 const App = () => {
   const filteredAnecdotes = useSelector(selectFilteredAnecdotes);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Fetch anecdotes from the JSON server
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/anecdotes');
+        const data = await response.json();
+        dispatch(initializeAnecdotes(data));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
 
   const handleVote = (id) => {
     console.log('vote', id);
