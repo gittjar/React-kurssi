@@ -16,7 +16,7 @@ const Notification = () => {
   const clearNotificationWithDelay = () => {
     setTimeout(() => {
       dispatch(clearNotification());
-    }, 5000); 
+    }, 10000); 
   };
 
   // When the component renders, set a timeout to clear the notification
