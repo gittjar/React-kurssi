@@ -1,15 +1,28 @@
-// Notification.jsx
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearNotification } from '../reducers/notificationReducer';
 
 const Notification = () => {
+  const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
 
   const style = {
-    border: 'solid',
+    border: 'dashed',
     padding: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     display: notification ? 'block' : 'none',
   };
+
+  // Function to clear the notification after a delay
+  const clearNotificationWithDelay = () => {
+    setTimeout(() => {
+      dispatch(clearNotification());
+    }, 5000); 
+  };
+
+  // When the component renders, set a timeout to clear the notification
+  if (notification) {
+    clearNotificationWithDelay();
+  }
 
   return <div style={style}>{notification}</div>;
 };
