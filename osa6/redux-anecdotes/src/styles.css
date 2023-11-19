@@ -28,8 +28,12 @@ button:hover {
     box-shadow: 3px 3px;
 }
 
+.anecdote-id {
+    font-size: 0.6rem;
+}
+
 .anecdote-content {
-    background-color: rgb(244, 244, 198);
+    background-color: rgb(250, 250, 214);
     padding: 1%;
     border: 1px rgb(51, 100, 2) solid;
     margin: 0.3%;
