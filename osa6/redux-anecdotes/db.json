@@ -11,9 +11,9 @@
       "votes": 0
     },
     {
-      "content": "Ei tippa tapa ja ämpäriin ei huku.",
-      "id": "20012",
-      "votes": 10
+      "content": "Ei tippa tapa",
+      "votes": 200,
+      "id": "20012"
     },
     {
       "content": "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
@@ -41,19 +41,14 @@
       "id": "1700379143977000"
     },
     {
-      "content": "Nice!",
+      "content": "Testatt",
       "votes": 0,
-      "id": "70346"
+      "id": "96717"
     },
     {
-      "content": "Load anecdotes!",
+      "content": "Monesko Anecdote",
       "votes": 0,
-      "id": "97136"
-    },
-    {
-      "content": "Moi",
-      "votes": 0,
-      "id": "94808"
+      "id": "55045"
     }
   ]
 }

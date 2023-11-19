@@ -1,17 +1,13 @@
 // notificationReducer.js
-import { createSlice } from '@reduxjs/toolkit';
 
-// Set your default notification message here
-const initialState = 'Hello, tervetuloa ohjelmaan'; 
+import { createSlice } from '@reduxjs/toolkit';
 
 const notificationSlice = createSlice({
   name: 'notification',
-  initialState,
+  initialState: null,
   reducers: {
-    setNotification: (state, action) => {
-      return action.payload;
-    },
-    clearNotification: () => initialState,
+    setNotification: (state, action) => action.payload,
+    clearNotification: () => null,
   },
 });
 

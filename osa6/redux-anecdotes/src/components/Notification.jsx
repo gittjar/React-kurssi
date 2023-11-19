@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearNotification } from '../reducers/notificationReducer';
 
@@ -5,24 +6,26 @@ const Notification = () => {
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
 
+  useEffect(() => {
+    // When the notification changes, set a timeout to clear it after a delay
+    console.log('Notification:', notification); 
+
+    if (notification) {
+      const timeoutId = setTimeout(() => {
+        dispatch(clearNotification());
+      }, 10000);
+
+      // Clear the timeout when the component unmounts or the notification changes
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dispatch, notification]);
+
   const style = {
     border: 'dashed',
     padding: 10,
     borderWidth: 2,
     display: notification ? 'block' : 'none',
   };
-
-  // Function to clear the notification after a delay
-  const clearNotificationWithDelay = () => {
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 10000); 
-  };
-
-  // When the component renders, set a timeout to clear the notification
-  if (notification) {
-    clearNotificationWithDelay();
-  }
 
   return <div style={style}>{notification}</div>;
 };

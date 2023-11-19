@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
-import { vote, resetAnecdotes, appendAnecdote } from './reducers/anecdoteReducer';
+import { resetAnecdotes, appendAnecdote } from './reducers/anecdoteReducer';
 import { selectFilteredAnecdotes } from './reducers/rootReducer';
 import Notification from './components/Notification';
+import { voteAsync } from './reducers/anecdoteActions'; // Adjust the path accordingly
+
 
 const App = () => {
   const filteredAnecdotes = useSelector(selectFilteredAnecdotes);
@@ -43,7 +45,7 @@ const App = () => {
 
   const handleVote = (id) => {
     console.log('vote', id);
-    dispatch(vote({ id }));
+    dispatch(voteAsync(id)); // Dispatch the asynchronous 'voteAsync' action
   };
 
   const handleReset = () => {
