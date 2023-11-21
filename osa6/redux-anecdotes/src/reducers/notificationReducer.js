@@ -1,10 +1,11 @@
 // notificationReducer.js
-
 import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = 'Hello, tervetuloa ohjelmaan'; 
 
 const notificationSlice = createSlice({
   name: 'notification',
-  initialState: null,
+  initialState,
   reducers: {
     setNotification: (state, action) => action.payload,
     clearNotification: () => null,

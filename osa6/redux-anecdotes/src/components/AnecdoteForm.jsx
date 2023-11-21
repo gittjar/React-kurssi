@@ -1,27 +1,30 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createAnecdoteAsync } from '../reducers/anecdoteSlice';
-import { setNotification } from '../reducers/notificationReducer';
-
-
+import { setNotification, clearNotification } from '../reducers/notificationReducer';
 
 const AnecdoteForm = () => {
   const [content, setContent] = useState('');
   const dispatch = useDispatch();
 
-// components/AnecdoteForm.jsx
-const handleCreateAnecdote = async () => {
-  try {
-    event.preventDefault(); // Prevent the default form submission behavior
-    await dispatch(createAnecdoteAsync(content));
-    setContent(''); // Clear the input after creating an anecdote
-    dispatch(setNotification('New anecdote created!'));
-  } catch (error) {
-    // Handle the error and show a notification
-    dispatch(setNotification(`Failed to create anecdote: ${error.message}`));
-  }
-};
-
+  const handleCreateAnecdote = async () => {
+    try {
+      event.preventDefault();
+      await dispatch(createAnecdoteAsync(content));
+      setContent('');
+  
+      // Dispatch a notification when a new anecdote is created
+      dispatch(setNotification(`New anecdote created: '${content}'`));
+  
+      // Clear the notification after 5000 milliseconds (5 seconds)
+      setTimeout(() => {
+        dispatch(clearNotification());
+      }, 5000);
+    } catch (error) {
+      // Handle the error and show a notification
+      dispatch(setNotification(`Failed to create anecdote: ${error.message}`));
+    }
+  };
 
   return (
     <div>
@@ -38,4 +41,3 @@ const handleCreateAnecdote = async () => {
 };
 
 export default AnecdoteForm;
-

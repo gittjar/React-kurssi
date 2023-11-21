@@ -1,51 +1,60 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
 import { resetAnecdotes, appendAnecdote } from './reducers/anecdoteReducer';
 import { selectFilteredAnecdotes } from './reducers/rootReducer';
 import Notification from './components/Notification';
-import { voteAsync } from './reducers/anecdoteActions'; // Adjust the path accordingly
-
+import { voteAsync } from './reducers/anecdoteActions';
 
 const App = () => {
   const filteredAnecdotes = useSelector(selectFilteredAnecdotes);
   const dispatch = useDispatch();
-
-  const fetchData = async () => {
-    try {
-      console.log('Fetching data...');
-      const response = await fetch('http://localhost:3001/anecdotes');
-      console.log('Response:', response);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      console.log('Data:', data);
-
-      // Dispatch appendAnecdote for each individual anecdote
-      data.forEach((anecdote) => dispatch(appendAnecdote(anecdote)));
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      // Optionally, dispatch an action to set an error message in your state
-      // dispatch(setErrorMessage('Failed to fetch anecdotes'));
-    }
-  };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch data initially
+
+
+  const fetchData = async () => {
+  try {
+    console.log('Fetching data...');
+    const response = await fetch('http://localhost:3001/anecdotes');
+    console.log('Response:', response);
+
+    if (!response.ok) {
+      const error = new Error('Failed to fetch data');
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+
+    const data = await response.json();
+    console.log('Data:', data);
+
+    // Convert the data object into an array
+    const anecdotesArray = Object.values(data);
+
+    // Dispatch appendAnecdote for each individual anecdote
+    anecdotesArray.forEach((anecdote) => dispatch(appendAnecdote(anecdote)));
+
+    // Set loading to false and clear error after fetching data
+    setLoading(false);
+    setError(null);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    setError(error.message);
+  }
+};
+
     fetchData();
   }, [dispatch]);
 
   const handleFetchClick = () => {
-    // Manually trigger fetching of all data
+    setLoading(true);
     fetchData();
   };
 
   const handleVote = (id) => {
-    console.log('vote', id);
-    dispatch(voteAsync(id)); // Dispatch the asynchronous 'voteAsync' action
+    dispatch(voteAsync(id));
   };
 
   const handleReset = () => {
@@ -56,6 +65,14 @@ const App = () => {
     const filter = event.target.value;
     dispatch(setFilter({ filter }));
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div>
@@ -68,21 +85,23 @@ const App = () => {
       <button onClick={handleFetchClick}>Load all</button>
       <hr />
       <Notification />
-
-      {filteredAnecdotes
-        .sort((a, b) => b.votes - a.votes)
-        .map((anecdote) => (
+      <hr />
+      {Array.isArray(filteredAnecdotes) && filteredAnecdotes.length > 0 ? (
+        filteredAnecdotes.map((anecdote) => (
           <div key={anecdote.id} className="anecdote-content">
-            <div className='anecdote-id'>id:{anecdote.id}</div>
-            <hr></hr>
+            <div className="anecdote-id">id:{anecdote.id}</div>
+            <hr />
             <div>{anecdote.content}</div>
             <div>
-              has {anecdote.votes} votes!
+              <p>has {anecdote.votes} votes!</p>
               <button onClick={() => handleVote(anecdote.id)}>Vote</button>
             </div>
             <br />
           </div>
-        ))}
+        ))
+      ) : (
+        <p>No anecdotes found.</p>
+      )}
     </div>
   );
 };

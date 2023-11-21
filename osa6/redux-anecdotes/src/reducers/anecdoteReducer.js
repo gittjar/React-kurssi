@@ -14,9 +14,6 @@ const anecdotesAtStart = [
 */
 const anecdotesAtStart = [];
 
-
-
-
 const getId = () => (100000 * Math.random()).toFixed(0);
 
 const asObject = (anecdote) => ({
@@ -51,8 +48,8 @@ const anecdoteSlice = createSlice({
     },
     resetAnecdotes: () => initialState,
 
-    appendAnecdote(state, action){
-      state.push(action.payload)
+    appendAnecdote: (state, action) => {
+      return [...state, action.payload];
     }
   },
 });
