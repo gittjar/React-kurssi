@@ -8,6 +8,12 @@ const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
   const handleCreateAnecdote = async () => {
+    if (content.length < 5) {
+      // Show a notification if the anecdote is less than 5 characters
+      dispatch(setNotification(`Anecdote must be at least 5 characters long.`));
+      return; // Prevent further processing if the anecdote is too short
+    }
+    
     try {
       event.preventDefault();
       await dispatch(createAnecdoteAsync(content));
