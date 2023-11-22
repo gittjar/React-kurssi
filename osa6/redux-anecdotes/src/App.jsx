@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFilter } from './reducers/filterReducer';
-import { resetAnecdotes, appendAnecdote } from './reducers/anecdoteReducer';
+import {
+  resetAnecdotes,
+  appendAnecdote,
+} from './reducers/anecdoteReducer';
 import { selectFilteredAnecdotes } from './reducers/rootReducer';
 import Notification from './components/Notification';
 import { voteAsync } from './reducers/anecdoteActions';
@@ -13,45 +16,46 @@ const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log('Fetching data...');
+        const response = await fetch('http://localhost:3001/anecdotes');
+        console.log('Response:', response);
 
+        if (!response.ok) {
+          const error = new Error('Failed to fetch data');
+          console.error('Error fetching data:', error);
+          throw error;
+        }
 
-  const fetchData = async () => {
-  try {
-    console.log('Fetching data...');
-    const response = await fetch('http://localhost:3001/anecdotes');
-    console.log('Response:', response);
+        const data = await response.json();
+        console.log('Data:', data);
 
-    if (!response.ok) {
-      const error = new Error('Failed to fetch data');
-      console.error('Error fetching data:', error);
-      throw error;
-    }
+        // Convert the data object into an array
+        const anecdotesArray = Object.values(data);
 
-    const data = await response.json();
-    console.log('Data:', data);
+        // Dispatch appendAnecdote for each individual anecdote
+        anecdotesArray.forEach((anecdote) => dispatch(appendAnecdote(anecdote)));
 
-    // Convert the data object into an array
-    const anecdotesArray = Object.values(data);
-
-    // Dispatch appendAnecdote for each individual anecdote
-    anecdotesArray.forEach((anecdote) => dispatch(appendAnecdote(anecdote)));
-
-    // Set loading to false and clear error after fetching data
-    setLoading(false);
-    setError(null);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    setError(error.message);
-  }
-};
+        // Set loading to false and clear error after fetching data
+        setLoading(false);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error.message);
+      }
+    };
 
     fetchData();
   }, [dispatch]);
 
-  const handleFetchClick = () => {
-    setLoading(true);
-    fetchData();
-  };
+  useEffect(() => {
+    // Update the local state whenever filteredAnecdotes changes
+    if (!loading) {
+      setLoading(true);
+      fetchData();
+    }
+  }, [filteredAnecdotes]);
 
   const handleVote = (id) => {
     dispatch(voteAsync(id));
@@ -76,17 +80,20 @@ const App = () => {
 
   return (
     <div>
+      
       <h2>Anecdotes - Anecdote Web App</h2>
+      
       <div>
         <div>Filter:</div>
         <input type="text" onChange={handleFilterChange} />
       </div>
+      
       <button onClick={handleReset}>Reset all</button>
-      <button onClick={handleFetchClick}>Load all</button>
       <hr />
       <Notification />
+
       <hr />
-      {Array.isArray(filteredAnecdotes) && filteredAnecdotes.length > 0 ? (
+      {filteredAnecdotes && filteredAnecdotes.length > 0 ? (
         filteredAnecdotes.map((anecdote) => (
           <div key={anecdote.id} className="anecdote-content">
             <div className="anecdote-id">id:{anecdote.id}</div>

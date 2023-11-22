@@ -30,21 +30,16 @@ const anecdoteSlice = createSlice({
   reducers: {
     vote: (state, action) => {
       const id = action.payload.id;
-      const anecdoteToVote = state.find((anecdote) => anecdote.id === id);
-
-      if (anecdoteToVote) {
-        const updatedState = state.map((anecdote) =>
-          anecdote.id === id ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote
-        );
-
-        return updatedState.sort((a, b) => b.votes - a.votes);
-      }
-
-      return state;
+      const updatedState = state.map((anecdote) =>
+        anecdote.id === id ? { ...anecdote, votes: anecdote.votes + 1 } : anecdote
+      );
+    
+      return updatedState.sort((a, b) => b.votes - a.votes);
     },
+    
     createAnecdote: (state, action) => {
       const newAnecdote = action.payload;
-      state.push(newAnecdote);
+      return [...state, newAnecdote];
     },
     resetAnecdotes: () => initialState,
 
