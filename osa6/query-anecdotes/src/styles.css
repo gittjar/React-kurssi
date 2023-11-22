@@ -1,0 +1,27 @@
+html {
+    background-color: rgb(225, 249, 216);
+    margin: 1%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+input {
+    padding: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: beige;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: transparent;
+}
+
+.anecdote-content {
+    border: 2px black solid;
+    margin-bottom: 0.5%;
+    margin-top: 0.5%;
+    padding: 5px;
+    width: 320px;
+}
