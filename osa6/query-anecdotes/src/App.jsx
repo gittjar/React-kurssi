@@ -3,7 +3,9 @@ import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 import './styles.css';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getAnecdotes } from './requests';
+import { getAnecdotes, updateAnecdote } from './requests';
+import { deleteAnecdote } from './requests';
+
 
 const OfflineMessage = () => {
   return (
@@ -16,8 +18,44 @@ const OfflineMessage = () => {
 const App = () => {
   const queryClient = useQueryClient();
 
-  const handleVote = (anecdote) => {
-    console.log('vote');
+  const handleVotePlus = async (anecdote) => {
+    try {
+      const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
+
+      await updateAnecdote(updatedAnecdote);
+
+      // Optionally, you can refetch the anecdotes to update the UI
+      queryClient.invalidateQueries('anecdotes');
+    } catch (error) {
+      console.error('Error updating anecdote:', error);
+    }
+  };
+
+  const handleVoteMinus = async (anecdote) => {
+    try {
+      const updatedAnecdote = { ...anecdote, votes: anecdote.votes - 1 };
+
+      await updateAnecdote(updatedAnecdote);
+
+      // Optionally, you can refetch the anecdotes to update the UI
+      queryClient.invalidateQueries('anecdotes');
+    } catch (error) {
+      console.error('Error updating anecdote:', error);
+    }
+  };
+
+
+
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteAnecdote(id);
+
+      // Optionally, you can refetch the anecdotes to update the UI
+      queryClient.invalidateQueries('anecdotes');
+    } catch (error) {
+      console.error('Error deleting anecdote:', error);
+    }
   };
 
   const result = useQuery({
@@ -39,7 +77,7 @@ const App = () => {
 
   return (
     <div>
-      <h3>Anecdote app</h3>
+      <h2>Anecdote app</h2>
 
       <Notification />
 
@@ -52,12 +90,16 @@ const App = () => {
           {anecdotes.map((anecdote) => (
             <div key={anecdote.id}>
               <article className='anecdote-content'>
-              <div>{anecdote.content}</div>
-              <hr/>
-              <div>
-                has {anecdote.votes} votes! <br/>
-                <button onClick={() => handleVote(anecdote)}>vote</button>
-              </div>
+                <div>{anecdote.content}</div>
+                <hr />
+                <div>
+                  has {anecdote.votes} votes! <br />
+                  <button onClick={() => handleVotePlus(anecdote)}>Vote +1</button>
+                  <button onClick={() => handleVoteMinus(anecdote)}>Vote -1</button>
+
+                  <button className='delete-button' onClick={() => handleDelete(anecdote.id)}>Delete</button>
+
+                </div>
               </article>
             </div>
           ))}

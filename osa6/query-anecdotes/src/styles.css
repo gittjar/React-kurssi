@@ -2,24 +2,42 @@ html {
     background-color: rgb(225, 249, 216);
     margin: 1%;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgba(7, 23, 117, 0.693);
+}
+
+h2 {
+    font-size: 2.5rem;
+    color: rgb(7, 68, 62);
 }
 
 input {
     padding: 10px;
+    width: 250px;
 }
 
 button {
     padding: 10px;
-    background-color: beige;
+    background-color: rgb(162, 249, 160);
     cursor: pointer;
+    border: 0;
+
 }
 
 button:hover {
     background-color: transparent;
+    border: 1px black solid;
+}
+
+.delete-button {
+    background-color: rgb(249, 102, 102);
+}
+
+.anecdote-form {
+    margin-bottom: 1%;
 }
 
 .anecdote-content {
-    border: 2px black solid;
+    border: 2px rgba(7, 23, 117, 0.693) solid;
     margin-bottom: 0.5%;
     margin-top: 0.5%;
     padding: 5px;
