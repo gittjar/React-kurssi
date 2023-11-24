@@ -12,7 +12,7 @@ const AnecdoteForm = () => {
 
     try {
       if (!content || content.length < 5) {
-        throw new Error('Give at least 5 characters long anecdote!');
+        throw new Error('Too short! Give at least 5 characters long anecdote!');
       }
 
       const response = await fetch('http://localhost:3001/anecdotes', {
