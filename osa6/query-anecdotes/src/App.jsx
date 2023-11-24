@@ -107,9 +107,11 @@ const App = () => {
                 <hr />
                 <div>
                   has {anecdote.votes} votes! <br />
+                  <section className='nappulat'>
                   <button onClick={() => handleVotePlus(anecdote)}>Vote +1</button>
                   <button onClick={() => handleVoteMinus(anecdote)}>Vote -1</button>
                   <button className='delete-button' onClick={() => handleDelete(anecdote.id)}>Delete</button>
+                  </section>
                 </div>
               </article>
             </div>
