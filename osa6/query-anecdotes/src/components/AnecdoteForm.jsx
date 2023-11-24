@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import Notification from './Notification'; // Import your Notification component
 
 const AnecdoteForm = () => {
   const [notification, setNotification] = useState(null);
@@ -50,20 +50,11 @@ const AnecdoteForm = () => {
         <input name='anecdote' />
         <button type='submit'>Create</button>
       </form>
-      {notification && (
-        <div
-          style={{
-            border: 'solid',
-            padding: 10,
-            width: 320,
-            borderWidth: 1,
-            marginBottom: 5,
-            color: notification.type === 'success' ? 'green' : 'red',
-          }}
-        >
-          {notification.message}
-        </div>
-      )}
+      <Notification
+        type={notification?.type}
+        message={notification?.message}
+        onClose={() => setNotification(null)}
+      />
     </div>
   );
 };

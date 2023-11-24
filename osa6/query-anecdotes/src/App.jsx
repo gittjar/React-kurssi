@@ -1,4 +1,5 @@
 // @refresh ignore
+import React, { useState } from 'react';
 import AnecdoteForm from './components/AnecdoteForm';
 import Notification from './components/Notification';
 import './styles.css';
@@ -17,6 +18,8 @@ const OfflineMessage = () => {
 
 const App = () => {
   const queryClient = useQueryClient();
+  const [notification, setNotification] = useState(null);
+
 
   const handleVotePlus = async (anecdote) => {
     try {
@@ -26,8 +29,13 @@ const App = () => {
 
       // Optionally, you can refetch the anecdotes to update the UI
       queryClient.invalidateQueries('anecdotes');
+
+      // Set a success notification
+      setNotification({ type: 'success', message: `${anecdote.content} has +1 vote` });
     } catch (error) {
       console.error('Error updating anecdote:', error);
+      // Set an error notification
+      setNotification({ type: 'error', message: 'Failed to update vote' });
     }
   };
 
@@ -39,8 +47,13 @@ const App = () => {
 
       // Optionally, you can refetch the anecdotes to update the UI
       queryClient.invalidateQueries('anecdotes');
+
+      // Set a success notification
+      setNotification({ type: 'success', message: `${anecdote.content} has -1 vote` });
     } catch (error) {
       console.error('Error updating anecdote:', error);
+      // Set an error notification
+      setNotification({ type: 'error', message: 'Failed to update vote' });
     }
   };
 
@@ -50,7 +63,7 @@ const App = () => {
   const handleDelete = async (id) => {
     try {
       await deleteAnecdote(id);
-
+      setNotification({ type: 'success', message: `Anecdote has Deleted!` });
       // Optionally, you can refetch the anecdotes to update the UI
       queryClient.invalidateQueries('anecdotes');
     } catch (error) {
@@ -79,7 +92,7 @@ const App = () => {
     <div>
       <h2>Anecdote app</h2>
 
-      <Notification />
+      <Notification type={notification?.type} message={notification?.message} onClose={() => setNotification(null)} />
 
       {isOffline ? (
         <OfflineMessage />
@@ -96,9 +109,7 @@ const App = () => {
                   has {anecdote.votes} votes! <br />
                   <button onClick={() => handleVotePlus(anecdote)}>Vote +1</button>
                   <button onClick={() => handleVoteMinus(anecdote)}>Vote -1</button>
-
                   <button className='delete-button' onClick={() => handleDelete(anecdote.id)}>Delete</button>
-
                 </div>
               </article>
             </div>
