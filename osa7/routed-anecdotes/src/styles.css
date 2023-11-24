@@ -1,0 +1,18 @@
+html {
+    background-color: rgb(12, 7, 0);
+    color: rgb(6, 186, 33);
+    font-family: monospace;
+}
+
+a {
+    color: bisque;
+    font-size: 1.4rem;
+}
+
+input {
+    padding: 10px;
+    background-color: transparent;
+    border: 2px solid rgb(6, 186, 33);
+    color: rgb(6, 186, 33);
+    margin-bottom: 5px;
+}
