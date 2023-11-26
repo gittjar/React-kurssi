@@ -6,6 +6,8 @@ Oppimistehtäviä Full Stack Open kurssilta. Materiaalit : https://fullstackopen
 
 * Tehtävä 3.10 backend step10: https://puhelinluettelo-oqv3.onrender.com/api/persons
 * Tehtävä 3.11 frontend step11: https://puhelinluettelo-frontend.onrender.com/
+* Tehtävä 6.23 : frontend: https://anecdotes-front.onrender.com/ <br/>
+backend: https://anecdotes-jarno.onrender.com/anecdotes
 
 #### Kuvankaappaukset
 
