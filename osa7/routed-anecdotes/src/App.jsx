@@ -68,14 +68,36 @@ const About = () => (
   </div>
 );
 
-const CreateNew = () => {
+const CreateNew = ({ addNew, setNotification }) => {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
+
+    const newAnecdote = {
+      content,
+      author,
+      info,
+      votes: 0,
+    };
+
+    addNew(newAnecdote);
+
+    // Show notification for 5 seconds
+    setNotification('New anecdote created!');
+
+  // Clear notification after 5 seconds
+       setTimeout(() => {
+        setNotification('');
+      }, 5000);
+    
+
+    // Clear form fields
+    setContent('');
+    setAuthor('');
+    setInfo('');
   };
 
   return (
@@ -83,7 +105,7 @@ const CreateNew = () => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content<br/>
+          content<br />
           <input
             name="content"
             value={content}
@@ -91,7 +113,7 @@ const CreateNew = () => {
           />
         </div>
         <div>
-          author<br/>
+          author<br />
           <input
             name="author"
             value={author}
@@ -99,7 +121,7 @@ const CreateNew = () => {
           />
         </div>
         <div>
-          url for more info<br/>
+          url for more info<br />
           <input
             name="info"
             value={info}
@@ -173,15 +195,18 @@ const App = () => {
   return (
     <Router>
       <div className='main'>
+           {/* Display notification */}
+           {notification && (
+          <div className="notification">
+            {notification}
+          </div>
+        )}
         <h1>Software anecdotes</h1>
         <Menu />
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/createnew"
-            element={<CreateNew addNew={addNew} />}
-          />
+          <Route path="/createnew" element={<CreateNew addNew={addNew} setNotification={setNotification} />} />
           <Route path="/about" element={<About />} />
           <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route
