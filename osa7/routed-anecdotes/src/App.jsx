@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMatch } from 'react-router-dom';
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,12 +16,15 @@ const Menu = () => {
     paddingRight: 5,
   };
   return (
-    <div>
+    <div className='nav-links'>
       <Link style={padding} to="/">
         Home
       </Link>
       <Link style={padding} to="/createnew">
         Create new
+      </Link>
+      <Link style={padding} to="/anecdotes">
+        Anecdotes
       </Link>
       <Link style={padding} to="/about">
         About
@@ -34,7 +38,9 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
@@ -77,7 +83,7 @@ const CreateNew = () => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
+          content<br/>
           <input
             name="content"
             value={content}
@@ -85,7 +91,7 @@ const CreateNew = () => {
           />
         </div>
         <div>
-          author
+          author<br/>
           <input
             name="author"
             value={author}
@@ -93,7 +99,7 @@ const CreateNew = () => {
           />
         </div>
         <div>
-          url for more info
+          url for more info<br/>
           <input
             name="info"
             value={info}
@@ -105,8 +111,6 @@ const CreateNew = () => {
     </div>
   );
 };
-
-
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -145,6 +149,26 @@ const App = () => {
 
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
+  const AnecdoteDetail = () => {
+    const match = useMatch('/anecdotes/:id');
+    const anecdoteId = match ? Number(match.params.id) : null;
+    const anecdote = anecdoteId ? anecdotes.find(anecdote => anecdote.id === anecdoteId) : null;
+  
+    if (!anecdote) {
+      return <div>Anecdote not found</div>;
+    }
+  
+    return (
+      <div className='anecdote-content'>
+        <h2>Anecdote Details</h2>
+        <p>{anecdote.content}</p>
+        <p>Author: {anecdote.author}</p>
+        <p>Info: {anecdote.info}</p>
+        <p>Votes: {anecdote.votes}</p>
+        <a href="/anecdotes">Back to Anecdotes</a>
+      </div>
+    );
+  };
 
   return (
     <Router>
@@ -159,10 +183,14 @@ const App = () => {
             element={<CreateNew addNew={addNew} />}
           />
           <Route path="/about" element={<About />} />
+          <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
+          <Route
+            path="/anecdotes/:id"
+            element={<AnecdoteDetail />}
+          />
         </Routes>
 
-        <AnecdoteList anecdotes={anecdotes} />
-        
+
         <Footer />
       </div>
     </Router>
