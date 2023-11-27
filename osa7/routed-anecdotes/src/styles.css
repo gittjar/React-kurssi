@@ -2,11 +2,32 @@ html {
     background-color: rgb(12, 7, 0);
     color: rgb(6, 186, 33);
     font-family: monospace;
+    min-height: 100vh;
+
+}
+
+.main {
+    margin: 1.5%;
+
+}
+
+button {
+    padding: 10px;
+    background-color: transparent;
+    border: 1px rgb(6, 186, 33) solid;
+    color: rgb(6, 186, 33);
+    cursor: pointer;
 }
 
 a {
-    color: bisque;
+    color: rgb(248, 182, 101);
     font-size: 1.4rem;
+    text-decoration: none;
+}
+
+a:hover {
+    background-color: rgb(110, 110, 208);
+    color: black;
 }
 
 input {
@@ -16,3 +37,11 @@ input {
     color: rgb(6, 186, 33);
     margin-bottom: 5px;
 }
+
+.footer {
+    background-color: #070707;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    bottom: 0;
+  }
