@@ -2,13 +2,12 @@ html {
     background-color: rgb(12, 7, 0);
     color: rgb(6, 186, 33);
     font-family: monospace;
-    min-height: 100vh;
 
 }
 
 .main {
-    margin: 1.5%;
-
+margin-left: 1.5%;
+margin-right: 1.5%;
 }
 
 .nav-links {
@@ -54,10 +53,13 @@ input {
     margin-bottom: 1%;
 }
 
-.footer {
-    background-color: #070707;
+footer {
+   
     padding: 10px;
     text-align: center;
-    position: sticky;
+    position: absolute;
     bottom: 0;
+    height: 5%;
+    border-top: 1px rgb(6, 186, 33) solid;
+    width: 95%;
   }

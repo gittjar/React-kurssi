@@ -9,33 +9,16 @@ import {
 } from 'react-router-dom';
 import Footer from './components/Footer';
 import Home from './components/Home';
+import Menu from './components/Menu';
 import './styles.css';
+import { useField } from './hooks/hooks';
 
-const Menu = () => {
-  const padding = {
-    paddingRight: 5,
-  };
-  return (
-    <div className='nav-links'>
-      <Link style={padding} to="/">
-        Home
-      </Link>
-      <Link style={padding} to="/createnew">
-        Create new
-      </Link>
-      <Link style={padding} to="/anecdotes">
-        Anecdotes
-      </Link>
-      <Link style={padding} to="/about">
-        About
-      </Link>
-    </div>
-  );
-};
+
+
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
-    <h2>Anecdotes</h2>
+    <h2>Today's great anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
         <li key={anecdote.id}>
@@ -69,17 +52,17 @@ const About = () => (
 );
 
 const CreateNew = ({ addNew, setNotification }) => {
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
+  const content = useField('text');
+  const author = useField('text');
+  const info = useField('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newAnecdote = {
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     };
 
@@ -88,16 +71,15 @@ const CreateNew = ({ addNew, setNotification }) => {
     // Show notification for 5 seconds
     setNotification('New anecdote created!');
 
-  // Clear notification after 5 seconds
-       setTimeout(() => {
-        setNotification('');
-      }, 5000);
-    
+    // Clear notification after 5 seconds
+    setTimeout(() => {
+      setNotification('');
+    }, 5000);
 
     // Clear form fields
-    setContent('');
-    setAuthor('');
-    setInfo('');
+    content.clear();
+    author.clear();
+    info.clear();
   };
 
   return (
@@ -106,33 +88,26 @@ const CreateNew = ({ addNew, setNotification }) => {
       <form onSubmit={handleSubmit}>
         <div>
           content<br />
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...content} />
         </div>
         <div>
           author<br />
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...author} />
         </div>
         <div>
           url for more info<br />
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...info} />
         </div>
         <button type="submit">create</button>
+        <button type="button" onClick={() => { content.clear(); author.clear(); info.clear(); }}>
+          reset
+        </button>
       </form>
     </div>
   );
 };
+
+
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -183,7 +158,7 @@ const App = () => {
     return (
       <div className='anecdote-content'>
         <h2>Anecdote Details</h2>
-        <p>{anecdote.content}</p>
+        <p>Anecdote content: {anecdote.content}</p>
         <p>Author: {anecdote.author}</p>
         <p>Info: {anecdote.info}</p>
         <p>Votes: {anecdote.votes}</p>
@@ -193,8 +168,9 @@ const App = () => {
   };
 
   return (
+    <div className='main'>
+
     <Router>
-      <div className='main'>
            {/* Display notification */}
            {notification && (
           <div className="notification">
@@ -215,10 +191,11 @@ const App = () => {
           />
         </Routes>
 
-
+            <footer>
         <Footer />
-      </div>
+            </footer>
     </Router>
+    </div>
   );
 };
 
