@@ -6,6 +6,10 @@ import blogService from './services/blogs';
 import './styles.css'; // Import the styles.css file
 import Togglable from './components/Togglable';
 import BlogForm from './components/BlogForm';
+import { setNotification, clearNotification } from './reducers/notificationReducer';
+import { useDispatch, useSelector } from 'react-redux';
+
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -19,6 +23,9 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [failureMessage, setFailureMessage] = useState(null);
   const [sortAsc, setSortAsc] = useState(true);
+  const notification = useSelector((state) => state.notification);
+  const dispatch = useDispatch(); // Use useDispatch to dispatch actions
+
 
 
   useEffect(() => {
@@ -49,15 +56,22 @@ const App = () => {
       const returnedBlog = await blogService.create(newBlog);
       setBlogs(blogs.concat(returnedBlog));
       setNewBlog({ title: '', author: '', url: '' });
-      showSuccessMessage('Blog added successfully.'); // Näytä onnistunut ilmoitus
 
-    } catch (error) {
-      setErrorMessage('Error adding a new blog');
+      // Dispatch a success notification
+      dispatch(setNotification({ type: 'success', message: 'Blog created successfully!' }));
+
+      // Hide the notification after some time
       setTimeout(() => {
-        setErrorMessage(null);
+        dispatch(clearNotification());
       }, 5000);
-      showFailureMessage('Failed to add a blog.'); // Näytä epäonnistunut ilmoitus
+    } catch (error) {
+      // Dispatch an error notification
+      dispatch(setNotification({ type: 'error', message: 'Error adding a new blog' }));
 
+      // Hide the notification after some time
+      setTimeout(() => {
+        dispatch(clearNotification());
+      }, 5000);
     }
   };
 
@@ -151,8 +165,17 @@ const App = () => {
   return (
     <div className='main'>
          {/* Notifications */}
+               {/* Notifications */}
+              {notification && (
+              <div className={`notification ${notification.type}`}>
+              {notification.message}
+               </div>
+              )}
+
         {successMessage && <div className="success-notification">{successMessage}</div>}
       {failureMessage && <div className="failure-notification">{failureMessage}</div>}
+
+      
 
 
       <h1>Blogs</h1>
