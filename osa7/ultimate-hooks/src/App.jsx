@@ -1,8 +1,9 @@
 // Import necessary dependencies and components
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useField, useResource } from './hooks';
 import Notification from './Nofication';
 import './styles.css';
+import '@master/css';
 
 
 // Define the main App component
@@ -73,7 +74,12 @@ const handlePersonSubmit = (event) => {
     <div className="main"> 
 
     <aside className='otsikko'>
-      <h3>Ultimate Hooks App!</h3>
+      <h3 className="font:antialiased@dark f:purple-20 f:2rem text-shadow:0|8|2">Ultimate Hooks App!</h3>
+      <h3 className="font:antialiased@dark f:purple-30 f:2rem text-shadow:0|6|2">Ultimate Hooks App!</h3>
+      <h3 className="font:antialiased@dark f:purple-40 f:2rem text-shadow:0|4|2">Ultimate Hooks App!</h3>
+      <h3 className="font:antialiased@dark f:purple-50 f:2rem text-shadow:0|2|2">Ultimate Hooks App!</h3>
+      <h3 className="font:antialiased@dark f:purple-60 f:2rem text-shadow:0|0|2">Ultimate Hooks App!</h3>
+
     </aside>
    
 <article className='notes'>
@@ -96,7 +102,7 @@ const handlePersonSubmit = (event) => {
         <button type="submit">create</button>
       </form>
       {persons.map((p) => (
-        <p key={p.id}>
+        <p key={p.id} className='p:4 m:5 b:2|solid|green-40 box-shadow:1|3|gray-30'>
           Nimi: {p.name} <br />Puhelinnumero: {p.number}
         </p>
       ))}

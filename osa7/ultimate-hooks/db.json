@@ -19,6 +19,10 @@
     {
       "content": "I need beer.",
       "id": 8
+    },
+    {
+      "content": "Vantaan Korso on hyvä paikka",
+      "id": 9
     }
   ],
   "persons": [
@@ -46,6 +50,11 @@
       "name": "Taxi",
       "number": "0400-123123",
       "id": 6
+    },
+    {
+      "name": "Joulupukki",
+      "number": "0504440422",
+      "id": 7
     }
   ]
 }
