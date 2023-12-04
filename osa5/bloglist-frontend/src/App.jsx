@@ -9,6 +9,8 @@ import BlogForm from './components/BlogForm';
 import { setNotification, clearNotification } from './reducers/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBlog } from './actions/blogActions';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -56,7 +58,7 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(newBlog);
       dispatch(createBlog(returnedBlog)); // Dispatch the action
-      setNewBlog({ title: '', author: '', url: '' });
+      setNewBlog({ title: '', author: '', url: '', likes: '' });
 
       // Dispatch a success notification
       dispatch(setNotification({ type: 'success', message: 'Blog created successfully!' }));
@@ -147,7 +149,7 @@ const App = () => {
     // Lisää funktio epäonnistuneen ilmoituksen näyttämiseksi
     const showFailureMessage = (message) => {
       setFailureMessage(message);
-  
+
       setTimeout(() => {
         setFailureMessage(null);
       }, 5000); // Piilota ilmoitus 5 sekunnin kuluttua
@@ -170,20 +172,19 @@ const App = () => {
 
   
   const blogsToShow = showAll ? sortedBlogs : sortedBlogs.filter(blog => blog.important);
+
+
+  
   
 
   return (
     <div className='main'>
          {/* Notifications */}
-               {/* Notifications */}
-              {notification && (
-              <div className={`notification ${notification.type}`}>
-              {notification.message}
-               </div>
-              )}
+    
+         <ToastContainer />
 
         {successMessage && <div className="success-notification">{successMessage}</div>}
-      {failureMessage && <div className="failure-notification">{failureMessage}</div>}
+        {failureMessage && <div className="failure-notification">{failureMessage}</div>}
 
       
 

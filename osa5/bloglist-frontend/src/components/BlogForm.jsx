@@ -30,6 +30,15 @@ const BlogForm = ({ newBlog, handleBlogChange, addBlog }) => {
           onChange={handleBlogChange}
         />
       </div>
+      <div>
+        LIKES<br/>
+        <input
+          type="number"
+          name="likes"
+          value={newBlog.likes}
+          onChange={handleBlogChange}
+        />
+      </div>
       <button type="submit">Save</button>
     </form>
   );

@@ -24,7 +24,8 @@
 
 /* Style for inputs */
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="number"] {
   padding: 10px;
   margin: 5px;
   border: 1px solid #ccc;
@@ -32,11 +33,12 @@ input[type="password"] {
   transition: border-color 0.3s;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="number"]:hover {
   outline: none;
-  border-color: #007bff; /* Change to your desired focus color */
-  box-shadow: 0 0 5px #007bff; /* Add a subtle box shadow on focus */
+  border-color: #fb00ff; /* Change to your desired focus color */
+  box-shadow: 0 0 5px #ee00ff; /* Add a subtle box shadow on focus */
 }
 
 /* Style for buttons */
