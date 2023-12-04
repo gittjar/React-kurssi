@@ -111,36 +111,35 @@ blogsRouter.put('/:id', async (request, response) => {
 });
 
 // PUT (update) the likes of a blog by ID
-// PUT (update) the likes of a blog by ID
 blogsRouter.put('/:id/like', verifyToken, async (request, response) => {
   const blogId = request.params.id;
-  const userId = request.user.id; // Assuming you have the user info in the token
+  const userId = request.user.id;
 
   try {
+    console.log('Decoded Token:', request.user);
+    console.log('Blog ID:', blogId);
+    console.log('User ID:', userId);
     const blog = await Bloglist.findById(blogId);
+    console.log('Found Blog:', blog);
+
 
     if (!blog) {
       return response.status(404).json({ error: 'Blog not found' });
     }
 
-    // Ensure that the 'likes' property is an array before checking 'includes'
     if (!Array.isArray(blog.likes)) {
       return response.status(500).json({ error: 'Invalid blog data' });
     }
 
-    // Check if the user has already liked this blog
     if (blog.likes.includes(userId)) {
       return response.status(400).json({ error: 'You have already liked this blog' });
     }
 
-    // Update the likes count and add the user's ID to the likes array
     blog.likes.push(userId);
     blog.likesCount = blog.likes.length;
 
-    // Save the updated blog
     const updatedBlog = await blog.save();
 
-    // Respond with the updated blog data (excluding sensitive data like user)
     const responseData = {
       likes: updatedBlog.likesCount,
     };
@@ -151,6 +150,7 @@ blogsRouter.put('/:id/like', verifyToken, async (request, response) => {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 
