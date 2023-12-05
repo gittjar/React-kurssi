@@ -6,6 +6,23 @@
     padding: 1%;
 }
 
+.router {
+  background-color: #59028b;;
+  padding: 1%;
+  border-radius: 10px;
+
+}
+
+.logged-in {
+  color: white;
+  font-size: 0.8rem;
+  margin-left: 0.5%;
+}
+
+.loginform {
+  text-align: center;
+}
+
 .notification {
   padding: 10px;
   margin-bottom: 10px;
@@ -29,6 +46,7 @@ input[type="number"] {
   padding: 10px;
   margin: 5px;
   border: 1px solid #ccc;
+  width: 15%;
   border-radius: 5px;
   transition: border-color 0.3s;
 }
@@ -45,7 +63,7 @@ input[type="number"]:hover {
 button {
   padding: 10px 20px;
   margin: 5px;
-  border: none;
+  border: 1px white solid;
   border-radius: 5px;
   background-color: #59028b; /* Change to your desired button background color */
   color: white;
@@ -53,9 +71,22 @@ button {
   transition: background-color 0.3s, transform 0.2s;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
+
+.bloglink {
+  color: #59028b;
+  text-decoration: none;
+}
+.bloglink:hover {
+  color: #a457d0;
+}
+
 button:hover {
-  background-color: rgb(179, 0, 167); /* Change to your desired hover color */
-  transform: scale(1.05); /* Add a slight scale effect on hover */
+  background-color: rgb(174, 3, 162); /* Change to your desired hover color */
+  transform: scale(1.03); /* Add a slight scale effect on hover */
 }
 
 /* Style for success notifications */
@@ -81,11 +112,12 @@ button:hover {
   }
 
   .blogibox {
-    background-color: rgb(82, 216, 171);
+    background-color: rgb(207, 251, 221);
     margin: 1%;
     padding: 1%;
     width: 450px;
-    border-radius: 0px 15px 15px 0px;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px black solid;
   }
 
   .showmore-button {
@@ -99,8 +131,8 @@ button:hover {
 
   .username {
     font-size: small;
-    background-color: #74f679;
-    padding: 3px;
+    background-color: #acf6b1;
+    padding: 10px;
     border-radius: 5px;
 
   }
@@ -108,7 +140,7 @@ button:hover {
   .delete-button {
     background-color: rgb(213, 8, 111);
     color: aliceblue;
-    padding: 3px;
+    padding: 10px;
     margin: 2px;
     border-radius: 5px;
     cursor: pointer;

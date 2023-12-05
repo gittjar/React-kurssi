@@ -137,8 +137,11 @@ function UserBlogs() {
            
             {showDetails[index] && (
               <div>
-                <a href={blog.url}>{blog.url}</a> <br />
-                likes: {blog.likes} <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
+                <hr></hr>
+                Linkki: <a className='bloglink' href={blog.url}>{blog.url}</a> <br />
+                <hr></hr>
+                Likes: {blog.likes} <br/>
+                <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
                 Like
               </button><br />
                 by {blog.author}

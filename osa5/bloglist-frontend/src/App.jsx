@@ -6,11 +6,16 @@ import blogService from './services/blogs';
 import './styles.css'; // Import the styles.css file
 import Togglable from './components/Togglable';
 import BlogForm from './components/BlogForm';
+import Home from './components/Home';
 import { setNotification, clearNotification } from './reducers/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBlog } from './actions/blogActions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
 
 
 
@@ -28,6 +33,10 @@ const App = () => {
   const [sortAsc, setSortAsc] = useState(true);
   const notification = useSelector((state) => state.notification);
   const dispatch = useDispatch(); // Use useDispatch to dispatch actions
+  const padding = {
+    padding: 5
+  }
+
 
 
 
@@ -173,68 +182,91 @@ const App = () => {
   
   const blogsToShow = showAll ? sortedBlogs : sortedBlogs.filter(blog => blog.important);
 
-
-  
-  
-
   return (
     <div className='main'>
-         {/* Notifications */}
-    
-         <ToastContainer />
+      {successMessage && <div className="success-notification">{successMessage}</div>}
+      {failureMessage && <div className="failure-notification">{failureMessage}</div>}
+      <h1>Blogs App</h1>
 
-        {successMessage && <div className="success-notification">{successMessage}</div>}
-        {failureMessage && <div className="failure-notification">{failureMessage}</div>}
-
-      
-
-
-      <h1>Blogs</h1>
-
-    
-
-      {user ? (
+      <Router>
         <div>
-          <p>Welcome, {username}! You are now logged in.</p>
-          <button onClick={handleLogout}>Logout</button>
-          <BlogForm // Käytä BlogForm-komponenttia tässä
-            newBlog={newBlog}
-            handleBlogChange={handleBlogChange}
-            addBlog={addBlog}
-          />
-    <button onClick={toggleSortingOrder}>
-        Sort by Likes: {sortAsc ? 'Ascending' : 'Descending'}
-      </button>
-          <ul>
-            {blogsToShow.map(blog => (
-              <Blog key={blog.id} blog={blog} />
-            ))}
-          </ul>
+          {user ? (
+            // If the user is logged in, show Links and user information
+            <>
+              <section className='router'>
+
+              <span className='logged-in'>Welcome, {username}! You are now logged in.</span>
+              <br></br>
+              <button onClick={handleLogout} to="/login">Logout</button>
+              <button className='linkbutton'>
+              <Link style={padding} to="/home">Home</Link>
+              </button>
+              <button className='linkbutton'>
+              <Link style={padding} to="/blogform">Add Blog</Link>
+              </button>
+              <button onClick={() => setShowAll(!showAll)}>
+              Jotakin tekstiä: {showAll ? 'Moikka' : 'Heippa'}
+              </button>
+
+              </section>
+
+              <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route
+              path="/blogform"
+              element={
+                <BlogForm
+                  newBlog={newBlog}
+                  handleBlogChange={handleBlogChange}
+                  addBlog={addBlog}
+                />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <LoginForm
+                  handleLogin={handleLogin}
+                  username={username}
+                  password={password}
+                  setUsername={setUsername}
+                  setPassword={setPassword}
+                />
+              }
+            />
+
+         
+        
+         
+          </Routes>
+            </>
+
+            
+          ) : (
+            // If the user is not logged in, show only the LoginForm
+            <LoginForm
+              handleLogin={handleLogin}
+              username={username}
+              password={password}
+              setUsername={setUsername}
+              setPassword={setPassword}
+            />
+          )}
+
+     
+
+          {/* Notifications */}
+          <ToastContainer />
+
+          {user && (
+            <Togglable buttonLabel='Load Blogs'>
+              <UserBlogs />
+            </Togglable>
+          )}
         </div>
-      ) : (
-        <LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        password={password}
-        setUsername={setUsername}
-        setPassword={setPassword}
-      />
-      )}
-  
-   
-  
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          Jotakin tekstiä: {showAll ? 'Moikka' : 'Heippa'}
-        </button>
-      </div>
-  
-      {user && (
-        <Togglable buttonLabel='Load Blogs'>
-          <UserBlogs />
-        </Togglable>
-      )}
+      </Router>
     </div>
   );
-      };
+};
+
 export default App;
