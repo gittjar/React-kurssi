@@ -4,6 +4,7 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background-color: rgb(235, 249, 249);
     padding: 1%;
+    
 }
 
 .router {
@@ -111,11 +112,33 @@ button:hover {
     transition: opacity 0.5s;
   }
 
+  .blogbox-flex{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .left-area {
+    padding: 2%;
+    border: #59028b 1px solid;
+    margin: 3%;
+    width: 50%;
+    font-size: 0.7rem;
+
+  }
+
+  .right-area {
+    padding: 2%;
+    border: #59028b 1px solid;
+    margin: 3%;
+    width: 50%;
+    font-size: 0.7rem;
+  }
+
   .blogibox {
-    background-color: rgb(207, 251, 221);
+    background-color: transparent;
     margin: 1%;
     padding: 1%;
-    width: 450px;
+    width: 50%;
     border-radius: 10px 10px 10px 10px;
     border: 1px black solid;
   }
@@ -130,11 +153,14 @@ button:hover {
   }
 
   .username {
-    font-size: small;
-    background-color: #acf6b1;
+    font-size: smaller;
+    background-color: #e3f4e4;
     padding: 10px;
     border-radius: 5px;
+  }
 
+  .authorname {
+    font-size: smaller;
   }
 
   .delete-button {

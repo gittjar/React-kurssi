@@ -3,13 +3,43 @@ import React, { useState, useEffect } from 'react';
 function UserBlogs() {
   const [userBlogs, setUserBlogs] = useState([]);
   const [error, setError] = useState(null);
-  const [showDetails, setShowDetails] = useState([]); // Initialize state for each blog
+  const [showDetails, setShowDetails] = useState([]);
+  const [comments, setComments] = useState({});
+
+  const initializeComments = (blogs) => {
+    const initialComments = {};
+    blogs.forEach((blog) => {
+      initialComments[blog.id] = []; // Initialize comments for each blog
+    });
+    setComments(initialComments);
+  };
+
+  const fetchCommentsForBlog = async (blogId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3003/api/blogs/${blogId}/comments`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+      });
+      if (response.ok) {
+        const fetchedComments = await response.json();
+        setComments((prevComments) => ({
+          ...prevComments,
+          [blogId]: fetchedComments,
+        }));
+      } else {
+        throw new Error('Failed to fetch comments');
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
 
   useEffect(() => {
-    // Fetch the user's blogs after successful login
     const token = localStorage.getItem('token');
     if (!token) {
-      // Handle the case where the user is not authenticated
       setError('Authentication required');
       return;
     }
@@ -18,7 +48,7 @@ function UserBlogs() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${token}`, // Add Authorization token
+        'Authorization': `${token}`,
       },
     };
 
@@ -32,6 +62,11 @@ function UserBlogs() {
       })
       .then((data) => {
         setUserBlogs(data);
+        initializeComments(data); // Initialize comments state
+        // Fetch comments for each blog
+        data.forEach((blog) => {
+          fetchCommentsForBlog(blog.id);
+        });
       })
       .catch((error) => {
         setError('Error fetching user blogs: ' + error.message);
@@ -40,7 +75,7 @@ function UserBlogs() {
 
   if (error) {
     return <p style={{ color: 'red' }}>{error}</p>;
-  }
+  }  
 
   const toggleDetails = (index) => {
     // Toggle the showDetails state for the specified blog index
@@ -117,11 +152,53 @@ function UserBlogs() {
       setError('Error deleting the blog: ' + error.message);
     }
   };
+
+  const handleAddComment = async (blogId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Authentication required');
+        return;
+      }
   
+      const content = prompt('Enter your comment:'); // You can use a form for a better user experience
   
+      if (!content) {
+        // User canceled or entered an empty comment
+        return;
+      }
+  
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+        body: JSON.stringify({ content, anonymous: true }), // Set to true for anonymous comments
+      };
+  
+      const response = await fetch(`http://localhost:3003/api/blogs/${blogId}/comments`, requestOptions);
+  
+      if (response.ok) {
+        const updatedBlog = await response.json();
+        setUserBlogs(userBlogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog)));
+  
+        // Ensure comments[blogId] is defined and iterable
+        setComments((prevComments) => ({
+          ...prevComments,
+          [blogId]: Array.isArray(prevComments[blogId]) ? [...prevComments[blogId], { content, anonymous: true }] : [{ content, anonymous: true }],
+        }));
+      } else {
+        throw new Error('Failed to add a comment');
+      }
+    } catch (error) {
+      console.error('Error adding a comment:', error);
+      setError('Error adding a comment: ' + error.message);
+    }
+  };
 
-
-
+ 
+  
   return (
     <div>
       <h2>User's Blogs</h2>
@@ -132,26 +209,62 @@ function UserBlogs() {
              
             {blog.title}<br/>
             <button onClick={() => toggleDetails(index)} className='showmore-button'>
-              {showDetails[index] ? 'Show Less' : 'Show More'}
+              {showDetails[index] ? 'Show Less <' : 'Show More >'}
             </button>
            
             {showDetails[index] && (
-              <div>
+              <div className='blogbox-flex'>
+
+                <section className='left-area'>
+                  <h3>{blog.title}</h3>
                 <hr></hr>
                 Linkki: <a className='bloglink' href={blog.url}>{blog.url}</a> <br />
-                <hr></hr>
-                Likes: {blog.likes} <br/>
-                <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
-                Like
-              </button><br />
+
+              <br />
+              <span className='authorname'>
                 by {blog.author}
+                </span>
                 <br/><br/>
                 <span className='username'>User: 
                 {blog.user.name} </span>
-                <br/><br/>
-                <button onClick={() => handleDeleteClick(blog.id)} className='delete-button'>
-                  Delete this Blog !
+                <br/><br/>                
+                    <ul>
+                    {blog.comments.map((comment) => (
+                    <li key={comment._id["$oid"]}>
+                    {comment.anonymous ? 'Anonymous comment: ' : ''}
+                    {comment.content}
+                    </li>
+                    ))}
+                    </ul>
+                </section>
+
+                <article className='right-area'>
+                  <div>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis blanditiis 
+                    necessitatibus nesciunt corporis, maxime nulla dignissimos, repellat quae distinctio ea 
+                    voluptate eum modi cupiditate dolorum totam molestias velit consequuntur ratione?
+                  </div>
+                  <br></br>
+                  <div>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis blanditiis 
+                    necessitatibus nesciunt corporis, maxime nulla dignissimos, repellat quae distinctio ea 
+                    voluptate eum modi cupiditate dolorum totam molestias velit consequuntur ratione?
+                  </div>
+                  <br></br>
+                Likes: {blog.likes} <br/>
+                <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
+                I Like this!
+              </button>
+              <button onClick={() => handleDeleteClick(blog.id)} className='delete-button'>
+                  Delete this Blog!
                 </button> 
+
+                <button onClick={() => handleAddComment(blog.id)} className='add-comment-button'>
+              Add a Comment
+            </button>
+
+                </article>
+            
                
 
  
