@@ -35,7 +35,7 @@ const BlogForm = ({ newBlog, handleBlogChange, addBlog }) => {
         <input
           type="number"
           name="likes"
-          value={newBlog.likes}
+          value={newBlog.likes = 0}
           onChange={handleBlogChange}
         />
       </div>

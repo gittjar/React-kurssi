@@ -224,18 +224,17 @@ function UserBlogs() {
               <span className='authorname'>
                 by {blog.author}
                 </span>
-                <br/><br/>
-                <span className='username'>User: 
-                {blog.user.name} </span>
+              
+             
                 <br/><br/>                
-                    <ul>
+                    <section>
                     {blog.comments.map((comment) => (
-                    <li key={comment._id["$oid"]}>
-                    {comment.anonymous ? 'Anonymous comment: ' : ''}
+                    <article key={comment._id["$oid"]}>
+                    {comment.anonymous ? 'Comment: ' : ''}
                     {comment.content}
-                    </li>
+                    </article>
                     ))}
-                    </ul>
+                    </section>
                 </section>
 
                 <article className='right-area'>
