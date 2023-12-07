@@ -116,37 +116,56 @@ blogsRouter.put('/:id/like', verifyToken, async (request, response) => {
   const userId = request.user.id;
 
   try {
-    console.log('Decoded Token:', request.user);
-    console.log('Blog ID:', blogId);
-    console.log('User ID:', userId);
     const blog = await Bloglist.findById(blogId);
-    console.log('Found Blog:', blog);
-
 
     if (!blog) {
       return response.status(404).json({ error: 'Blog not found' });
     }
 
-    if (!Array.isArray(blog.likes)) {
-      return response.status(500).json({ error: 'Invalid blog data' });
+    // Check if likes is NaN, and initialize it to 0 if needed
+    if (isNaN(blog.likes)) {
+      blog.likes = 0;
     }
 
-    if (blog.likes.includes(userId)) {
-      return response.status(400).json({ error: 'You have already liked this blog' });
-    }
-
-    blog.likes.push(userId);
-    blog.likesCount = blog.likes.length;
+    // Increment likes
+    blog.likes += 1;
 
     const updatedBlog = await blog.save();
 
     const responseData = {
-      likes: updatedBlog.likesCount,
+      likes: updatedBlog.likes,
     };
 
     response.json(responseData);
   } catch (error) {
     console.error('Error updating likes:', error);
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+// Route for adding comments to a blog
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { content, anonymous } = request.body;
+
+  try {
+    const blog = await Bloglist.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ error: 'Blog not found' });
+    }
+
+    const newComment = {
+      content,
+      anonymous: Boolean(anonymous), // Convert to a boolean value
+    };
+
+    blog.comments = blog.comments.concat(newComment);
+    await blog.save();
+
+    response.status(201).json(blog);
+  } catch (error) {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
