@@ -112,6 +112,10 @@ button:hover {
     transition: opacity 0.5s;
   }
 
+  .blogiarea {
+    
+  }
+
   .blogbox-flex{
     display: flex;
     flex-direction: row;
@@ -120,7 +124,7 @@ button:hover {
   .left-area {
     padding: 2%;
     border: #59028b 1px solid;
-    margin: 3%;
+    margin: 1.5%;
     width: 50%;
     font-size: 0.7rem;
 
@@ -129,7 +133,7 @@ button:hover {
   .right-area {
     padding: 2%;
     border: #59028b 1px solid;
-    margin: 3%;
+    margin: 1.5%;
     width: 50%;
     font-size: 0.7rem;
   }
@@ -138,7 +142,7 @@ button:hover {
     background-color: transparent;
     margin: 1%;
     padding: 1%;
-    width: 50%;
+    width: 96%;
     border-radius: 10px 10px 10px 10px;
     border: 1px black solid;
   }

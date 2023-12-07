@@ -100,19 +100,17 @@ function UserBlogs() {
         },
       };
   
+      // Optimistically update the UI before the server responds
+      const updatedBlogs = userBlogs.map((blog) =>
+        blog.id === blogId ? { ...blog, likes: blog.likes + 1 } : blog
+      );
+      setUserBlogs(updatedBlogs);
+  
       const response = await fetch(`http://localhost:3003/api/blogs/${blogId}/like`, requestOptions);
   
-      if (response.ok) {
-        // Assuming that the server responds with the updated blog object
-        const updatedBlog = await response.json();
-  
-        // Update the UI to reflect the new likes count
-        const updatedBlogs = userBlogs.map((blog) =>
-          blog.id === updatedBlog.id ? updatedBlog : blog
-        );
-  
-        setUserBlogs(updatedBlogs);
-      } else {
+      if (!response.ok) {
+        // Revert the update if there's an error
+        setUserBlogs(userBlogs);
         throw new Error('Failed to update likes');
       }
     } catch (error) {
@@ -120,6 +118,7 @@ function UserBlogs() {
       setError('Error updating likes: ' + error.message);
     }
   };
+  
   
 
   const handleDeleteClick = async (blogId) => {
@@ -202,12 +201,13 @@ function UserBlogs() {
   return (
     <div>
       <h2>User's Blogs</h2>
-      <div>
+      <div className='blogiarea'>
         {userBlogs.map((blog, index) => (
           
           <div key={blog.id} className='blogibox'>
              
             {blog.title}<br/>
+            <hr></hr>
             <button onClick={() => toggleDetails(index)} className='showmore-button'>
               {showDetails[index] ? 'Show Less <' : 'Show More >'}
             </button>
