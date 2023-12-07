@@ -5,6 +5,7 @@ function UserBlogs() {
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState([]);
   const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState('');
 
   const initializeComments = (blogs) => {
     const initialComments = {};
@@ -119,8 +120,6 @@ function UserBlogs() {
     }
   };
   
-  
-
   const handleDeleteClick = async (blogId) => {
     try {
       const token = localStorage.getItem('token');
@@ -160,10 +159,9 @@ function UserBlogs() {
         return;
       }
   
-      const content = prompt('Enter your comment:'); // You can use a form for a better user experience
-  
-      if (!content) {
-        // User canceled or entered an empty comment
+      // Check if the comment is empty
+      if (!newComment.trim()) {
+        // User entered an empty comment
         return;
       }
   
@@ -173,7 +171,7 @@ function UserBlogs() {
           'Content-Type': 'application/json',
           'Authorization': `${token}`,
         },
-        body: JSON.stringify({ content, anonymous: true }), // Set to true for anonymous comments
+        body: JSON.stringify({ content: newComment, anonymous: true }),
       };
   
       const response = await fetch(`http://localhost:3003/api/blogs/${blogId}/comments`, requestOptions);
@@ -185,8 +183,13 @@ function UserBlogs() {
         // Ensure comments[blogId] is defined and iterable
         setComments((prevComments) => ({
           ...prevComments,
-          [blogId]: Array.isArray(prevComments[blogId]) ? [...prevComments[blogId], { content, anonymous: true }] : [{ content, anonymous: true }],
+          [blogId]: Array.isArray(prevComments[blogId])
+            ? [...prevComments[blogId], { content: newComment, anonymous: true }]
+            : [{ content: newComment, anonymous: true }],
         }));
+
+        // Clear the input field after successfully adding a comment
+        setNewComment('');
       } else {
         throw new Error('Failed to add a comment');
       }
@@ -196,47 +199,37 @@ function UserBlogs() {
     }
   };
 
- 
-  
   return (
     <div>
       <h2>User's Blogs</h2>
       <div className='blogiarea'>
         {userBlogs.map((blog, index) => (
-          
           <div key={blog.id} className='blogibox'>
-             
             {blog.title}<br/>
             <hr></hr>
             <button onClick={() => toggleDetails(index)} className='showmore-button'>
               {showDetails[index] ? 'Show Less <' : 'Show More >'}
             </button>
-           
             {showDetails[index] && (
               <div className='blogbox-flex'>
-
                 <section className='left-area'>
                   <h3>{blog.title}</h3>
-                <hr></hr>
-                Linkki: <a className='bloglink' href={blog.url}>{blog.url}</a> <br />
-
-              <br />
-              <span className='authorname'>
-                by {blog.author}
-                </span>
-              
-             
-                <br/><br/>                
-                    <section>
+                  <hr></hr>
+                  Linkki: <a className='bloglink' href={blog.url}>{blog.url}</a> <br />
+                  <br />
+                  <span className='authorname'>
+                    by {blog.author}
+                  </span>
+                  <br/><br/>                
+                  <section>
                     {blog.comments.map((comment) => (
-                    <article key={comment._id["$oid"]}>
-                    {comment.anonymous ? 'Comment: ' : ''}
-                    {comment.content}
-                    </article>
+                      <article key={comment._id["$oid"]}>
+                        {comment.anonymous ? 'Comment: ' : ''}
+                        {comment.content}
+                      </article>
                     ))}
-                    </section>
+                  </section>
                 </section>
-
                 <article className='right-area'>
                   <div>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis blanditiis 
@@ -250,23 +243,23 @@ function UserBlogs() {
                     voluptate eum modi cupiditate dolorum totam molestias velit consequuntur ratione?
                   </div>
                   <br></br>
-                Likes: {blog.likes} <br/>
-                <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
-                I Like this!
-              </button>
-              <button onClick={() => handleDeleteClick(blog.id)} className='delete-button'>
-                  Delete this Blog!
-                </button> 
-
-                <button onClick={() => handleAddComment(blog.id)} className='add-comment-button'>
-              Add a Comment
-            </button>
-
+                  Likes: {blog.likes} <br/>
+                  <button onClick={() => handleLikeClick(blog.id)} className='like-button'>
+                    I Like this!
+                  </button>
+                  <button onClick={() => handleDeleteClick(blog.id)} className='delete-button'>
+                    Delete this Blog!
+                  </button> 
+                  <hr />
+                  <input className='comment-input'
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder='Enter your comment...'
+                  /><br></br>
+                  <button onClick={() => handleAddComment(blog.id)} className='add-comment-button'>
+                    Add a Comment
+                  </button>
                 </article>
-            
-               
-
- 
               </div>
             )}
           </div>
