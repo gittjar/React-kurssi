@@ -95,42 +95,38 @@ let books = [
   },
 ]
 
-let persons = [
-    { name: 'John Doe', age: 30, address: '123 Main St' },
-    { name: 'Jane Smith', age: 25, address: '456 Oak St' },
-    // Add more persons as needed
-  ];
 
 /*
   you can remove the placeholder query once your first one has been implemented 
 */
 
-const typeDefs = gql`
-  type Person {
-    name: String!
-    age: Int!
-    address: String!
-  }
+const typeDefs = gql `
+type Query {
+  bookCount: Int
+  authorCount: Int
+  allBooks: [Book!]!
+}
 
-  type Query {
-    personCount: Int
-    bookCount: Int
-    authorCount: Int
-    allPersons: [Person!]!
-    findPerson(name: String!): Person
-  }
-`;
+type Book {
+  title: String!
+  author: String!
+  published: Int
+  genres: [String!]
+}
+`
 
 const resolvers = {
   Query: {
-    personCount: () => persons.length,
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allPersons: () => persons,
-    findPerson: (root, args) =>
-      persons.find((p) => p.name === args.name),
+    allBooks: () => books.map((book) => ({
+      title: book.title,
+      author: book.author,
+      published: book.published,
+      genres: book.genres,
+    })),
   },
-};
+}
 
 const server = new ApolloServer({
   typeDefs,
