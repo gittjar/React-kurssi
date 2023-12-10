@@ -129,7 +129,7 @@ const resolvers = {
           name: author.name,
           bookCount: books.filter((book) => book.author === author.name).length
       })),
-      allBooks: () => books.filter((book) => book.genres.includes("refactoring")).map((book) => ({
+      allBooks: () => books.filter((book) =>  book.genres.includes("refactoring") && book.author === ('Robert Martin')).map((book) => ({
         title: book.title,
         author: book.author,
         published: book.published,
