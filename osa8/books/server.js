@@ -129,11 +129,11 @@ const resolvers = {
           name: author.name,
           bookCount: books.filter((book) => book.author === author.name).length
       })),
-      allBooks: () => books.map((book) => ({
+      allBooks: () => books.filter((book) => book.author === "Robert Martin").map((book) => ({
         title: book.title,
         author: book.author,
         published: book.published,
-        genres: book.genres,
+        genres: book.genres
       })),
     },
   };
