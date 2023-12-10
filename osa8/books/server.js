@@ -101,50 +101,108 @@ let books = [
 */
 
 const typeDefs = gql `
+
 type Query {
-  bookCount: Int
-  authorCount: Int
-  allAuthors: [Author!]!
-  allBooks: [Book!]!
+    bookCount: Int
+    authorCount: Int
+    allAuthors: [Author!]!
+    allBooks: [Book!]!
+  }
+
+type Mutation {
+  addBook(
+    title: String!
+    author: String!
+    published: Int!
+    genres: [String!]!
+  ): Book!
 }
 
 type Author {
-    name: String!
-    bookCount: Int!
-  }
+  name: String!
+  born: Int
+  bookCount: Int
+}
 
 type Book {
   title: String!
-  author: String!
+  author: Author!
   published: Int
   genres: [String!]
 }
-`
+`;
 
 const resolvers = {
-    Query: {
-      bookCount: () => books.length,
-      authorCount: () => authors.length,
-      allAuthors: () => authors.map((author) => ({
-          name: author.name,
-          bookCount: books.filter((book) => book.author === author.name).length
-      })),
-      allBooks: () => books.filter((book) =>  book.genres.includes("refactoring") && book.author === ('Robert Martin')).map((book) => ({
-        title: book.title,
-        author: book.author,
-        published: book.published,
-        genres: book.genres
-      })),
+  Query: {
+    bookCount: () => books.length,
+    authorCount: () => authors.length,
+    allAuthors: () => authors.map((author) => ({
+      name: author.name,
+      born: author.born,
+      bookCount: books.filter((book) => book.author === author.name).length
+    })),
+    allBooks: () => books.map((book) => ({
+      title: book.title,
+      author: book.author,
+      published: book.published,
+      genres: book.genres
+    })),
+  },
+  Mutation: {
+    addBook: async (_, { title, author: authorName, published, genres }) => {
+      // tarkista author jos on
+      let existingAuthor = authors.find((author) => author.name === authorName);
+
+      if (!existingAuthor) {
+        // if not, create author
+        existingAuthor = {
+          name: authorName,
+        };
+        authors.push(existingAuthor);
+      }
+
+      // luo uusi kirja
+      const newBook = {
+        title: title,
+        author: existingAuthor,
+        published,
+        genres,
+      };
+
+      // add new book to Array
+      books.push(newBook);
+
+      return newBook;
     },
-  };
+  },
+};
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
+/* MUTATION, run this in Apollo Server */
+/*
+
+mutation {
+  addBook(
+    title: "Pimeyden tango",
+    author: "Reijo Mäki",
+    published: 1997,
+    genres: ["crime"]
+  ) {
+    title
+    author {
+      name
+    }
+  }
+}
+
+*/
+
 startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`Palvelin toimii portissa : ${url}`);
-});
+    listen: { port: 4000 },
+  }).then(({ url }) => {
+    console.log(`Palvelin toimii portissa : ${url}`);
+  });
