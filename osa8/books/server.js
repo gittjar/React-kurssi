@@ -108,28 +108,32 @@ type Query {
     allAuthors: [Author!]!
     allBooks: [Book!]!
   }
-
-type Mutation {
-  addBook(
+  
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book!
+    editAuthor(
+        name: String!
+        setBornTo: Int!
+      ): Author
+  }
+  
+  type Author {
+    name: String
+    born: Int
+    bookCount: Int
+  }
+  
+  type Book {
     title: String!
-    author: String!
-    published: Int!
-    genres: [String!]!
-  ): Book!
-}
-
-type Author {
-  name: String!
-  born: Int
-  bookCount: Int
-}
-
-type Book {
-  title: String!
-  author: Author!
-  published: Int
-  genres: [String!]
-}
+    author: Author!
+    published: Int
+    genres: [String!]
+  }
 `;
 
 const resolvers = {
@@ -142,26 +146,44 @@ const resolvers = {
       bookCount: books.filter((book) => book.author === author.name).length
     })),
     allBooks: () => books.map((book) => ({
-      title: book.title,
-      author: book.author,
-      published: book.published,
-      genres: book.genres
-    })),
+        title: book.title,
+        author: {
+          name: book.author
+        },
+        published: book.published,
+        genres: book.genres
+      })),
   },
+
   Mutation: {
+
+    editAuthor: (_, { name, setBornTo }) => {
+        const author = authors.find((author) => author.name === name);
+        if (author) {
+          author.born = setBornTo;
+          return author;
+        } else {
+          return null; 
+        }
+      },
+
     addBook: async (_, { title, author: authorName, published, genres }) => {
-      // tarkista author jos on
+      // Check if the author already exists
       let existingAuthor = authors.find((author) => author.name === authorName);
 
       if (!existingAuthor) {
-        // if not, create author
+        // If the author doesn't exist, create a new author with a default birth year
         existingAuthor = {
           name: authorName,
+          born: null, // You can set this to null or some default value
+          bookCount: 0, // Initialize bookCount to 0 for new authors
         };
         authors.push(existingAuthor);
       }
 
-      // luo uusi kirja
+      // Increment the bookCount for the author
+      existingAuthor.bookCount++;
+
       const newBook = {
         title: title,
         author: existingAuthor,
@@ -169,12 +191,14 @@ const resolvers = {
         genres,
       };
 
-      // add new book to Array
+      // Add the new book to the books array
       books.push(newBook);
 
       return newBook;
     },
   },
+
+  
 };
 
 const server = new ApolloServer({
@@ -184,6 +208,7 @@ const server = new ApolloServer({
 
 /* MUTATION, run this in Apollo Server */
 /*
+// ADD Reijo Mäki book
 
 mutation {
   addBook(
@@ -196,6 +221,15 @@ mutation {
     author {
       name
     }
+  }
+}
+
+// ADD Born to Reijo Mäki
+
+mutation {
+  editAuthor(name: "Reijo Mäki", setBornTo: 1958) {
+    name
+    born
   }
 }
 
