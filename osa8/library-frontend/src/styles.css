@@ -58,3 +58,8 @@ input {
     margin-bottom: 3px;
     color: rgb(180, 228, 254);
   }
+
+  table, th,td {
+    padding: 3px;
+    text-align: left;
+  }
