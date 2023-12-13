@@ -6,13 +6,15 @@ const GET_BOOKS = gql`
     allBooks {
       title
       published
-      author{name} 
+      author{
+        name 
+        } 
     }
   }
 `;
 
 const Books = (props) => {
-  const { loading, error, data } = useQuery(GET_BOOKS);
+  const { loading, error, data } = useQuery(GET_BOOKS, {pollInterval: 2000});
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
