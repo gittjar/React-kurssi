@@ -12,6 +12,8 @@ const GET_AUTHORS = gql`
   }
 `;
 
+
+
 const Authors = (props) => {
   const { loading, error, data } = useQuery(GET_AUTHORS);
 
@@ -19,6 +21,8 @@ const Authors = (props) => {
   if (error) return <p>Error: {error.message}</p>;
 
   const authors = data.allAuthors;
+
+  
 
   return (
     <div>
@@ -32,6 +36,8 @@ const Authors = (props) => {
         </div>
       ))}
     </div>
+  
+
 
     </div>
   );
