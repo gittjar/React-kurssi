@@ -120,6 +120,10 @@ type Query {
         name: String!
         setBornTo: Int!
       ): Author
+      setAuthorBorn(
+        name: String!
+        born: Int!
+      ): Author
   }
   
   type Author {
@@ -164,6 +168,16 @@ const resolvers = {
           return author;
         } else {
           return null; 
+        }
+      },
+      
+      setAuthorBorn: (_, { name, born }) => {
+        const author = authors.find((author) => author.name === name);
+        if (author) {
+          author.born = born;
+          return author;
+        } else {
+          return null;
         }
       },
 
