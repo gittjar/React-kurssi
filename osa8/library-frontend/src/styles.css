@@ -4,32 +4,40 @@ html {
     color: rgb(180, 228, 254);
 }
 
+.iconfwd {
+  color: rgb(180, 228, 254);
+  font-size: 12px;
+  
+}
+
 .main {
-    border: 1px white solid;
     padding: 0.5%;
 }
 
 .navbuttons {
+  border-bottom: 1px white solid;
 }
 
 button {
     padding: 0.7%;
-    border-radius: 5px 5px 5px 5px;
     margin: 0.2%;
-    border: 1px solid white;
-    background-color: rgb(1, 37, 70);
+    border: 0;
     color: whitesmoke;
     font-weight: 500;
     cursor: pointer;
+    font-size: 1.4rem;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
 }
 button:hover {
-    background-color: transparent;
-    border: 1px solid white;
+  background-color: rgb(1, 37, 70);
+  color: rgb(180, 228, 254);
+
 
 }
 
 .content {
-    border: 1px black solid;
     padding: 0.5%;
 
 }

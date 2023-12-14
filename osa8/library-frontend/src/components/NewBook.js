@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 
 const ADD_BOOK = gql`
   mutation addBook(
@@ -85,12 +86,12 @@ const NewBook = (props) => {
           add genres<br></br>
           <input value={genre} onChange={({ target }) => setGenre(target.value)} />
           <button onClick={addGenre} type="button">
-            add genre<br></br>
+            add genre <ArrowForwardIosRoundedIcon className='iconfwd' fontSize="small"></ArrowForwardIosRoundedIcon><br></br>
           </button>
         </div>
         <div>genres: {genres.join(' ')}</div>
         <br></br>
-        <button type="submit">create book</button>
+        <button type="submit">create book <ArrowForwardIosRoundedIcon className='iconfwd' fontSize="small"></ArrowForwardIosRoundedIcon></button>
       </form>
     </div>
   );
