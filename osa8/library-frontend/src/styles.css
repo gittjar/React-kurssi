@@ -16,12 +16,13 @@ html {
 
 .navbuttons {
   border-bottom: 1px white solid;
+  padding-bottom: 1rem;
 }
 
 button {
     padding: 0.7%;
     margin: 0.2%;
-    border: 0;
+    border: 1px rgb(2, 90, 173) solid;
     color: whitesmoke;
     font-weight: 500;
     cursor: pointer;
@@ -31,8 +32,10 @@ button {
     justify-content: center;
 }
 button:hover {
-  background-color: rgb(1, 37, 70);
+  background-color: rgb(2, 90, 173);
   color: rgb(180, 228, 254);
+  border: 1px rgb(2, 90, 173) solid;
+  ;
 
 
 }
@@ -42,9 +45,10 @@ button:hover {
 
 }
 
-input {
+input, select {
     padding: 0.5%;
     width: 10em;
+    margin: 0.5%;
 }
 
 .authors-container {
