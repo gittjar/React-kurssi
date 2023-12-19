@@ -25,6 +25,7 @@ mongoose.connect(MONGODB_URI)
     authorCount: Int
     allAuthors: [Author!]!
     allBooks: [Book!]!
+    allGenres: [String!]!
   }
 
   type Mutation {
@@ -62,6 +63,13 @@ const resolvers = {
     allBooks: async () => Book.find({}).populate('author'),
     authorCount: async () => Author.collection.countDocuments(),
     allAuthors: async () => Author.find({}),
+    allGenres: async () => {
+      const books = await Book.find({});
+      const genres = books.map((book) => book.genres);
+      const flattenedGenres = genres.flat();
+      const uniqueGenres = [...new Set(flattenedGenres)];
+      return uniqueGenres;
+    },
   },
 
   Mutation: {
