@@ -19,44 +19,33 @@ mongoose.connect(MONGODB_URI)
   })
 
 
-  const typeDefs = gql `
+  const typeDefs = gql`
   type Query {
     bookCount: Int
     authorCount: Int
     allAuthors: [Author!]!
     allBooks: [Book!]!
   }
-  
+
   type Mutation {
     addBook(
       title: String!
-      author: AuthorInput
+      author: String!
       published: Int!
       genres: [String!]!
     ): Book
-
     editAuthor(
       name: String!
       setBornTo: Int!
     ): Author
-
-    setAuthorBorn(
-      name: String!
-      born: Int!
-    ): Author
   }
 
-  input AuthorInput {
-    name: String!
-    born: Int
-  }
-  
   type Author {
     name: String
     born: Int
     bookCount: Int
   }
-  
+
   type Book {
     title: String!
     published: Int!
@@ -70,31 +59,41 @@ mongoose.connect(MONGODB_URI)
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
-    allBooks: async (root, args) => {
-      return Book.find({})
-    },
-
+    allBooks: async () => Book.find({}).populate('author'),
     authorCount: async () => Author.collection.countDocuments(),
-    allAuthors: async (root, args) => {
-      return Author.find({})
-    },
+    allAuthors: async () => Author.find({}),
   },
 
   Mutation: {
     addBook: async (_, args) => {
       const { title, author, published, genres } = args;
-  
-      // Assuming Author is a mongoose model
+
+      // Check if the author already exists
+      let authorObject = await Author.findOne({ name: author });
+
+      // If the author doesn't exist, create a new one
+      if (!authorObject) {
+        authorObject = new Author({ name: author });
+        await authorObject.save();
+      }
+
+      // Create the book with the author's ObjectId
       const newBook = new Book({
         title,
-        author: new Author(author), // Ensure proper handling of author
+        author: authorObject._id,
         published,
         genres,
       });
-  
+
       return newBook.save();
-    },
+      
   },
+
+  editAuthor: async (_, args) => {
+    const { name, setBornTo } = args;
+    return Author.findOneAndUpdate({ name }, { born: setBornTo }, { new: true });
+  },
+},
 };
 
 const server = new ApolloServer({
@@ -109,8 +108,8 @@ const server = new ApolloServer({
 
 mutation {
   addBook(
-    title: "Pimeyden tango",
-    author: { name: "Reijo Mäki", born: 1958 },
+    title: "This is testbook",
+    author: "Veikko Virtanen",
     published: 1997,
     genres: ["crime"]
   ) {
