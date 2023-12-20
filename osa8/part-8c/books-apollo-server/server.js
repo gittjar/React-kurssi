@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/Book');
 const Author = require('./models/Author');
+const { ApolloError } = require('apollo-server-errors');
 
 require('dotenv').config()
 const MONGODB_URI = process.env.MONGODB_URI
@@ -76,6 +77,10 @@ const resolvers = {
     addBook: async (_, args) => {
       const { title, author, published, genres } = args;
 
+      if (title.length < 3 || author.length < 3) {
+        throw new ApolloError('Title and author name must be at least 3 characters long');
+      }
+      
       // Check if the author already exists
       let authorObject = await Author.findOne({ name: author });
 
