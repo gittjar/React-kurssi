@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: 'http://localhost:4000', // replace with your server's URL
+  cache: new InMemoryCache()
+});
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+// GraphQL query to fetch all books
+const BOOKS_QUERY = gql`
+  query GetBooks {
+    allBooks {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`;
+
+// Component to display the list of books
+function BooksList() {
+  const { loading, error, data } = useQuery(BOOKS_QUERY);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  return data.allBooks.map(({ title, author, published, genres }) => (
+    <div key={title}>
+      <h3>{title}</h3>
+      <p>Author: {author.name}</p>
+      <p>Published: {published}</p>
+      <p>Genres: {genres.join(', ')}</p>
+    </div>
+  ));
 }
 
-export default App
+// Main App component
+function App() {
+  return (
+    <ApolloProvider client={client}>
+      <h2>My Book List</h2>
+      <BooksList />
+    </ApolloProvider>
+  );
+}
+
+export default App;
