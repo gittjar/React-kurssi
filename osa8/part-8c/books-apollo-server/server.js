@@ -81,7 +81,7 @@ mongoose.connect(MONGODB_URI)
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
-    allBooks: async () => Book.find({}).populate('author'),
+    allBooks: async () => Book.find({}).populate('author', 'name -_id'), 
     authorCount: async () => Author.collection.countDocuments(),
     allAuthors: async () => Author.find({}),
     allGenres: async () => {
