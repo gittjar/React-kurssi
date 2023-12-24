@@ -9,16 +9,11 @@ const client = new ApolloClient({
 
 // GraphQL query to fetch all books
 const BOOKS_QUERY = gql`
-  query GetBooks {
-    allBooks {
-      title
-      author {
-        name
-      }
-      published
-      genres
-    }
+query AllBooks {
+  allBooks {
+    title
   }
+}
 `;
 
 // Component to display the list of books
@@ -28,12 +23,9 @@ function BooksList() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  return data.allBooks.map(({ title, author, published, genres }) => (
+  return data.allBooks.map(({ title }) => (
     <div key={title}>
       <h3>{title}</h3>
-      <p>Author: {author.name}</p>
-      <p>Published: {published}</p>
-      <p>Genres: {genres.join(', ')}</p>
     </div>
   ));
 }
