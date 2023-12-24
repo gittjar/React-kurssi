@@ -6,6 +6,8 @@ mongoose.set('strictQuery', false)
 const Book = require('./models/Book');
 const Author = require('./models/Author');
 const { ApolloError } = require('apollo-server-errors');
+const User = require('./models/User')
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config()
 const MONGODB_URI = process.env.MONGODB_URI
@@ -21,12 +23,22 @@ mongoose.connect(MONGODB_URI)
 
 
   const typeDefs = gql`
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+  type Token {
+    value: String!
+  }
+
   type Query {
     bookCount: Int
     authorCount: Int
     allAuthors: [Author!]!
     allBooks: [Book!]!
     allGenres: [String!]!
+    me: User
   }
 
   type Mutation {
@@ -40,6 +52,14 @@ mongoose.connect(MONGODB_URI)
       name: String!
       setBornTo: Int!
     ): Author
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 
   type Author {
@@ -74,13 +94,14 @@ const resolvers = {
   },
 
   Mutation: {
+
     addBook: async (_, args) => {
       const { title, author, published, genres } = args;
 
       if (title.length < 3 || author.length < 3) {
         throw new ApolloError('Title and author name must be at least 3 characters long');
       }
-      
+
       // Check if the author already exists
       let authorObject = await Author.findOne({ name: author });
 
@@ -99,32 +120,67 @@ const resolvers = {
       });
 
       return newBook.save();
-      
   },
 
   editAuthor: async (_, args) => {
     const { name, setBornTo } = args;
     return Author.findOneAndUpdate({ name }, { born: setBornTo }, { new: true });
   },
-},
+
+  createUser: async (_, args) => {
+    const { username, favoriteGenre } = args;
+    // Create a new user + add the favorite genre
+    const newUser = new User({ username, favoriteGenre });
+    // Save the user to the database and return it
+    return newUser.save();
+  },
+
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+  
+        // hard-coded password for now
+      if ( !user || args.password !== 'secret' ) {
+        throw new GraphQLError('wrong credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT'
+          }
+        })        
+      }
+  
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
+  
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    },
+  },
+
+
+
 };
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  cors: {
+    origin: '*', // specify the domains that have access or '*' for all domains
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify the HTTP methods allowed
+    allowedHeaders: ['Content-Type', 'Authorization'], // specify the headers allowed
+  },
 });
 
 /* MUTATION, run this in Apollo Server */
 /*
-// ADD Reijo Mäki book
-////
+// ADD book
+
 
 mutation {
   addBook(
-    title: "This is testbook",
-    author: "Veikko Virtanen",
-    published: 1997,
-    genres: ["crime"]
+    title: "The Book Thief",
+    author: "Markus Zusak",
+    published: 2005,
+    genres: ["historical fiction", "war"]
   ) {
     title
     author {
@@ -134,12 +190,25 @@ mutation {
 }
 
 
-// ADD Born to Reijo Mäki
+// User creation and login
 
 mutation {
-  editAuthor(name: "Reijo Mäki", setBornTo: 1958) {
-    name
-    born
+  createUser (
+    username: "username1"
+    favoriteGenre: "Codespace"
+  ) {
+    username
+    id
+    favoriteGenre
+  }
+}
+
+mutation {
+  login (
+    username: "username1"
+    password: "secret"
+  ) {
+    value
   }
 }
 
@@ -147,6 +216,17 @@ mutation {
 
 startStandaloneServer(server, {
     listen: { port: 4000 },
+      context: async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.startsWith('Bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), process.env.JWT_SECRET
+      )
+      const currentUser = await User
+        .findById(decodedToken.id).populate('friends')
+      return { currentUser }
+    }
+  },
   }).then(({ url }) => {
     console.log(`Palvelin toimii portissa : ${url}`);
   });
