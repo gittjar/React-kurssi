@@ -71,7 +71,7 @@ mongoose.connect(MONGODB_URI)
   type Book {
     title: String!
     published: Int!
-    author: Author!
+    author: Author
     genres: [String!]!
     id: ID!
   }
