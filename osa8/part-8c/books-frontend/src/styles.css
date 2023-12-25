@@ -1,0 +1,12 @@
+.book-card {
+
+    width: 200px;
+    height: fit-content;
+    margin: 10px;
+    padding: 10px;
+    border: 0;
+    background-color: #3e0142;
+    color: #c903cd;
+    text-decoration: none;
+    border-left: 5px solid #c903cd;
+}

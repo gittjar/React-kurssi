@@ -1,34 +1,16 @@
 import React from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
-
+import { ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import './styles.css';
+import BooksList from './components/BooksList';
 // Initialize Apollo Client
 const client = new ApolloClient({
   uri: 'http://localhost:4000', // replace with your server's URL
   cache: new InMemoryCache()
 });
 
-// GraphQL query to fetch all books
-const BOOKS_QUERY = gql`
-query AllBooks {
-  allBooks {
-    title
-  }
-}
-`;
 
-// Component to display the list of books
-function BooksList() {
-  const { loading, error, data } = useQuery(BOOKS_QUERY);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
 
-  return data.allBooks.map(({ title }) => (
-    <div key={title}>
-      <h3>{title}</h3>
-    </div>
-  ));
-}
 
 // Main App component
 function App() {
