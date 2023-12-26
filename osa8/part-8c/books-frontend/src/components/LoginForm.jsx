@@ -28,12 +28,12 @@ function LoginForm({ onLogin }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='loginform'>
-      <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-      <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" />
-      <button type="submit">Login</button>
-      {error && <p>Error :(</p>}
-    </form>
+    <form onSubmit={handleSubmit} className='loginform dark-background'>
+    <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+    <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" />
+    <button type="submit">Login</button>
+    {error && <p>Error :(</p>}
+  </form>
   );
 }
 
