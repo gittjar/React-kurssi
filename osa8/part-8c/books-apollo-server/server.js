@@ -125,6 +125,19 @@ const resolvers = {
       return newBook.save();
   },
 
+  deleteBook: async (_, args) => {
+    const { title } = args;
+    // Find the book by title
+    const book = await Book.findOne({ title });
+    if (!book) {
+      throw new ApolloError('Book not found');
+    }
+    // Delete the book
+    await Book.deleteOne({ title });
+    // Return the deleted book
+    return book;
+  },
+
   editAuthor: async (_, args) => {
     const { name, setBornTo } = args;
     return Author.findOneAndUpdate({ name }, { born: setBornTo }, { new: true });
