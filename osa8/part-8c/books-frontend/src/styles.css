@@ -29,11 +29,29 @@ button {
     margin-bottom: 5px;
     margin-right: 5px;
 }
-
 button:hover {
-    background-color: #c903cd;
-    color: #3e0142;
+  background-color: #c903cd;
+  color: #3e0142;
 }
+
+.filter-button {
+    padding: 10px;
+    border: 0;
+    font-size: 1rem;
+    background-color: transparent;
+    color: #079aae;
+    text-decoration: none;
+    border: 2px solid #079aae;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.filter-button:hover {
+  background-color: #079aae;
+  color: black;
+}
+
+
 
 .booklist-main {
     width: 100%;

@@ -3,8 +3,8 @@ import { useQuery, useMutation, gql } from '@apollo/client';
 
 // GraphQL query to fetch all books
 const BOOKS_QUERY = gql`
-query AllBooks {
-  allBooks {
+query AllBooks($genre: String) {
+  allBooks(genre: $genre) {
     title
     published
     author {
@@ -68,9 +68,9 @@ function BooksList() {
   return (
     <div>
       {dataGenres.allGenres.map((genre) => (
-        <button key={genre} onClick={() => handleGenreSelect(genre)}>{genre}</button>
+        <button className='filter-button' key={genre} onClick={() => handleGenreSelect(genre)}>{genre}</button>
       ))}
-      <button onClick={() => handleGenreSelect(null)}>All</button>
+      <button className='filter-button' onClick={() => handleGenreSelect(null)}>All</button>
       {lastDeletedBook && <h2>Deleted successfully: {lastDeletedBook}</h2>}
       <div className="booklist-main">
         {dataBooks.allBooks.map(({ title, published, author }) => (
