@@ -60,7 +60,11 @@ mongoose.connect(MONGODB_URI)
       username: String!
       password: String!
     ): Token
+    deleteBook(
+      title: String!
+    ): Book
   }
+
 
   type Author {
     name: String
