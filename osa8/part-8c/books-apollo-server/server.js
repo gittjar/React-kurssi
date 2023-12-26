@@ -36,7 +36,7 @@ mongoose.connect(MONGODB_URI)
     bookCount: Int
     authorCount: Int
     allAuthors: [Author!]!
-    allBooks: [Book!]!
+    allBooks(genre: String): [Book!]!
     allGenres: [String!]!
     me: User
   }
@@ -85,7 +85,14 @@ mongoose.connect(MONGODB_URI)
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
-    allBooks: async () => Book.find({}).populate('author'),    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (_, args) => {
+      if (args.genre) {
+        return Book.find({ genres: { $in: [args.genre] } }).populate('author');
+      } else {
+        return Book.find({}).populate('author');
+      }
+    },       
+    authorCount: async () => Author.collection.countDocuments(),
     allAuthors: async () => Author.find({}),
     allGenres: async () => {
       const books = await Book.find({});

@@ -29,27 +29,51 @@ mutation DeleteBook($title: String!) {
 }
 `;
 
+
+
+// GraphQL query to fetch all genres
+const GENRES_QUERY = gql`
+query AllGenres {
+  allGenres
+}
+`;
+
 function BooksList() {
-  const { loading, error, data, refetch } = useQuery(BOOKS_QUERY, {
+  const [genre, setGenre] = useState(null); // new state variable for the selected genre
+  const { loading: loadingBooks, error: errorBooks, data: dataBooks, refetch: refetchBooks } = useQuery(BOOKS_QUERY, {
+    variables: { genre },
     pollInterval: 10000, // fetch data every 10 seconds
   });
+  const { loading: loadingGenres, error: errorGenres, data: dataGenres } = useQuery(GENRES_QUERY);
   const [deleteBook] = useMutation(DELETE_BOOK);
   const [lastDeletedBook, setLastDeletedBook] = useState(null);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  if (loadingBooks || loadingGenres) return <p>Loading...</p>;
+  if (errorBooks || errorGenres) return <p>Error :(</p>;
 
   const handleDelete = async (title) => {
     await deleteBook({ variables: { title } });
     setLastDeletedBook(title);
-    refetch(); // refetch data after deleting a book
+    refetchBooks(); // refetch data after deleting a book
+  };
+
+  const handleGenreSelect = (genre) => {
+    console.log('Selected genre:', genre); // log the selected genre
+    setGenre(genre);
+    refetchBooks().then(() => {
+      console.log('Books refetched'); // log when the books are refetched
+    });
   };
 
   return (
     <div>
+      {dataGenres.allGenres.map((genre) => (
+        <button key={genre} onClick={() => handleGenreSelect(genre)}>{genre}</button>
+      ))}
+      <button onClick={() => handleGenreSelect(null)}>All</button>
       {lastDeletedBook && <h2>Deleted successfully: {lastDeletedBook}</h2>}
       <div className="booklist-main">
-        {data.allBooks.map(({ title, published, author }) => (
+        {dataBooks.allBooks.map(({ title, published, author }) => (
           <section key={title} className='book-card'>
             <h4>{published} - {title}</h4>
             <p>Author: {author ? author.name : 'Unknown'}</p>
