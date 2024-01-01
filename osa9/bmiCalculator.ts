@@ -1,4 +1,4 @@
-function calculateBmi(height: number, weight: number): string {
+export function calculateBmi(height: number, weight: number): string {
     let heightInMeters: number = height / 100;
     let bmi: number = weight / (heightInMeters ** 2);
 
@@ -12,11 +12,3 @@ function calculateBmi(height: number, weight: number): string {
         return "Obesity";
     }
 }
-
-const args = process.argv.slice(2);
-const height = Number(args[0]);
-const weight = Number(args[1]);
-
-console.log(calculateBmi(height, weight));
-
-// npm run bmicalc 180 91
