@@ -1,0 +1,16 @@
+{
+  "name": "osa9",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "multiply": "ts-node multiplier.ts",
+    "bmicalc": "ts-node bmiCalculator.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.6"
+  }
+}
