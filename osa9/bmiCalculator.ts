@@ -13,9 +13,10 @@ function calculateBmi(height: number, weight: number): string {
     }
 }
 
-let pituus: number = 180;
-let paino: number = 74;
+const args = process.argv.slice(2);
+const height = Number(args[0]);
+const weight = Number(args[1]);
 
-// Call the function with hard-coded parameters
-let bmiResult: string = calculateBmi(pituus, paino);
-console.log(bmiResult + ' pituus: ' + pituus + 'cm' + ' paino: ' + paino + 'kg');
+console.log(calculateBmi(height, weight));
+
+// npm run bmicalc 180 91

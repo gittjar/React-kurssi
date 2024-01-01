@@ -38,4 +38,10 @@ interface Result {
     };
   }
   
-  console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+  const args = process.argv.slice(2);
+  const target = Number(args[0]);
+  const dailyHours = args.slice(1).map(Number);
+  
+  console.log(calculateExercises(dailyHours, target));
+
+  // npm run exercise 2 1 0 2 4.5 0 3 1 0 4
