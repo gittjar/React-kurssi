@@ -1,4 +1,15 @@
-const data = [
+type Gender = 'male' | 'female' | 'other';
+
+type Patient = {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  gender: Gender;
+  occupation: string;
+};
+
+const patients: Array<Patient> = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
@@ -50,4 +61,4 @@ const data = [
 
 ];
 
-export default data;
+export default patients;
