@@ -5,6 +5,7 @@ import cors from "cors";
 import { v1 as uuid } from 'uuid';
 import diagnoses from "../data/diagnoses";
 import patients from "../data/patients";
+import { toNewPatient } from "../data/utils";
 
 const app = express();
 app.use(cors());
@@ -23,17 +24,14 @@ app.get("/api/patients", (req, res) => {
 });
 
 app.post("/api/patients", (req, res) => {
-  const { name, dateOfBirth, ssn, gender, occupation } = req.body;
-  const newPatient = {
-    id: uuid(),
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation
-  };
-  patients.push(newPatient);
-  res.send(newPatient);
+  try {
+    const newPatient = toNewPatient(req.body);
+    newPatient.id = uuid();
+    patients.push(newPatient);
+    res.json(newPatient);
+  } catch (e) {
+    res.status(400).send(e.message);
+  }
 });
 
 const PORT = process.env.PORT || 3003;

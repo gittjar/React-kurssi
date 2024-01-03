@@ -54,7 +54,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
           Patient list
         </Typography>
       </Box>
-      <Table style={{ marginBottom: "1em" }}>
+      <Table style={{ marginBottom: "1em", backgroundColor: "light-grey"}}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -66,11 +66,11 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         <TableBody>
           {Object.values(patients).map((patient: Patient) => (
             <TableRow key={patient.id}>
-              <TableCell>{patient.name}</TableCell>
+              <TableCell style={{ backgroundColor: "pink"}}>{patient.name}</TableCell>
               <TableCell>{patient.gender}</TableCell>
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
+                <HealthRatingBar showText={true} rating={3} />
               </TableCell>
             </TableRow>
           ))}
@@ -82,7 +82,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         error={error}
         onClose={closeModal}
       />
-      <Button variant="contained" onClick={() => openModal()}>
+      <Button variant="outlined" onClick={() => openModal()}>
         Add New Patient
       </Button>
     </div>
