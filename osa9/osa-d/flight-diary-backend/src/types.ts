@@ -4,6 +4,8 @@ export enum Weather {
   Cloudy = 'cloudy',
   Stormy = 'stormy',
   Windy = 'windy',
+  Snowy = 'snowy',
+  Freezing = 'freezing'
 }
 
 export enum Visibility {
@@ -11,6 +13,8 @@ export enum Visibility {
   Good = 'good',
   Ok = 'ok',
   Poor = 'poor',
+  Terrible = 'terrible',
+  Cold = 'cold',
 }
 
 export interface DiaryEntry {
