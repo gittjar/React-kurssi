@@ -17,9 +17,11 @@ export enum Visibility {
   Cold = 'cold',
 }
 
+export type FormattedDate = string;
+  
 export interface DiaryEntry {
   id: number;
-  date: string;
+  date: FormattedDate;
   weather: Weather;
   visibility: Visibility;
   comment: string;

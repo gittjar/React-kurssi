@@ -25,7 +25,8 @@ const App: React.FC = () => {
 
   const addEntry = async () => {
     try {
-      const response = await axios.post<DiaryEntry>('http://localhost:3001/api/diaries', newEntry);
+      const entryToSend = { ...newEntry, date: formatDate(newEntry.date) };
+      const response = await axios.post<DiaryEntry>('http://localhost:3001/api/diaries', entryToSend);
       setDiaryEntries([...diaryEntries, response.data]);
       setNewEntry({ date: '', weather: Weather.Sunny, visibility: Visibility.Great, comment: '' });
       setErrorMessage(null); // clear any previous error message
@@ -35,18 +36,37 @@ const App: React.FC = () => {
     }
   };
 
+  const formatDate = (date: string): string => {
+    const parts = date.split('.');
+    if (parts.length !== 3) {
+      return date;
+    }
+    const [day, month, year] = parts;
+    return `${day}-${month}-${year}`;
+  };
+  
+
+
   return (
     <div>
-      
+      <section className='headerbox'>
         {errorMessage && <article className='error-message'>Error: {errorMessage}</article>}
-      
       <h1>My Flight Diary</h1>
+      </section>
+
+    <section className='main'>
+      <aside className='input'>
       <div>
-        <input
-          value={newEntry.date}
-          onChange={e => setNewEntry({ ...newEntry, date: e.target.value })}
-          placeholder="Date"
-        /><br/>
+            <input
+        type="date"
+        value={newEntry.date}
+        onChange={e => {
+          const date = e.target.value;
+          setNewEntry({ ...newEntry, date });
+        }}
+      />
+        
+        <br/>
         <select
           value={newEntry.weather}
           onChange={e => setNewEntry({ ...newEntry, weather: e.target.value as Weather })}
@@ -74,9 +94,17 @@ const App: React.FC = () => {
         /><br/>
         <button onClick={addEntry}>Add entry</button>
       </div>
+      </aside>
+
+            <aside className='entries'>
+      <h2>Entries</h2>
       {diaryEntries.map(entry => (
+        <article className='entry-results'>
         <DiaryEntryComponent key={entry.id} entry={entry} />
+        </article>
       ))}
+           </aside>
+    </section>
     </div>
   );
 };
