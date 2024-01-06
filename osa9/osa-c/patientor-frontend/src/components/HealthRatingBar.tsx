@@ -10,10 +10,10 @@ type BarProps = {
 
 const StyledRating = styled(Rating)({
   iconFilled: {
-    color: "#ff6d75",
+    color: "green",
   },
   iconHover: {
-    color: "#ff3d47",
+    color: "green",
   }
 });
 
@@ -32,6 +32,7 @@ const HealthRatingBar = ({ rating, showText }: BarProps) => {
         value={4 - rating}
         max={4}
         icon={<Favorite fontSize="inherit" />}
+        
       />
 
       {showText ? <p>{HEALTHBAR_TEXTS[rating]}</p> : null}

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 import { PatientFormValues, Patient } from "../../types";
 import AddPatientModal from "../AddPatientModal";
@@ -66,11 +68,18 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         <TableBody>
           {Object.values(patients).map((patient: Patient) => (
             <TableRow key={patient.id}>
-              <TableCell style={{ backgroundColor: "pink"}}>{patient.name}</TableCell>
-              <TableCell>{patient.gender}</TableCell>
-              <TableCell>{patient.occupation}</TableCell>
-              <TableCell>
-                <HealthRatingBar showText={true} rating={3} />
+                        <TableCell>
+                          
+            <Link to={`/patients/${patient.id}`} style={{ backgroundColor: "white", color: "navy"}}>
+              {patient.name}
+            </Link>
+          </TableCell>
+
+              
+              <TableCell style={{ backgroundColor: "white", color: "navy"}}>{patient.gender}</TableCell>
+              <TableCell style={{ backgroundColor: "white", color: "navy"}}>{patient.occupation}</TableCell>
+              <TableCell style={{ backgroundColor: "white", color: "navy"}}>
+                <HealthRatingBar  showText={true} rating={3} />
               </TableCell>
             </TableRow>
           ))}
