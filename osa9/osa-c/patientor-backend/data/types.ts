@@ -19,6 +19,22 @@ export interface Patient {
   entries: Entry[]
 }
 
+export interface Discharge {
+  date: string;
+  criteria: string;
+}
+
+export interface HospitalEntry {
+  type: "Hospital";
+  date: string;
+  specialist: string;
+  diagnosisCodes?: string[];
+  description: string;
+  discharge: Discharge;
+}
+
+export type Entry = HospitalEntry;
+
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
 export type NewPatient = Omit<Patient, 'id'>;

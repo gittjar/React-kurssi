@@ -6,6 +6,9 @@ import { v1 as uuid } from 'uuid';
 import diagnoses from "../data/diagnoses";
 import patients from "../data/patients";
 import { toNewPatient } from "../data/utils";
+import { toNewEntry } from "../data/utils";
+
+
 
 const app = express();
 app.use(cors());
@@ -41,6 +44,22 @@ app.post("/api/patients", (req, res) => {
     res.json(newPatient);
   } catch (e) {
     res.status(400).send(e.message);
+  }
+});
+
+
+app.post("/api/patients/:id/entries", (req, res) => {
+  const patient = patients.find(p => p.id === req.params.id);
+  if (patient) {
+    try {
+      const newEntry = toNewEntry(req.body);
+      patient.entries.push(newEntry);
+      res.json(newEntry);
+    } catch (e) {
+      res.status(400).send(e.message);
+    }
+  } else {
+    res.sendStatus(404);
   }
 });
 

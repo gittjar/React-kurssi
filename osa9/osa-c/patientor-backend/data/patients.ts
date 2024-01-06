@@ -7,6 +7,7 @@ type Patient = {
   ssn: string;
   gender: Gender;
   occupation: string;
+  entries: [];
 };
 
 const patients: Array<Patient> = [
@@ -56,7 +57,8 @@ const patients: Array<Patient> = [
         "dateOfBirth": "1731-01-11",
         "ssn": "011131-9012",
         "gender": "male",
-        "occupation": "Pirate"
+        "occupation": "Pirate",
+        "entries": []
     }
 
 ];

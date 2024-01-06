@@ -1,6 +1,8 @@
 // data/utils.ts
 
 import { NewPatient, Gender } from './types';
+import { Entry, HospitalEntry, Discharge } from './types';
+
 
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -14,12 +16,12 @@ const isGender = (param: any): param is Gender => {
   return Object.values(Gender).includes(param);
 };
 
-const parseName = (name: any): string => {
-  if (!name || !isString(name)) {
-    throw new Error('Incorrect or missing name');
+const parseString = (text: any): string => {
+  if (!text || !isString(text)) {
+    throw new Error('Incorrect or missing string');
   }
 
-  return name;
+  return text;
 };
 
 const parseDateOfBirth = (date: any): string => {
@@ -56,10 +58,37 @@ const parseOccupation = (occupation: any): string => {
 
 export const toNewPatient = (object: any): NewPatient => {
   return {
-    name: parseName(object.name),
+    name: parseString(object.name),
     dateOfBirth: parseDateOfBirth(object.dateOfBirth),
     ssn: parseSsn(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation)
   };
+};
+
+const parseDischarge = (discharge: any): Discharge => {
+  if (!discharge || !isDate(discharge.date) || !isString(discharge.criteria)) {
+    throw new Error('Incorrect or missing discharge');
+  }
+
+  return discharge;
+};
+
+export const toNewEntry = (object: any): Entry => {
+  switch (object.type) {
+    case "Hospital":
+      const newEntry: HospitalEntry = {
+        type: "Hospital",
+        date: parseDateOfBirth(object.date), // use parseDateOfBirth instead of parseDate
+        specialist: parseString(object.specialist),
+        description: parseString(object.description),
+        discharge: parseDischarge(object.discharge),
+      };
+      if (object.diagnosisCodes) {
+        newEntry.diagnosisCodes = object.diagnosisCodes;
+      }
+      return newEntry;
+    default:
+      throw new Error(`Invalid or missing type: ${object.type}`);
+  }
 };
