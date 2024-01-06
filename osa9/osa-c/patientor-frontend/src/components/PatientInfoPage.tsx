@@ -37,15 +37,26 @@ const PatientInfoPage = () => {
 
   return (
     <div className='patient-card'>
-        <p className='smallfont'>{patient.id}</p>
-      <h1>{patient.name}</h1>
-      <div className='thinline'></div>
-      <p>Gender: {genderIcon()}</p>
-      <p>Date of birth: {patient.dateOfBirth}</p>
-      <p>Occupation: {patient.occupation}</p>
-      <div className='thinline'></div>
-      <p>This is card footer</p>
-    </div>
+    <p className='smallfont'>{patient.id}</p>
+    <h1>{patient.name}</h1>
+    <div className='thinline'></div>
+    <p>Gender: {genderIcon()}</p>
+    <p>Date of birth: {patient.dateOfBirth}</p>
+    <p>Occupation: {patient.occupation}</p>
+    <div className='thinline'></div>
+    <h2>Entries</h2>
+    {patient.entries.map(entry => (
+      <div key={entry.id}>
+        <p>{entry.date}: {entry.description}</p>
+        <p>Specialist: {entry.specialist}</p>
+        {entry.diagnosisCodes && <p>Diagnosis codes: {entry.diagnosisCodes.join(', ')}</p>}
+        {entry.discharge && <p>Discharge: {entry.discharge.date} <br></br> {entry.discharge.criteria}</p>}
+      </div>
+    ))}
+    <div className='thinline'></div>
+
+    <p>This is card footer</p>
+  </div>
   );
 };
 
