@@ -55,6 +55,7 @@ app.post("/api/patients/:id/entries", (req, res) => {
       const newEntry = toNewEntry(req.body);
       patient.entries.push(newEntry);
       res.json(newEntry);
+      console.log('Data of newEntry: ' + newEntry);
     } catch (e) {
       res.status(400).send(e.message);
     }

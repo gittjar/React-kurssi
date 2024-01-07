@@ -11,6 +11,31 @@ const diagnoses: Array<Diagnosis> = [
       "latin": "Morbositas ligamenti"
     },
     {
+      "code": "A00.1",
+      "name": "Cholera due to Vibrio cholerae 01, biovar eltor",
+      "latin": "Cholera ab Vibrio cholerae 01, biovar eltor"
+    },
+    {
+      "code": "A01.0",
+      "name": "Typhoid fever",
+      "latin": "Febres typhoides"
+    },
+    {
+      "code": "A02.1",
+      "name": "Salmonella sepsis",
+      "latin": "Salmonella sepsis"
+    },
+    {
+      "code": "A03.0",
+      "name": "Shigellosis due to Shigella dysenteriae",
+      "latin": "Shigellosis ab Shigella dysenteriae"
+    },
+    {
+      "code": "A04.0",
+      "name": "Enteropathogenic Escherichia coli infection",
+      "latin": "Infectio ab Escherichia coli enteropathogenica"
+    },
+    {
       "code": "M51.2",
       "name": "Other specified intervertebral disc displacement",
       "latin": "Alia dislocatio disci intervertebralis specificata"

@@ -2,16 +2,19 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-
 const PatientInfoPage = () => {
   const { id } = useParams();
   const [patient, setPatient] = useState(null);
+  const [diagnoses, setDiagnoses] = useState([]);
+  const [loadingPatient, setLoadingPatient] = useState(true);
+  const [loadingDiagnoses, setLoadingDiagnoses] = useState(true);
 
   useEffect(() => {
     const fetchPatient = async () => {
       try {
         const response = await axios.get(`http://localhost:3003/api/patients/${id}`);
         setPatient(response.data);
+        setLoadingPatient(false);
       } catch (error) {
         console.error('Failed to fetch patient', error);
       }
@@ -20,7 +23,21 @@ const PatientInfoPage = () => {
     fetchPatient();
   }, [id]);
 
-  if (!patient) {
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        const response = await axios.get('http://localhost:3003/api/diagnoses');
+        setDiagnoses(response.data);
+        setLoadingDiagnoses(false);
+      } catch (error) {
+        console.error('Failed to fetch diagnoses', error);
+      }
+    };
+
+    fetchDiagnoses();
+  }, []);
+
+  if (loadingPatient || loadingDiagnoses) {
     return <div>Loading...</div>;
   }
 
@@ -35,28 +52,38 @@ const PatientInfoPage = () => {
     }
   };
 
+  const getDiagnosisDescription = (code) => {
+    const diagnosis = diagnoses.find(d => d.code === code);
+    return diagnosis ? diagnosis.name : '';
+  };
+
   return (
     <div className='patient-card'>
-    <p className='smallfont'>{patient.id}</p>
-    <h1>{patient.name}</h1>
-    <div className='thinline'></div>
-    <p>Gender: {genderIcon()}</p>
-    <p>Date of birth: {patient.dateOfBirth}</p>
-    <p>Occupation: {patient.occupation}</p>
-    <div className='thinline'></div>
-    <h2>Entries</h2>
-    {patient.entries.map(entry => (
-      <div key={entry.id}>
-        <p>{entry.date}: {entry.description}</p>
-        <p>Specialist: {entry.specialist}</p>
-        {entry.diagnosisCodes && <p>Diagnosis codes: {entry.diagnosisCodes.join(', ')}</p>}
-        {entry.discharge && <p>Discharge: {entry.discharge.date} <br></br> {entry.discharge.criteria}</p>}
-      </div>
-    ))}
-    <div className='thinline'></div>
-
-    <p>This is card footer</p>
-  </div>
+      <p className='smallfont'>{patient.id}</p>
+      <h1>{patient.name}</h1>
+      <div className='thinline'></div>
+      <p>Gender: {genderIcon()}</p>
+      <p>Date of birth: {patient.dateOfBirth}</p>
+      <p>Occupation: {patient.occupation}</p>
+      <div className='thinline'></div>
+      <h2>Entries</h2>
+      {patient.entries.map(entry => (
+        <div key={entry.id} className='entry-card'>
+          <p>{entry.date}: {entry.description}</p>
+          <p>Specialist: {entry.specialist}</p>
+          {entry.diagnosisCodes && (
+            <ul>
+              {entry.diagnosisCodes.map(code => (
+                <li key={code}>{code}: {getDiagnosisDescription(code)}</li>
+              ))}
+            </ul>
+          )}
+          {entry.discharge && <p>Discharge: {entry.discharge.date} <br></br> {entry.discharge.criteria}</p>}
+        </div>
+      ))}
+      <div className='thinline'></div>
+      <p>This is card footer</p>
+    </div>
   );
 };
 
