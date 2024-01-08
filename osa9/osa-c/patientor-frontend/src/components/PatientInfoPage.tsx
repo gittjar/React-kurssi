@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import AddEntryForm from './AddEntryForm';
 
 const PatientInfoPage = () => {
   const { id } = useParams();
@@ -33,9 +34,10 @@ const PatientInfoPage = () => {
         console.error('Failed to fetch diagnoses', error);
       }
     };
-
+     // Fetch the diagnoses data immediately
     fetchDiagnoses();
   }, []);
+
 
   if (loadingPatient || loadingDiagnoses) {
     return <div>Loading...</div>;
@@ -57,8 +59,14 @@ const PatientInfoPage = () => {
     return diagnosis ? diagnosis.name : '';
   };
 
+
+
   return (
-    <div className='patient-card'>
+   
+    <div className='main'>
+            <AddEntryForm patientId={patient.id} />
+
+       <section className='patient-card'>
       <p className='smallfont'>{patient.id}</p>
       <h1>{patient.name}</h1>
       <div className='thinline'></div>
@@ -83,8 +91,10 @@ const PatientInfoPage = () => {
       ))}
       <div className='thinline'></div>
       <p>This is card footer</p>
-    </div>
+      </section>
+          </div>
+         
   );
-};
+};  
 
 export default PatientInfoPage;
