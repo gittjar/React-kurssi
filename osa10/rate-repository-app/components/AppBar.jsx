@@ -1,5 +1,7 @@
 import { View, StyleSheet, Text, Pressable } from 'react-native'; // Import Text
 import Constants from 'expo-constants';
+import { Link } from 'react-router-native'; // Import Link
+import React from 'react'; // Import React
 
 const styles = StyleSheet.create({
   container: {
@@ -16,6 +18,11 @@ const styles = StyleSheet.create({
     textAlign: 'left', // Align the text to the left
     paddingLeft: 80, // Add left padding
   },
+  link: {
+    color: 'darkcyan',
+    fontSize: 20,
+    paddingLeft: 80,
+  },
   // ...
 });
 
@@ -24,6 +31,13 @@ const AppBar = () => {
     <View style={styles.container}>
 
       <Text style={styles.title}>Repositories</Text> {/* Use Text component for the title */}
+      <Link to="/signin" >
+            <Text style={styles.link}>Sign In</Text>
+        </Link>
+
+        <Link to="/">
+            <Text style={styles.link}>Repositories</Text>
+        </Link>
   
     </View>
   );
