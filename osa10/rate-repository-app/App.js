@@ -20,7 +20,6 @@ export default function App() {
         </Routes>
       </NativeRouter>
 
-      <Text>Open up App.js to start working on your app! This is test!</Text>
       <StatusBar style="auto" />
     </View>
   );

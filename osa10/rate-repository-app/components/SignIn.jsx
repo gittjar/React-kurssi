@@ -1,5 +1,7 @@
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +22,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  errorInput: {
+    borderColor: 'red',
+  },
   button: {
     backgroundColor: 'darkblue',
     padding: 10,
@@ -30,34 +35,54 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
+  errorText: {
+    color: 'red',
+    marginBottom: 5,
+  },
+});
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string().required('Username is required'),
+  password: Yup.string().required('Password is required'),
 });
 
 const SignIn = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onSubmit = () => {
-    console.log({ username, password });
+  const onSubmit = (values) => {
+    console.log(values);
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={setUsername}
-        value={username}
-        placeholder="Username"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setPassword}
-        value={password}
-        placeholder="Password"
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+          <>
+            <TextInput
+              style={[styles.input, touched.username && errors.username && styles.errorInput]}
+              onChangeText={handleChange('username')}
+              onBlur={handleBlur('username')}
+              value={values.username}
+              placeholder="Username"
+            />
+            {touched.username && errors.username && <Text style={styles.errorText}>{errors.username}</Text>}
+            <TextInput
+              style={[styles.input, touched.password && errors.password && styles.errorInput]}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              placeholder="Password"
+              secureTextEntry
+            />
+            {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </Formik>
     </View>
   );
 };

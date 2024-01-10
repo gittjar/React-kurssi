@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: 'black', // Set background color to black
+    backgroundColor: '#050E56',
     height: 80, // Set height (5rem is typically 80 in React Native)
     justifyContent: 'center', // Center the text vertically
     alignItems: 'flex-start', // Align the text to the start
@@ -19,19 +19,25 @@ const styles = StyleSheet.create({
     fontSize: 24, // Set text size
     textAlign: 'left', // Align the text to the left
     paddingLeft: 80, // Add left padding
+    fontWeight: 'bold', // Make text bold
   },
   link: {
-    color: 'darkcyan',
-    fontSize: 20,
+    color: 'white',
+    fontSize: 18,
     paddingLeft: 80,
   },
-  // ...
+  teksti: {
+    color: 'white',
+    fontSize: 12,
+    paddingLeft: 80,
+  },
 });
 
 const AppBar = () => {
   return (
     <View style={styles.container}>
 
+    <Text style={styles.teksti}>Part 10 - by gittjar - 2024</Text>
 
       <Text style={styles.title}>Repositories</Text> {/* Use Text component for the title */}
       <ScrollView horizontal>
