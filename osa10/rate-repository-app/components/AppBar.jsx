@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text } from 'react-native'; // Import Text
+import { View, StyleSheet, Text, Pressable } from 'react-native'; // Import Text
 import Constants from 'expo-constants';
 
 const styles = StyleSheet.create({
@@ -22,7 +22,9 @@ const styles = StyleSheet.create({
 const AppBar = () => {
   return (
     <View style={styles.container}>
+
       <Text style={styles.title}>Repositories</Text> {/* Use Text component for the title */}
+  
     </View>
   );
 };
