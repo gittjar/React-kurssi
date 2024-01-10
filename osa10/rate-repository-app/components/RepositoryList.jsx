@@ -93,6 +93,17 @@ const repositories = [
     reviewCount: 0,
     ownerAvatarUrl: 'https://avatars3.githubusercontent.com/u/13142323?v=4',
   },
+  {
+    id: 'code.slave',
+    fullName: 'Pekka Kirves',
+    description: 'Master of the code and breaker of chains',
+    language: 'C# and Java',
+    forksCount: 240023,
+    stargazersCount: 564,
+    ratingAverage: 666,
+    reviewCount: 1,
+    ownerAvatarUrl: 'https://digital.pictures.fi/kuvat/pizzatilaus-pic-db/burger003.jpg?img=smaller',
+  }
 ];
 
 const ItemSeparator = () => <View style={styles.separator} />;
