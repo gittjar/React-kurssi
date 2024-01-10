@@ -2,6 +2,8 @@ import { View, StyleSheet, Text, Pressable } from 'react-native'; // Import Text
 import Constants from 'expo-constants';
 import { Link } from 'react-router-native'; // Import Link
 import React from 'react'; // Import React
+import { ScrollView } from 'react-native';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +32,9 @@ const AppBar = () => {
   return (
     <View style={styles.container}>
 
+
       <Text style={styles.title}>Repositories</Text> {/* Use Text component for the title */}
+      <ScrollView horizontal>
       <Link to="/signin" >
             <Text style={styles.link}>Sign In</Text>
         </Link>
@@ -38,7 +42,7 @@ const AppBar = () => {
         <Link to="/">
             <Text style={styles.link}>Repositories</Text>
         </Link>
-  
+        </ScrollView>
     </View>
   );
 };
