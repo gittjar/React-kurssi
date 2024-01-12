@@ -1,5 +1,6 @@
 import { FlatList, View, StyleSheet, Text, Image } from 'react-native';
 import React from 'react';
+import theme from '../components/theme';
 
 const styles = StyleSheet.create({
     card: {
@@ -8,6 +9,7 @@ const styles = StyleSheet.create({
       marginTop: 10,
       borderRadius: 5,
       border: '1px solid black',
+      fontFamily: theme.fonts.main
     },
     separator: {
       height: 10,
