@@ -1,7 +1,16 @@
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useMutation, gql } from '@apollo/client';
+
+const AUTHENTICATE = gql`
+  mutation Authenticate($credentials: AuthenticateInput) {
+    authenticate(credentials: $credentials) {
+      accessToken
+    }
+  }
+`;
 
 const styles = StyleSheet.create({
   container: {
@@ -47,8 +56,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
+  const [message, setMessage] = useState('');
+  const [authenticate, { data }] = useMutation(AUTHENTICATE);
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const result = await authenticate({ variables: { credentials: { username, password } } });
+      console.log(result.data.authenticate.accessToken);
+      setMessage('Login successful');
+    } catch (e) {
+      console.log(e);
+      setMessage('Login failed');
+    }
   };
 
   return (
@@ -80,6 +101,7 @@ const SignIn = () => {
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
+            {message && <Text>{message}</Text>}
           </>
         )}
       </Formik>

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NativeRouter } from 'react-router-native';
 import { Route, Routes, Navigate } from 'react-router-native';
 import SignIn from './components/SignIn';
+import TestComponent from './components/TestComponent';
 
 import React from 'react';
 import RepositoryList from './components/RepositoryList';
@@ -29,6 +30,7 @@ export default function App() {
           <Routes>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/" element={<RepositoryList />} />
+            <Route path="/test" element={<TestComponent />} />
           </Routes>
         </NativeRouter>
 

@@ -82,6 +82,7 @@ const AppBar = () => {
       <ScrollView horizontal>
         <HoverableLink to="/signin">Sign In</HoverableLink>
         <HoverableLink to="/">Repositories</HoverableLink>
+        <HoverableLink to="/test">Test</HoverableLink>
       </ScrollView>
     </View>
   );
