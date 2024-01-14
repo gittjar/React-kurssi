@@ -69,6 +69,7 @@ const formatCount = (count) => {
         <FlatList
         data={repositories}
         ItemSeparatorComponent={ItemSeparator}
+        style={{ backgroundColor: '#FAFAFE', paddingLeft: 20, paddingRight: 20 }} 
         renderItem={({ item }) => (
             <View style={styles.card}>
             <View style={styles.row}>

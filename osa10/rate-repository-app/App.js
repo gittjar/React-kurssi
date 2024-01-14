@@ -11,12 +11,16 @@ import AppBar from './components/AppBar';
 import { ApolloProvider } from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
+import Constants from 'expo-constants';
+
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
+  // .env + app.config.js
+  uri: Constants.manifest.extra.apolloUri,
   cache: new InMemoryCache()
 });
 
 export default function App() {
+  console.log(Constants.manifest);
   return (
     <ApolloProvider client={client}>
       <View style={styles.container}>

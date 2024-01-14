@@ -91,7 +91,7 @@ const repositories = [
 // Define your resolvers
 const resolvers = {
   Query: {
-    hello: () => 'Hello, world!',
+    hello: () => 'Hei maailma!',
     repositories: () => ({
       edges: repositories.map((repo) => ({
         node: repo,
