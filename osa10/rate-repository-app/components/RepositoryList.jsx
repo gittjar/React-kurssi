@@ -6,8 +6,10 @@ import useRepositories from './useRepositories';
 const styles = StyleSheet.create({
     card: {
       backgroundColor: 'white',
+      width: '100%',
       padding: 15,
       marginTop: 10,
+      marginBottom: 5,
       borderRadius: 5,
       border: '1px solid black',
       fontFamily: theme.fonts.main

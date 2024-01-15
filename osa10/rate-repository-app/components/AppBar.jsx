@@ -3,6 +3,19 @@ import Constants from 'expo-constants';
 import { Link } from 'react-router-native';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
+import { useQuery, useApolloClient, gql } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const ME = gql`
+  query Me {
+    me {
+      id
+      username
+    }
+  }
+`;
+
+
 
 const { width } = Dimensions.get('window');
 
@@ -74,13 +87,34 @@ const HoverableLink = ({ to, children }) => {
   );
 };
 
+const SignOutTab = () => {
+  const client = useApolloClient();
+
+  const handleSignOut = async () => {
+    await AsyncStorage.removeItem('userToken');
+    client.resetStore();
+  };
+
+  return (
+    <Pressable onPress={handleSignOut}>
+      <Text style={styles.link}>Sign Out</Text>
+    </Pressable>
+  );
+};
+
 const AppBar = () => {
+  const { data } = useQuery(ME);
+
   return (
     <View style={styles.container}>
       <Text style={styles.teksti}>Part 10 - by gittjar - 2024</Text>
       <Text style={styles.title}>Repositories</Text>
       <ScrollView horizontal>
-        <HoverableLink to="/signin">Sign In</HoverableLink>
+        {data && data.me ? (
+          <SignOutTab />
+        ) : (
+          <HoverableLink to="/signin">Sign In</HoverableLink>
+        )}
         <HoverableLink to="/">Repositories</HoverableLink>
         <HoverableLink to="/test">Test</HoverableLink>
       </ScrollView>

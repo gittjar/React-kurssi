@@ -1,44 +1,25 @@
+import Constants from 'expo-constants';
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import AuthStorage from './utils/authStorage';
+import AuthStorageContext from './contexts/AuthStorageContext';
+import { ApolloProvider } from '@apollo/client';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { NativeRouter, Route, Routes, Link, Switch, Redirect } from "react-router-native";
+
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NativeRouter } from 'react-router-native';
-import { Route, Routes, Navigate } from 'react-router-native';
+import AppBar from './components/AppBar';
+import RepositoryList from './components/RepositoryList';
 import SignIn from './components/SignIn';
 import TestComponent from './components/TestComponent';
 
-import React from 'react';
-import RepositoryList from './components/RepositoryList';
-import AppBar from './components/AppBar';
 
-import { ApolloProvider } from '@apollo/client';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-
-import Constants from 'expo-constants';
-
-const client = new ApolloClient({
-  // .env + app.config.js
+const authStorage = new AuthStorage();
+const httpLink = createHttpLink({
   uri: Constants.manifest.extra.apolloUri,
-  cache: new InMemoryCache()
 });
-
-export default function App() {
-  console.log(Constants.manifest);
-  return (
-    <ApolloProvider client={client}>
-      <View style={styles.container}>
-        <NativeRouter>
-          <AppBar />
-          <Routes>
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/" element={<RepositoryList />} />
-            <Route path="/test" element={<TestComponent />} />
-          </Routes>
-        </NativeRouter>
-
-        <StatusBar style="auto" />
-      </View>
-    </ApolloProvider>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -47,3 +28,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+
+const authLink = setContext(async (_, { headers }) => {
+  const accessToken = await authStorage.getAccessToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: accessToken ? `Bearer ${accessToken}` : '',
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+});
+
+export default function App() {
+  return (
+    <ApolloProvider client={client}>
+      <AuthStorageContext.Provider value={authStorage}>
+        <View style={styles.container}>
+          <NativeRouter>
+            <AppBar />
+            <Routes>
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/" element={<RepositoryList />} />
+              <Route path="/test" element={<TestComponent />} />
+            </Routes>
+          </NativeRouter>
+          <StatusBar style="auto" />
+        </View>
+      </AuthStorageContext.Provider>
+    </ApolloProvider>
+  );
+}

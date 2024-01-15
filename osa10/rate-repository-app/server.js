@@ -32,9 +32,15 @@ const typeDefs = gql`
     password: String!
   }
 
+  type User {
+    id: ID!
+    username: String!
+  }
+
   type Query {
     repositories: RepositoryConnection
     hello: String
+    me: User
   }
 
   type Mutation {
@@ -52,7 +58,13 @@ const resolvers = {
         node: repo,
       })),
     }),
+
+    me: (root, args, context) => {
+      const userId = context.user.id;
+      return getUserById(userId); 
+    },
   },
+
   Mutation: {
     authenticate: (root, args) => {
       // Here you should check the credentials and return an access token.
