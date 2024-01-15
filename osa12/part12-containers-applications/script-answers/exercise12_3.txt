@@ -1,0 +1,14 @@
+docker run -it ubuntu bash
+mkdir -p /usr/src/app
+touch /usr/src/app/index.js
+
+apt-get update
+apt-get install -y nano
+nano /usr/src/app/index.js
+
+type: console.log("HEi Maailma")
+
+ctrl+o 
+ctrl+x
+
+Script done on Mon Jan 15 19:45:25 2024
