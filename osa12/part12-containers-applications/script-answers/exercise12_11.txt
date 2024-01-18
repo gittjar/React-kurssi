@@ -1,0 +1,15 @@
+docker exec -it todo-backend-redis-1 redis-cli
+KEYS *
+GET todoCount
+SET todoCount 9001
+
+
+http://localhost:3000/todos/statistics
+{"added_todos":9001}
+
+POST http://localhost:3000/todos
+{"text": "My new todo","done": false}
+
+icreases todos +1
+
+DEL todoCount
