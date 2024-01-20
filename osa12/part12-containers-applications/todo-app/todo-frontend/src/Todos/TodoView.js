@@ -4,11 +4,13 @@ import axios from '../util/apiClient'
 import List from './List'
 import Form from './Form'
 
+const Base_URL = 'http://localhost:3000'
+
 const TodoView = () => {
   const [todos, setTodos] = useState([])
 
   const refreshTodos = async () => {
-    const { data } = await axios.get('/todos')
+    const { data } = await axios.get(Base_URL+'/todos')
     setTodos(data)
   }
 
@@ -36,10 +38,15 @@ const TodoView = () => {
 
   return (
     <>
+      <section className='header'>
       <h1>Todos</h1>
       <Form createTodo={createTodo} />
+      </section>
+      <section className='main'>
       <List todos={todos} deleteTodo={deleteTodo} completeTodo={completeTodo} />
+      </section>  
     </>
+   
   )
 }
 

@@ -10,39 +10,28 @@ const TodoList = ({ todos, deleteTodo, completeTodo }) => {
   }
 
   return (
-    <>
-      {todos.map(todo => {
-        const doneInfo = (
-          <>
-            <span>This todo is done</span>
-            <span>
-              <button onClick={onClickDelete(todo)}> Delete </button>
-            </span>
-          </>
-        )
-
-        const notDoneInfo = (
-          <>
-            <span>
-              This todo is not done
-            </span>
-            <span>
-              <button onClick={onClickDelete(todo)}> Delete </button>
-              <button onClick={onClickComplete(todo)}> Set as done </button>
-            </span>
-          </>
-        )
-
-        return (
-          <div style={{ display: 'flex', justifyContent: 'space-between', maxWidth: '70%', margin: 'auto' }}>
-            <span>
-              {todo.text} 
-            </span>
-            {todo.done ? doneInfo : notDoneInfo}
-          </div>
-        )
-      }).reduce((acc, cur) => [...acc, <hr />, cur], [])}
-    </>
+    <table className='listaus' >
+      <tbody>
+        {todos.map((todo, index) => (
+          <tr key={index} style={{ borderBottom: '1px solid #ddd', padding: '10px' }}>
+            <td>{todo.text}
+            <div style={{ fontSize: '0.8em' }}>
+            {todo.done ? 'This todo is done' : 'This todo is not done'}
+            </div>
+            
+            </td>
+            <td style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.8em' }}>
+                
+              </div>
+              <button onClick={onClickDelete(todo)}>Delete</button>
+              {todo.done ? null : <button onClick={onClickComplete(todo)}>Set as done</button>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+   
   )
 }
 
