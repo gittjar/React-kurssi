@@ -1,0 +1,38 @@
+docker-compose exec db psql -U postgres -d blogdb
+
+---
+
+CREATE TABLE blogs (
+    id SERIAL PRIMARY KEY,
+    author VARCHAR(255),
+    url VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    likes INT DEFAULT 0
+);
+
+INSERT INTO blogs (author, url, title, likes) VALUES
+('Author 1', 'http://blog1.com', 'Blog Title 1', 10),
+('Author 2', 'http://blog2.com', 'Blog Title 2', 20);
+
+---
+
+blogdb=# \dt
+         List of relations
+ Schema | Name  | Type  |  Owner   
+--------+-------+-------+----------
+ public | blogs | table | postgres
+(1 row)
+
+---
+
+blogdb=# \d blogs
+                                    Table "public.blogs"
+ Column |          Type          | Collation | Nullable |              Default              
+--------+------------------------+-----------+----------+-----------------------------------
+ id     | integer                |           | not null | nextval('blogs_id_seq'::regclass)
+ author | character varying(255) |           |          | 
+ url    | character varying(255) |           | not null | 
+ title  | character varying(255) |           | not null | 
+ likes  | integer                |           |          | 0
+Indexes:
+    "blogs_pkey" PRIMARY KEY, btree (id)
