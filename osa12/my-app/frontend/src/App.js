@@ -33,7 +33,7 @@ function App() {
           
         ))}
       </div>
-      <hr></hr>
+      
       <div class='info-text'>
       Create a similar containerized development environment of one of your own full stack apps that you have created during the course or in your free time. You should structure the app in your submission repository as follows:
 <br></br>
