@@ -1,0 +1,7 @@
+{
+    "name": "my-app",
+    "version": "1.0.0",
+    "scripts": {
+      "dev": "docker-compose -f docker-compose.dev.yml up"
+    }
+  }

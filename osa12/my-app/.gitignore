@@ -1,0 +1,22 @@
+# .gitignore
+
+# Ignore node_modules in any directory
+**/node_modules
+
+# Ignore .env files
+**/.env
+
+# Ignore log files
+**/*.log
+
+# Ignore the build folder
+**/build
+
+# Ignore the .next folder (if using Next.js)
+**/.next
+
+# Ignore the .cache folder (if using Gatsby.js)
+**/.cache
+
+# Ignore dist folder (if using a bundler like webpack)
+**/dist
