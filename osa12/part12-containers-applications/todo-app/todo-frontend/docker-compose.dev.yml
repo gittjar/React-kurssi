@@ -1,13 +1,15 @@
-version: '3.8'
-services:
-  todo-frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - 3000:3000
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+# todo-frontend Dockerfile
+todo-frontend:
+  build:
+    context: ./todo-frontend
+    dockerfile: Dockerfile
+    args:
+      - REACT_APP_BACKEND_URL=http://todo-backend:8080/api/todos
+  volumes:
+    - ./todo-frontend:/app
+    - /app/node_modules
+  ports:
+    - 3000:3000
+  environment:
+    - CHOKIDAR_USEPOLLING=true
+      
