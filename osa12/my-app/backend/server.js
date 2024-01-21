@@ -14,5 +14,6 @@ app.get('/api/products', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Backend API is running at http://localhost:${port}/api/products`);
 });
+

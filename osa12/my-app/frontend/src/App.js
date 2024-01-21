@@ -14,11 +14,13 @@ function App() {
     fetchProducts();
   }, []);
 
+  console.log('Frontend is running at http://localhost/');
+
   return (
     <div className="App">
       <header className="App-header">
       <h1>Products </h1>
-      <h3>Exercise 12.21</h3>
+      <h3>Exercise 12.21 and 12.22</h3>
       </header>
       <div className="product-grid">
         {products.map(product => (
@@ -44,5 +46,6 @@ my-app/docker-compose.yml
     </div>
   );
 }
+
 
 export default App;

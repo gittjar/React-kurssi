@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: /bin/sh -c "echo 'Frontend is running at http://localhost/' && nginx -g 'daemon off;'"
+    ports:
+      - 80:80
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: /bin/sh -c "echo 'Backend API is running at http://localhost:3001/api/products' && npm start"
+
+    ports:
+      - 3001:3001
