@@ -13,14 +13,9 @@ RUN npm install
 # Copy the rest of the application code into the container
 COPY . .
 
-# Expose port 3000 for the application
-EXPOSE 3000
+# Expose port 8080 for the application
+EXPOSE 8080
 
 # Define the command to run the application
 CMD [ "npm", "start" ]
 
-# Build the Docker image
-#
-#
-# docker build -t todo-backend .
-# docker run -p 3000:3000 todo-backend

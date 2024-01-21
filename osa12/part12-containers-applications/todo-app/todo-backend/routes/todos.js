@@ -8,6 +8,7 @@ router.get('/', async (_, res) => {
   res.send(todos);
 });
 
+
 // http://localhost:3000/todos/statistics
 router.get('/statistics', async (req, res) => {
   // Get the counter from Redis

@@ -1,24 +1,35 @@
 version: '3.8'
-
 services:
-  mongo:
-    image: mongo
-    ports:
-      - 3456:27017
+  todo-frontend:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-frontend:/usr/src/app
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: the_database
-    volumes: 
-      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
-      - ./mongo_data:/data/db
+      - REACT_APP_BACKEND_URL=http://localhost:8080/api/todos
+  todo-backend:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-backend:/usr/src/app
+    environment: 
+      - REDIS_URL=redis://redis:6379
+      - MONGO_URL=mongodb://the_username:the_password@mongo:27017/todos
   redis:
-    image: redis
+    image: redis:latest
+  mongo:
+    build:
+      context: .
+      dockerfile: Dockerfile.mongo
+  nginx:
+    build:
+      context: .
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - "6379:6379"
-    volumes: 
-      - redis-data:/data
-
-volumes:
-  mongo_data:
-  redis-data:
+      - 8080:8080
+    depends_on:
+      - todo-frontend
+      - todo-backend
