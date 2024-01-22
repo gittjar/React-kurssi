@@ -39,6 +39,20 @@ app.post('/api/blogs', (req, res) => {
     });
   });
 
+  // PUT api/blogs/:id (modify the like count of a blog)
+app.put('/api/blogs/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const { likes } = req.body;
+    pool.query('UPDATE blogs SET likes = $1 WHERE id = $2', [likes, id], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error executing query');
+      } else {
+        res.status(200).send(`Blog modified with ID: ${id}`);
+      }
+    });
+  });
+
 // DELETE api/blogs/:id (delete a blog)
 app.delete('/api/blogs/:id', (req, res) => {
   const { id } = req.params;
