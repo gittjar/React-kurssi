@@ -8,6 +8,8 @@ services:
       - db
   db:
     image: postgres:13
+    ports:
+      - "5433:5432" # maps PostgreSQL's port 5432 to port 5433 on the host machine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
