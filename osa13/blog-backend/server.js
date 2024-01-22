@@ -11,19 +11,45 @@ const pool = new Pool({
   port: 5432,
 });
 
-app.get('/', (req, res) => {
-  pool.query('SELECT NOW()', (err, result) => {
+// Use express.json() middleware to parse JSON request bodies
+app.use(express.json());
+
+// GET api/blogs (list all blogs)
+app.get('/api/blogs', (req, res) => {
+  pool.query('SELECT * FROM blogs', (err, result) => {
     if (err) {
       console.error(err);
       res.status(500).send('Error executing query');
     } else {
-      res.send(`Connected! Current time: ${result.rows[0].now}`);
+      res.json(result.rows);
     }
   });
 });
 
-app.get('/hello', (req, res) => {
-  res.send('Hello World!')
+// POST api/blogs (add a new blog)
+app.post('/api/blogs', (req, res) => {
+    const { author, title, likes, url } = req.body;
+    pool.query('INSERT INTO blogs (author, title, likes, url) VALUES ($1, $2, $3, $4)', [author, title, likes, url], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error executing query');
+      } else {
+        res.status(201).send('Blog added');
+      }
+    });
+  });
+
+// DELETE api/blogs/:id (delete a blog)
+app.delete('/api/blogs/:id', (req, res) => {
+  const { id } = req.params;
+  pool.query('DELETE FROM blogs WHERE id = $1', [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error executing query');
+    } else {
+      res.send('Blog deleted');
+    }
+  });
 });
 
 app.listen(port, () => {
