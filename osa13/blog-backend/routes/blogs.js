@@ -25,18 +25,19 @@ router.get('/', (req, res) => {
     });
   });
   
-  // POST api/blogs (add a new blog)
-  router.post('/', getUserFromToken, async (req, res) => {
-      const { author, title, likes, url } = req.body;
-      pool.query('INSERT INTO blogs (author, title, likes, url) VALUES ($1, $2, $3, $4)', [author, title, likes, url], (err, result) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('Error executing query');
-        } else {
-          res.status(201).send('Blog added');
-        }
-      });
-    });
+// POST api/blogs (add a new blog)
+router.post('/', getUserFromToken, async (req, res) => {
+  const { author, title, likes, url } = req.body;
+  const userId = req.user.id; // Get user id from request
+  pool.query('INSERT INTO blogs (author, title, likes, url, userid) VALUES ($1, $2, $3, $4, $5)', [author, title, likes, url, userId], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error executing query');
+    } else {
+      res.status(201).send('Blog added');
+    }
+  });
+});
   
     // PUT api/blogs/:id (modify the like count of a blog)
   router.put('/:id', (req, res) => {
@@ -52,18 +53,30 @@ router.get('/', (req, res) => {
       });
     });
   
-  // DELETE api/blogs/:id (delete a blog)
-  router.delete('/:id', (req, res) => {
-    const { id } = req.params;
-    pool.query('DELETE FROM blogs WHERE id = $1', [id], (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error executing query');
+// DELETE api/blogs/:id (delete a blog)
+router.delete('/:id', getUserFromToken, (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id; // Get user id from request
+  pool.query('SELECT userid FROM blogs WHERE id = $1', [id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error executing query');
+    } else {
+      if (result.rows[0].userid !== userId) {
+        res.status(403).send('You are not authorized to delete this blog');
       } else {
-        res.send('Blog deleted');
+        pool.query('DELETE FROM blogs WHERE id = $1', [id], (err, result) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send('Error executing query');
+          } else {
+            res.send('Blog deleted');
+          }
+        });
       }
-    });
+    }
   });
+});
 
 
 module.exports = router;
