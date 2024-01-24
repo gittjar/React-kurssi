@@ -1,5 +1,8 @@
+// routes/blogs.js
+
 const express = require('express');
 const router = express.Router();
+const getUserFromToken = require('../middleware/getUserFromToken');
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -23,7 +26,7 @@ router.get('/', (req, res) => {
   });
   
   // POST api/blogs (add a new blog)
-  router.post('/', (req, res) => {
+  router.post('/', getUserFromToken, async (req, res) => {
       const { author, title, likes, url } = req.body;
       pool.query('INSERT INTO blogs (author, title, likes, url) VALUES ($1, $2, $3, $4)', [author, title, likes, url], (err, result) => {
         if (err) {

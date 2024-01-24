@@ -1,6 +1,11 @@
+// routes/users.js
+
 const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
+const sha256 = require('crypto-js/sha256');
+const hmacSHA512 = require('crypto-js/hmac-sha512');
+const Base64 = require('crypto-js/enc-base64');
 
 const pool = new Pool({
   user: 'postgres',
@@ -11,17 +16,22 @@ const pool = new Pool({
 });
 
 // POST api/users (add a new user)
-router.post('/', (req, res) => {
-    const { name, username, password } = req.body;
-    pool.query('INSERT INTO users (name, username, password) VALUES ($1, $2, $3)', [name, username, password], (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error executing query');
-      } else {
-        res.status(201).send('User added');
-      }
-    });
+router.post('/', async (req, res) => {
+  const { name, username, password } = req.body;
+
+  // hash the password
+  const hashDigest = sha256(password);
+  const hashedPassword = Base64.stringify(hmacSHA512(password + hashDigest, password));
+
+  pool.query('INSERT INTO users (name, username, password) VALUES ($1, $2, $3)', [name, username, hashedPassword], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error executing query');
+    } else {
+      res.status(201).send('User added');
+    }
   });
+});
   
   // GET api/users (list all users)
   router.get('/', (req, res) => {
