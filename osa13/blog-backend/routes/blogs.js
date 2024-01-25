@@ -15,15 +15,15 @@ const pool = new Pool({
 
 // GET api/blogs (list all blogs)
 router.get('/', (req, res) => {
-    pool.query('SELECT * FROM blogs', (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error executing query');
-      } else {
-        res.json(result.rows);
-      }
-    });
+  pool.query('SELECT blogs.*, users.username FROM blogs JOIN users ON blogs.userid = users.id', (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error executing query');
+    } else {
+      res.json(result.rows);
+    }
   });
+});
   
 // POST api/blogs (add a new blog)
 router.post('/', getUserFromToken, async (req, res) => {

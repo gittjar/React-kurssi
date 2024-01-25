@@ -35,12 +35,12 @@ router.post('/', async (req, res) => {
   
   // GET api/users (list all users)
   router.get('/', (req, res) => {
-    pool.query('SELECT * FROM users', (err, result) => {
+    pool.query('SELECT users.*, array_agg(blogs.title) as blogs FROM users LEFT JOIN blogs ON users.id = blogs.userid GROUP BY users.id', (err, result) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error executing query');
       } else {
-        res.status(200).json(result.rows);
+        res.json(result.rows);
       }
     });
   });
