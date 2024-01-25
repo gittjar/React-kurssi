@@ -15,7 +15,16 @@ const pool = new Pool({
 
 // GET api/blogs (list all blogs)
 router.get('/', (req, res) => {
-  pool.query('SELECT blogs.*, users.username FROM blogs JOIN users ON blogs.userid = users.id', (err, result) => {
+  const search = req.query.search;
+  let query = 'SELECT blogs.*, users.username FROM blogs JOIN users ON blogs.userid = users.id';
+  let params = [];
+
+  if (search) {
+    query += ' WHERE title ILIKE $1';
+    params.push(`%${search}%`); // Add the search parameter wrapped in % signs for a substring match
+  }
+
+  pool.query(query, params, (err, result) => {
     if (err) {
       console.error(err);
       res.status(500).send('Error executing query');
