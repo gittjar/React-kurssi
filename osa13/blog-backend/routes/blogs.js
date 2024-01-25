@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
   let params = [];
 
   if (search) {
-    query += ' WHERE title ILIKE $1';
+    query += ' WHERE title ILIKE $1 OR author ILIKE $1';
     params.push(`%${search}%`); // Add the search parameter wrapped in % signs for a substring match
   }
 
