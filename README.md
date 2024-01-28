@@ -91,3 +91,23 @@ Library frontend (osa 8C)
 <img src="./screenshots/osa8-books-frontend.jpeg">
 
 <hr>
+
+### Osa 9
+<br>
+Patientor front
+<img src="./screenshots/osa-9-patientor-front.jpeg">
+<br>
+Flight diary
+<img src="./screenshots/osa-9-flight-diary.jpeg">
+Exercise Calculator
+<img src="./screenshots/osa9-exercise-calculator.jpeg">
+<br>
+<hr>
+
+### Osa 10
+
+<hr>
+
+### Osa 12
+Docker 
+<img src="./screenshots/osa-12-docker-1.jpeg">
