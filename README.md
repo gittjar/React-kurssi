@@ -105,9 +105,14 @@ Exercise Calculator
 <hr>
 
 ### Osa 10
+<br>
+Raterepository App (React native)
+<img src="./screenshots/osa-10-react-native.jpeg">
+
 
 <hr>
 
 ### Osa 12
+<br>
 Docker 
 <img src="./screenshots/osa-12-docker-1.jpeg">
