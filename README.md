@@ -7,7 +7,8 @@ Oppimistehtäviä Full Stack Open kurssilta. Materiaalit : https://fullstackopen
 * Tehtävä 3.10 backend step10: https://puhelinluettelo-oqv3.onrender.com/api/persons
 * Tehtävä 3.11 frontend step11: https://puhelinluettelo-frontend.onrender.com/
 * Tehtävä 6.23 : frontend: https://anecdotes-front.onrender.com/ <br/>
-backend: https://anecdotes-jarno.onrender.com/anecdotes
+backend: https://anecdotes-jarno.onrender.com/anecdotes<br>
+* Tehtävä 13 : SQL + React app: https://blogapp2024.onrender.com/
 
 #### Kuvankaappaukset
 <hr>
@@ -116,3 +117,11 @@ Raterepository App (React native)
 <br>
 Docker 
 <img src="./screenshots/osa-12-docker-1.jpeg">
+
+<hr>
+
+### Osa 13
+<br>
+Azure SQL + React backend + React frontend
+<br>
+https://blogapp2024.onrender.com/
